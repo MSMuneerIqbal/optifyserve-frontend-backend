@@ -8,6 +8,7 @@
  */
 
 import { useEffect, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -49,7 +50,7 @@ export function SettingsDrawer({
     }
   }, [isOpen, handleKeyDown])
 
-  return (
+  return createPortal(
     <>
       {/* Overlay */}
       <div
@@ -95,6 +96,7 @@ export function SettingsDrawer({
           </div>
         </div>
       </div>
-    </>
+    </>,
+    document.body
   )
 }

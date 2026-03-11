@@ -118,8 +118,8 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
     const Icon = item.icon
 
     const activeStyle = { backgroundColor: themeColors.primary }
-    const textMuted = { color: themeColors.sidebarText, opacity: 0.7 }
-    const textMutedIcon = { color: themeColors.sidebarText, opacity: 0.5 }
+    const textMuted = { color: themeColors.sidebarText, opacity: 0.85 }
+    const textMutedIcon = { color: themeColors.sidebarText, opacity: 0.65 }
 
     if (hasSubItems) {
       const isSubActive = item.subItems!.some(sub => location.pathname === sub.href)
@@ -129,12 +129,12 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
           <button
             onClick={() => toggleSubmenu(item.nameKey)}
             className={cn(
-              'flex w-full items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-all',
+              'sidebar-nav-item flex w-full items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium',
               !isSubActive && 'hover:bg-white/10'
             )}
             style={isSubActive ? { backgroundColor: 'rgba(255,255,255,0.1)', color: themeColors.sidebarText } : textMuted}
           >
-            <Icon className="h-5 w-5 shrink-0" style={isSubActive ? { color: themeColors.sidebarText } : textMutedIcon} />
+            <Icon className="sidebar-icon-hover h-5 w-5 shrink-0" style={isSubActive ? { color: themeColors.sidebarText } : textMutedIcon} />
             <span className="flex-1 text-start">{t(item.nameKey)}</span>
             <ChevronDown
               className={cn(
@@ -144,7 +144,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
             />
           </button>
           {isExpanded && (
-            <div className="mt-1 ms-4 space-y-1 border-s border-white/15 ps-3">
+            <div className="sidebar-submenu-enter mt-1 ms-4 space-y-1 border-s border-white/15 ps-3">
               {item.subItems!.map(subItem => {
                 const SubIcon = subItem.icon
                 const isSubItemActive = location.pathname === subItem.href
@@ -154,12 +154,12 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                     to={subItem.href}
                     onClick={onClose}
                     className={cn(
-                      'flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm transition-all',
+                      'sidebar-nav-item flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm',
                       !isSubItemActive && 'hover:bg-white/10'
                     )}
                     style={isSubItemActive ? { ...activeStyle, color: '#fff' } : textMuted}
                   >
-                    <SubIcon className="h-4 w-4" style={isSubItemActive ? { color: '#fff' } : textMutedIcon} />
+                    <SubIcon className="sidebar-icon-hover h-4 w-4" style={isSubItemActive ? { color: '#fff' } : textMutedIcon} />
                     {t(subItem.nameKey)}
                   </Link>
                 )
@@ -176,12 +176,12 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
         to={item.href}
         onClick={onClose}
         className={cn(
-          'flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-all',
+          'sidebar-nav-item flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium',
           !isActive && 'hover:bg-white/10'
         )}
         style={isActive ? { ...activeStyle, color: '#fff' } : textMuted}
       >
-        <Icon className="h-5 w-5 shrink-0" style={isActive ? { color: '#fff' } : textMutedIcon} />
+        <Icon className="sidebar-icon-hover h-5 w-5 shrink-0" style={isActive ? { color: '#fff' } : textMutedIcon} />
         <span>{t(item.nameKey)}</span>
         {item.badge && (
           <span className="ms-auto flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-xs font-medium" style={{ backgroundColor: themeColors.primary, opacity: 0.85 }}>
@@ -206,7 +206,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
               size="icon"
               onClick={onClose}
               className="h-8 w-8 hover:bg-white/10"
-              style={{ color: themeColors.sidebarText, opacity: 0.7 }}
+              style={{ color: themeColors.sidebarText, opacity: 0.85 }}
             >
               <X className="h-4 w-4" />
             </Button>

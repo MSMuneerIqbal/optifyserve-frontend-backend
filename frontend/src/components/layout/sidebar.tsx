@@ -225,8 +225,8 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
     // Style helpers for theme-aware colors
     const activeStyle = { backgroundColor: themeColors.primary }
     const hoverBg = 'hover:bg-white/10'
-    const textMuted = { color: themeColors.sidebarText, opacity: 0.7 }
-    const textMutedIcon = { color: themeColors.sidebarText, opacity: 0.5 }
+    const textMuted = { color: themeColors.sidebarText, opacity: 0.85 }
+    const textMutedIcon = { color: themeColors.sidebarText, opacity: 0.65 }
 
     // For items with subitems
     if (hasSubItems) {
@@ -239,12 +239,12 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
             <TooltipTrigger asChild>
               <button
                 className={cn(
-                  'flex w-full items-center justify-center rounded-lg px-2 py-2.5 text-sm font-medium transition-all',
+                  'sidebar-nav-item flex w-full items-center justify-center rounded-lg px-2 py-2.5 text-sm font-medium',
                   !isSubActive && hoverBg
                 )}
                 style={isSubActive ? activeStyle : textMuted}
               >
-                <Icon className="h-5 w-5 shrink-0" style={isSubActive ? { color: '#fff' } : textMutedIcon} />
+                <Icon className="sidebar-icon-hover h-5 w-5 shrink-0" style={isSubActive ? { color: '#fff' } : textMutedIcon} />
               </button>
             </TooltipTrigger>
             <TooltipContent side="right" className="p-0">
@@ -276,12 +276,12 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
           <button
             onClick={() => toggleSubmenu(item.nameKey)}
             className={cn(
-              'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all',
+              'sidebar-nav-item flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium',
               !isSubActive && hoverBg
             )}
             style={isSubActive ? { backgroundColor: 'rgba(255,255,255,0.1)', color: themeColors.sidebarText } : textMuted}
           >
-            <Icon className="h-5 w-5 shrink-0" style={isSubActive ? { color: themeColors.sidebarText } : textMutedIcon} />
+            <Icon className="sidebar-icon-hover h-5 w-5 shrink-0" style={isSubActive ? { color: themeColors.sidebarText } : textMutedIcon} />
             <span className="flex-1 text-start">{t(item.nameKey)}</span>
             <ChevronDown
               className={cn(
@@ -291,7 +291,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
             />
           </button>
           {isExpanded && (
-            <div className="mt-1 ms-4 space-y-1 border-s border-white/15 ps-3">
+            <div className="sidebar-submenu-enter mt-1 ms-4 space-y-1 border-s border-white/15 ps-3">
               {item.subItems!.map(subItem => {
                 const SubIcon = subItem.icon
                 const isSubItemActive = location.pathname === subItem.href
@@ -300,12 +300,12 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                     key={subItem.href}
                     to={subItem.href}
                     className={cn(
-                      'flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-all',
+                      'sidebar-nav-item flex items-center gap-2 rounded-lg px-3 py-2 text-sm',
                       !isSubItemActive && hoverBg
                     )}
                     style={isSubItemActive ? { ...activeStyle, color: '#fff' } : textMuted}
                   >
-                    <SubIcon className="h-4 w-4" style={isSubItemActive ? { color: '#fff' } : textMutedIcon} />
+                    <SubIcon className="sidebar-icon-hover h-4 w-4" style={isSubItemActive ? { color: '#fff' } : textMutedIcon} />
                     {t(subItem.nameKey)}
                   </Link>
                 )
@@ -321,14 +321,14 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
       <Link
         to={item.href}
         className={cn(
-          'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all',
+          'sidebar-nav-item flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium',
           !isActive && hoverBg,
           isCollapsed && 'justify-center px-2'
         )}
         style={isActive ? { ...activeStyle, color: '#fff' } : textMuted}
       >
         <Icon
-          className="h-5 w-5 shrink-0"
+          className="sidebar-icon-hover h-5 w-5 shrink-0"
           style={isActive ? { color: '#fff' } : textMutedIcon}
         />
         {!isCollapsed && <span>{t(item.nameKey)}</span>}
@@ -399,7 +399,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
               'w-full hover:bg-white/10',
               isCollapsed ? 'justify-center' : 'justify-start'
             )}
-            style={{ color: themeColors.sidebarText, opacity: 0.7 }}
+            style={{ color: themeColors.sidebarText, opacity: 0.85 }}
           >
             {isCollapsed ? (
               <ChevronRight className="h-4 w-4" />

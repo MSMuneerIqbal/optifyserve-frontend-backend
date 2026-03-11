@@ -5,7 +5,7 @@
 
 import { useState, useRef, useLayoutEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { useLocalStorage } from '@/hooks/use-local-storage'
 import { useIsDesktop } from '@/hooks/use-media-query'
@@ -22,6 +22,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   const { t } = useTranslation()
   const isDesktop = useIsDesktop()
   const navigate = useNavigate()
+  const location = useLocation()
   const { user, logout } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [sidebarCollapsed, setSidebarCollapsed] = useLocalStorage('sidebar-collapsed', false)
@@ -83,7 +84,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         />
 
         {/* Page Content */}
-        <main className="flex-1 p-4 md:p-6 lg:p-8">
+        <main key={location.pathname} className="animate-page-enter flex-1 p-4 md:p-6 lg:p-8">
           {children || <Outlet />}
         </main>
 

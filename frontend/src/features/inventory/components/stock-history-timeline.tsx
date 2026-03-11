@@ -8,7 +8,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ArrowDown, ArrowUp, ArrowRight, Wrench, Filter, Clock } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
+import { StatusBadge } from '@/components/shared/status-badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { LoadingSpinner } from '@/components/shared/loading-spinner'
@@ -146,9 +146,9 @@ export function StockHistoryTimeline({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2 mb-2">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <Badge variant={badge.variant as any} className="text-xs">
+                          <StatusBadge variant={badge.variant as 'success' | 'error' | 'warning' | 'info' | 'neutral'}>
                             {badge.label}
-                          </Badge>
+                          </StatusBadge>
                           {movement.referenceNumber && (
                             <code className="text-xs bg-muted px-2 py-0.5 rounded">
                               {movement.referenceNumber}

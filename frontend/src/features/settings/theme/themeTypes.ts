@@ -84,8 +84,8 @@ export const THEME_PRESETS: ThemePreset[] = [
     colors: {
       primary: '#1565C0',
       secondary: '#00ACC1',
-      sidebarBg: '#0B1929',
-      sidebarText: '#B2EBF2',
+      sidebarBg: '#0A1628',
+      sidebarText: '#E8EDF5',
       success: '#00B377',
       warning: '#F59E0B',
       error: '#EF4444',

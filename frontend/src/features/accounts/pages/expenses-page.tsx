@@ -14,6 +14,7 @@ import { useCurrency } from '@/contexts/currency-context'
 import { ExpenseList } from '../components/expense-list'
 import { ExpenseForm } from '../components/expense-form'
 import { ExpenseApprovalModal } from '../components/expense-approval-modal'
+import { ExpenseDetailModal } from '../components/expense-detail-modal'
 import { sampleExpenses } from '@/data/accounts.data'
 import type { Expense, ExpenseFormData } from '../types/expense.types'
 
@@ -23,6 +24,7 @@ export function ExpensesPage() {
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null)
   const [formMode, setFormMode] = useState<'create' | 'edit'>('create')
+  const [isViewOpen, setIsViewOpen] = useState(false)
   const [approvalExpense, setApprovalExpense] = useState<Expense | null>(null)
 
   const isLoading = false
@@ -51,6 +53,7 @@ export function ExpensesPage() {
 
   const handleView = useCallback((expense: Expense) => {
     setSelectedExpense(expense)
+    setIsViewOpen(true)
   }, [])
 
   const handleApprove = useCallback((expense: Expense) => {
@@ -117,6 +120,17 @@ export function ExpensesPage() {
           />
         </SheetContent>
       </Sheet>
+
+      {/* Detail Modal */}
+      <ExpenseDetailModal
+        expense={selectedExpense}
+        isOpen={isViewOpen}
+        onClose={() => {
+          setIsViewOpen(false)
+          setSelectedExpense(null)
+        }}
+        onEdit={handleEdit}
+      />
 
       {/* Approval Modal */}
       <ExpenseApprovalModal

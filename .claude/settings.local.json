@@ -9,7 +9,12 @@
       "Bash(python:*)",
       "Bash(npm install:*)",
       "WebFetch(domain:www.optifyserve.com)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(npx eslint:*)",
+      "Bash(dir:*)",
+      "Bash(node find_missing_keys.cjs:*)",
+      "Bash(node:*)",
+      "Bash(ls:*)"
     ]
   }
 }
