@@ -86,10 +86,12 @@ interface EmployeeListProps {
 
 const STATUS_CLASS_MAP: Record<EmployeeStatus, string> = {
   active: 'bg-green-100 text-green-800 hover:bg-green-100',
-  inactive: 'bg-gray-100 text-gray-800 hover:bg-gray-100',
-  on_leave: 'bg-amber-100 text-amber-800 hover:bg-amber-100',
-  terminated: 'bg-red-100 text-red-800 hover:bg-red-100',
   probation: 'bg-blue-100 text-blue-800 hover:bg-blue-100',
+  'notice-period': 'bg-amber-100 text-amber-800 hover:bg-amber-100',
+  terminated: 'bg-red-100 text-red-800 hover:bg-red-100',
+  resigned: 'bg-gray-100 text-gray-800 hover:bg-gray-100',
+  absconded: 'bg-red-100 text-red-800 hover:bg-red-100',
+  suspended: 'bg-orange-100 text-orange-800 hover:bg-orange-100',
 }
 
 // ---------------------------------------------------------------------------

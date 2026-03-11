@@ -57,7 +57,7 @@ export function UnassignedJobsList({
         {jobs.map(job => {
           const priorityCfg = JOB_PRIORITY_CONFIG[job.priority]
           const serviceCfg = SERVICE_TYPE_CONFIG[job.serviceType]
-          const isUrgent = job.priority === 'urgent' || job.priority === 'emergency'
+          const isUrgent = job.priority === 'emergency'
           const isSelected = selectedJobId === job.id
 
           return (

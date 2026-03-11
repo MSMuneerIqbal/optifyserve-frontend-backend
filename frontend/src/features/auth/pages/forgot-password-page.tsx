@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
-import { ArrowLeft, Building2, Loader2, Mail, CheckCircle2, KeyRound } from 'lucide-react'
+import { ArrowLeft, Loader2, Mail, CheckCircle2, KeyRound } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -55,9 +55,7 @@ export function ForgotPasswordPage() {
       {/* Header */}
       <div className="flex items-center justify-between border-b px-6 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-            <Building2 className="h-5 w-5 text-primary-foreground" />
-          </div>
+          <img src="/logo.png" alt="OptifyServe" className="h-9 w-9 rounded-lg object-contain" />
           <div>
             <h1 className="text-sm font-bold">{t('auth.brandName')}</h1>
             <p className="text-xs text-muted-foreground">{t('auth.brandTagline')}</p>

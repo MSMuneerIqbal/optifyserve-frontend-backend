@@ -19,6 +19,12 @@ import {
   Contact,
   Target,
   Radio,
+  ShieldCheck,
+  Shield,
+  Crown,
+  CreditCard,
+  BarChart3,
+  ScrollText,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
@@ -55,6 +61,26 @@ const navigation: NavigationItem[] = [
   { nameKey: 'nav.hr', href: '/hr', icon: UserCircle },
   { nameKey: 'nav.jobs', href: '/jobs', icon: Briefcase },
   { nameKey: 'nav.dispatcher', href: '/dispatcher', icon: Radio },
+  {
+    nameKey: 'nav.userManagement',
+    href: '/users',
+    icon: ShieldCheck,
+    subItems: [
+      { nameKey: 'nav.users', href: '/users/list', icon: Users },
+      { nameKey: 'nav.rolesPermissions', href: '/users/roles', icon: Shield },
+    ]
+  },
+  {
+    nameKey: 'nav.platformAdmin',
+    href: '/admin',
+    icon: Crown,
+    subItems: [
+      { nameKey: 'nav.tenants', href: '/admin/tenants', icon: Building2 },
+      { nameKey: 'nav.subscriptionPlans', href: '/admin/plans', icon: CreditCard },
+      { nameKey: 'nav.platformAnalytics', href: '/admin/analytics', icon: BarChart3 },
+    ]
+  },
+  { nameKey: 'nav.auditLogs', href: '/audit', icon: ScrollText },
   { nameKey: 'nav.settings', href: '/settings', icon: Settings },
 ]
 
@@ -168,13 +194,11 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent side={isRtl ? 'right' : 'left'} className="w-64 p-0" style={{ backgroundColor: themeColors.sidebarBg, color: themeColors.sidebarText }}>
-        <SheetHeader className="border-b border-white/10 p-4">
+      <SheetContent side={isRtl ? 'right' : 'left'} className="w-[85vw] max-w-64 p-0 flex flex-col" style={{ backgroundColor: themeColors.sidebarBg, color: themeColors.sidebarText }}>
+        <SheetHeader className="border-b border-white/10 p-4 shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ backgroundColor: themeColors.primary }}>
-                <Building2 className="h-5 w-5 text-white" />
-              </div>
+              <img src="/logo.png" alt="OptifyServe" className="h-9 w-9 rounded-lg object-contain" />
               <SheetTitle className="text-lg font-semibold" style={{ color: themeColors.sidebarText }}>{t('nav.brandName')}</SheetTitle>
             </div>
             <Button

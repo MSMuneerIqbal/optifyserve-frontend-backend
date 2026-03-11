@@ -10,7 +10,7 @@ import type { PaginatedResponse, StatusBadgeVariant } from '@/types/common.types
 /**
  * Quotation status
  */
-export type QuotationStatus = 'draft' | 'sent' | 'approved' | 'rejected' | 'expired' | 'converted'
+export type QuotationStatus = 'draft' | 'sent' | 'viewed' | 'accepted' | 'rejected' | 'expired' | 'converted'
 
 /**
  * Quotation status configuration for UI display
@@ -18,7 +18,8 @@ export type QuotationStatus = 'draft' | 'sent' | 'approved' | 'rejected' | 'expi
 export const QUOTATION_STATUS_CONFIG: Record<QuotationStatus, { key: string; variant: StatusBadgeVariant }> = {
   draft: { key: 'status.draft', variant: 'neutral' },
   sent: { key: 'status.sent', variant: 'info' },
-  approved: { key: 'status.approved', variant: 'success' },
+  viewed: { key: 'status.viewed', variant: 'info' },
+  accepted: { key: 'status.accepted', variant: 'success' },
   rejected: { key: 'status.rejected', variant: 'error' },
   expired: { key: 'status.expired', variant: 'warning' },
   converted: { key: 'status.convertedToInvoice', variant: 'success' },
@@ -174,7 +175,7 @@ export interface QuotationSummary {
   totalQuotations: number
   draftCount: number
   sentCount: number
-  approvedCount: number
+  acceptedCount: number
   rejectedCount: number
   expiredCount: number
   convertedCount: number

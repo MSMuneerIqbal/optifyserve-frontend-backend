@@ -50,7 +50,7 @@ export function AttendanceList({
     present: records.filter((r) => r.status === 'present').length,
     absent: records.filter((r) => r.status === 'absent').length,
     late: records.filter((r) => r.status === 'late').length,
-    onLeave: records.filter((r) => r.status === 'on_leave').length,
+    onLeave: records.filter((r) => r.status === 'on-leave').length,
   }
 
   return (
@@ -207,8 +207,8 @@ export function AttendanceList({
                             record.status === 'present' && 'bg-green-100 text-green-800',
                             record.status === 'absent' && 'bg-red-100 text-red-800',
                             record.status === 'late' && 'bg-amber-100 text-amber-800',
-                            record.status === 'on_leave' && 'bg-purple-100 text-purple-800',
-                            record.status === 'half_day' && 'bg-blue-100 text-blue-800',
+                            record.status === 'on-leave' && 'bg-purple-100 text-purple-800',
+                            record.status === 'half-day' && 'bg-blue-100 text-blue-800',
                           )}
                         >
                           {t(ATTENDANCE_STATUS_CONFIG[record.status].key)}

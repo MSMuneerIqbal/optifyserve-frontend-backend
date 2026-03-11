@@ -1,6 +1,6 @@
-# PROJECT SPECIFICATION — OptifySoft ERP SaaS Platform
+# PROJECT SPECIFICATION — OptifyServe ERP SaaS Platform
 
-> **Version**: 2.1 | **Last Updated**: 2026-03-02
+> **Version**: 2.2 | **Last Updated**: 2026-03-11
 > **Purpose**: Complete technical specification for rebuilding context across sessions. Read this file first when making any future changes.
 
 ---
@@ -32,7 +32,7 @@
 **Target Users**: Maintenance, cleaning, pest control, HVAC, plumbing, electrical, facilities management
 **Deployment**: Cloud SaaS (multi-tenant with row-level security — when backend is integrated)
 
-### Modules (11)
+### Modules (14)
 
 | # | Module | Description | Pages |
 |---|--------|-------------|-------|
@@ -46,10 +46,13 @@
 | 8 | **HR** | Employees, departments, attendance, leaves, payroll, performance, EOSB, documents | 10 |
 | 9 | **Jobs** | Job management, technicians, scheduling, service reports | 5 |
 | 10 | **Dispatcher** | Real-time map, job assignment, technician tracking | 1 |
-| 11 | **Settings** | Company profile, users, roles, notifications, integrations, security, audit logs, theme | 1 |
+| 11 | **User Management** | User accounts, role & permission management | 2 |
+| 12 | **Platform Admin** | Tenant management, subscription plans, platform analytics | 3 |
+| 13 | **Audit** | Audit log viewer with filters | 1 |
+| 14 | **Settings** | Company profile, notifications, integrations, security, theme | 1 |
 
-**Total**: 44 pages, ~140 feature components, 27 shadcn/ui components, 12 shared components, 6 layout components
-**i18n**: 2,198 translation keys per language (English + Arabic), 18 namespaces, full RTL support
+**Total**: 49 pages, 148 feature components, 27 shadcn/ui components, 14 shared components, 6 layout components
+**i18n**: 2,299 translation keys per language (English + Arabic), 18 namespaces, full RTL support
 
 ---
 
@@ -98,7 +101,7 @@
 ## 3. Project Structure
 
 ```
-OptifySof-frontend/
+optifyserve-frontend/
 ├── public/
 ├── database/                          # PostgreSQL schema (16 SQL files)
 │   ├── 00_extensions.sql              # uuid-ossp, pgcrypto, btree_gist, pg_trgm
@@ -130,7 +133,7 @@ OptifySof-frontend/
 │   │   └── ui/                        # 27 shadcn/ui components
 │   ├── contexts/
 │   │   └── auth-context.tsx           # AuthProvider, useAuth() hook
-│   ├── data/                          # 15 static sample data files
+│   ├── data/                          # 18 static sample data files
 │   │   ├── dashboard.data.ts
 │   │   ├── customers.data.ts
 │   │   ├── leads.data.ts
@@ -145,8 +148,11 @@ OptifySof-frontend/
 │   │   ├── employees.data.ts
 │   │   ├── jobs.data.ts
 │   │   ├── dispatcher.data.ts
-│   │   └── settings.data.ts
-│   ├── features/                      # 11 modules
+│   │   ├── settings.data.ts
+│   │   ├── users.data.ts
+│   │   ├── admin.data.ts
+│   │   └── audit.data.ts
+│   ├── features/                      # 14 modules
 │   │   ├── auth/                      # components/, types/, pages/
 │   │   ├── dashboard/                 # components/, types/, pages/
 │   │   ├── crm/                       # components/, types/, pages/
@@ -157,13 +163,16 @@ OptifySof-frontend/
 │   │   ├── hr/                        # components/, types/, pages/
 │   │   ├── jobs/                      # components/, types/, pages/
 │   │   ├── dispatcher/                # components/, types/, pages/
+│   │   ├── user-management/           # components/, types/, pages/
+│   │   ├── admin/                     # components/, types/, pages/
+│   │   ├── audit/                     # components/, types/, pages/
 │   │   └── settings/                  # components/, types/, pages/, theme/
 │   ├── hooks/                         # useLocalStorage, useDebounce, usePagination, useModal, useMediaQuery, useDirection
 │   ├── i18n/
 │   │   ├── index.ts                   # i18next config (EN default, AR, browser detection)
 │   │   └── locales/
-│   │       ├── en.json                # English translations (2,198 keys)
-│   │       └── ar.json                # Arabic translations (2,198 keys)
+│   │       ├── en.json                # English translations (2,299 keys)
+│   │       └── ar.json                # Arabic translations (2,299 keys)
 │   ├── lib/
 │   │   ├── utils.ts                   # 30+ utility functions
 │   │   ├── constants.ts               # All enum constants + config
@@ -213,7 +222,7 @@ OptifySof-frontend/
 - `TopNav` has breadcrumbs, global search, notifications bell, language switcher (EN/AR), user dropdown
 - `PageHeader` provides title + description + action buttons slot
 
-### Routing (43 protected routes + 2 public)
+### Routing (49 protected routes + 2 public)
 ```
 /login                          → LoginPage (split-screen with branding)
 /forgot-password                → ForgotPasswordPage
@@ -224,40 +233,46 @@ OptifySof-frontend/
 /sales/invoices                 → InvoicesPage
 /inventory/items                → ItemsPage
 /inventory/warehouses           → WarehousesPage
-/inventory/current-stock        → CurrentStockPage
-/inventory/stock-movements      → StockMovementsPage
-/inventory/stock-reports        → StockReportsPage
+/inventory/stock                → CurrentStockPage
+/inventory/movements            → StockMovementsPage
+/inventory/reports              → StockReportsPage
 /purchase/vendors               → VendorsPage
-/purchase/purchase-orders       → PurchaseOrdersPage
+/purchase/orders                → PurchaseOrdersPage
 /purchase/grn                   → GRNPage
 /purchase/returns               → PurchaseReturnsPage
-/purchase/vendor-payments       → VendorPaymentsPage
-/accounts/chart-of-accounts     → ChartOfAccountsPage
-/accounts/journal-entries       → JournalEntriesPage
+/purchase/payments              → VendorPaymentsPage
+/accounts/dashboard             → FinancialDashboardPage
+/accounts/chart                 → ChartOfAccountsPage
+/accounts/journal               → JournalEntriesPage
 /accounts/receivable            → AccountsReceivablePage
 /accounts/payable               → AccountsPayablePage
 /accounts/expenses              → ExpensesPage
-/accounts/financial-dashboard   → FinancialDashboardPage
-/accounts/financial-reports     → FinancialReportsPage
-/accounts/bank-reconciliation   → BankReconciliationPage
-/accounts/vat-returns           → VATReturnsPage
+/accounts/reports               → FinancialReportsPage
+/accounts/reconciliation        → BankReconciliationPage
+/accounts/vat                   → VATReturnsPage
 /hr/employees                   → EmployeesPage
 /hr/departments                 → DepartmentsPage
 /hr/attendance                  → AttendancePage
-/hr/leaves                      → LeavesPage
+/hr/leave                       → LeavesPage
 /hr/documents                   → DocumentsPage
 /hr/payroll                     → PayrollPage
 /hr/performance                 → PerformancePage
 /hr/eosb                        → EOSBPage
 /hr/reports                     → HRReportsPage
-/hr/employee-portal             → EmployeePortalPage
+/hr/portal                      → EmployeePortalPage
 /jobs                           → JobsPage
 /jobs/technicians               → TechniciansPage
-/jobs/scheduling                → JobSchedulingPage
-/jobs/service-reports           → ServiceReportsPage
-/jobs/reports                   → JobReportsPage
+/jobs/schedule                  → JobSchedulingPage
+/jobs/reports                   → ServiceReportsPage
+/jobs/analytics                 → JobReportsPage
 /dispatcher                     → DispatcherPage
-/settings                       → SettingsPage
+/users/list                     → UsersPage
+/users/roles                    → RolesPage
+/admin/tenants                  → TenantsPage
+/admin/plans                    → PlansPage
+/admin/analytics                → AdminAnalyticsPage
+/audit                          → AuditPage
+/settings/*                     → SettingsPage
 ```
 
 ### Current Data Flow (UI Template Mode)
@@ -332,8 +347,8 @@ Full bilingual support: English (default) + Arabic with automatic RTL layout mir
 src/i18n/
 ├── index.ts           # i18next init: browser detection, localStorage persistence, fallback 'en'
 └── locales/
-    ├── en.json        # 2,198 English keys across 18 namespaces
-    └── ar.json        # 2,198 Arabic keys across 18 namespaces
+    ├── en.json        # 2,299 English keys across 18 namespaces
+    └── ar.json        # 2,299 Arabic keys across 18 namespaces
 
 src/hooks/use-direction.ts         # Sets document.dir (rtl/ltr) + document.lang on language change
 src/components/shared/language-switcher.tsx  # Globe icon dropdown (EN/AR) in TopNav
@@ -459,7 +474,7 @@ Only these files use `useAppSelector(s => s.theme)`:
 **Components**: LoginForm
 **Auth**: React Context (`useAuth()`) — not Redux
 **Login**: Zero-friction — click Sign In to enter (no validation in template mode)
-**Branding**: OptifySoft with feature cards, stats bar, trust badges
+**Branding**: OptifyServe with feature cards, stats bar, trust badges
 
 ### 8.2 Dashboard Module
 **Pages**: DashboardPage
@@ -472,7 +487,7 @@ Only these files use `useAppSelector(s => s.theme)`:
 **Data**: `src/data/customers.data.ts`, `src/data/leads.data.ts`
 **Features**:
 - Customer list with DataTable, filters (status, type, emirate), detail panel (Sheet)
-- Lead Kanban board with stages (New → Follow-up → Qualified → Closed)
+- Lead Kanban board with 5 stages (New → Follow-up → Qualified → Won → Lost)
 - Follow-up tracking with call/email/meeting types
 
 ### 8.4 Sales Module
@@ -549,18 +564,43 @@ Only these files use `useAppSelector(s => s.theme)`:
 - Top 3 suggestions with "Best Match" indicator
 - Technician utilization dashboard
 
-### 8.11 Settings Module
-**Pages**: SettingsPage (with tabs)
+### 8.11 User Management Module
+**Pages**: UsersPage, RolesPage
+**Data**: `src/data/users.data.ts`
+**Features**:
+- User list with search, filters (role, status, department)
+- User creation/edit with role assignment
+- Role management with granular permissions
+- Permission matrix (71 permissions across all modules)
+
+### 8.12 Platform Administration Module (Super Admin)
+**Pages**: TenantsPage, PlansPage, AdminAnalyticsPage
+**Data**: `src/data/admin.data.ts`
+**Features**:
+- Tenant management with stats, search, filters, add/edit dialog
+- Subscription plan cards with features and pricing
+- Platform analytics with KPI cards, module popularity, recent activity
+
+### 8.13 Audit Module
+**Pages**: AuditPage
+**Data**: `src/data/audit.data.ts`
+**Features**:
+- Audit log viewer with search, module/action filters
+- Activity timeline with user, action, module, timestamp
+- Filterable by date range, module, and action type
+
+### 8.14 Settings Module
+**Pages**: SettingsPage (drawer with two-panel layout)
 **Data**: `src/data/settings.data.ts`
 **Features**:
 - Company profile with branding and TRN
-- User management with role assignment
-- Custom roles with granular permissions
 - Branch management (UAE emirates)
 - Notification preferences
+- Integration settings
+- Security settings
 - Theme customization (3 presets + full color picker)
 - Subscription & billing view
-- Audit log viewer
+- Tax configuration
 
 ---
 
@@ -722,8 +762,8 @@ GET    /api/audit-logs              → PaginatedResponse<AuditLog>
 
 ### Seed Data (in `15_seed.sql`)
 - 71 permissions (CRUD per module + specialized actions)
-- 1 test tenant: OptiFy Solutions LLC (TRN: 100234567890003)
-- 1 admin user: admin@optify.ae / Admin@123
+- 1 test tenant: OptifyServe Solutions LLC (TRN: 100234567890003)
+- 1 admin user: admin@optifyserve.com / Admin@123
 - 4 system roles: Administrator, Manager, Staff, Technician
 - 9 UAE leave types (annual 30d, sick 90d, maternity 60d, etc.)
 - 80+ chart of accounts (UAE standard hierarchy)
@@ -815,6 +855,66 @@ CREATE POLICY tenant_isolation_select ON <table>
 
 ## 15. Changelog
 
+### v2.2 — 2026-03-11 (Module Extraction + Backend Alignment Audit)
+
+**Major**: Extracted User Management, Platform Administration, and Audit Logs from Settings into standalone modules. Comprehensive audit aligned all frontend TypeScript enums with the PostgreSQL database schema.
+
+#### New Modules (3)
+- **User Management** (`/users`) — Users list + Roles management (extracted from Settings)
+- **Platform Administration** (`/admin`) — Tenant management, Subscription plans, Platform analytics (extracted from Settings super-admin)
+- **Audit Logs** (`/audit`) — Standalone audit log viewer with search/filters (extracted from Settings tax & compliance)
+
+#### Files Created (~20)
+- `src/features/user-management/` — 7 files (components, types, pages, barrel exports)
+- `src/features/admin/` — 9 files (components, types, pages, barrel exports)
+- `src/features/audit/` — 6 files (components, types, pages, barrel exports)
+- `src/data/users.data.ts` — Sample user + role data
+- `src/data/admin.data.ts` — Sample tenant data
+- `src/data/audit.data.ts` — Sample audit log data
+
+#### Backend Alignment — Enum Fixes (13 type files)
+All frontend TypeScript union types aligned to PostgreSQL `01_enums.sql` (kebab-case convention):
+- **Jobs**: `JobStatus` (`'new'`→`'pending'`, snake_case→kebab-case), `JobPriority` (`'urgent'`→`'emergency'`), `ServiceType` (all kebab-case, added `'masonry'`), `TechnicianStatus` (new values: `'offline'`, `'en-route'`, `'on-leave'`)
+- **Sales**: `QuotationStatus` (`'approved'`→`'accepted'`, added `'viewed'`), `InvoiceStatus` (`'void'`→`'credited'`, added `'viewed'`), `VatStatus` (added `'out-of-scope'`, `'reverse-charge'`)
+- **HR**: `EmployeeStatus` (added `'notice-period'`, `'resigned'`, `'absconded'`, `'suspended'`), `AttendanceStatus` (kebab-case, added `'work-from-home'`), `ReviewStatus`/`ReviewPeriod`/`PerformanceGoal` (kebab-case, added `'acknowledged'`, `'deferred'`)
+- **Purchase**: `ApprovalLevel` (`'auto'`/`'manager'`/`'owner'`→`'level-1'`/`'level-2'`/`'level-3'`), `VendorCategory` (aligned to DB)
+- **CRM**: `LeadStage` (removed `'contacted'`/`'proposal'`/`'negotiation'` — 5 stages total)
+- **Inventory**: `UnitOfMeasure` (12 values aligned to DB)
+- **Geography**: `Emirate` (`'ras-al-khaimah'`→`'rak'`, `'umm-al-quwain'`→`'uaq'`)
+- **Jobs**: `RecurringFrequency` (added `'daily'`, `'biweekly'`→`'bi-weekly'`)
+
+#### Component Fixes (~25 files)
+- Updated all component references to match new enum values
+- Rewrote `job-workflow.ts` status transition map
+- Fixed Zod schemas in `item-form.tsx` (new UOM values)
+- Fixed purchase approval workflow components (3 files)
+- Fixed CRM lead kanban (removed 3 stage columns)
+- Fixed RTL: `left-3`/`right-1` → `start-3`/`end-1` in data-table-toolbar
+
+#### Sample Data Fixes (8 files)
+All `src/data/*.data.ts` files updated to use new enum values
+
+#### i18n Updates (+101 keys)
+- Added missing translation keys for new enum values (both EN + AR)
+- Replaced hardcoded placeholders with `t()` calls
+- Total keys: 2,198 → 2,299 per language
+
+#### Settings Cleanup
+- Removed Super Admin group, Audit Logs item from Settings navigation
+- Removed 5 settings categories from `SettingsCategory` type union
+- Cleaned up `settings-content.tsx` (removed lazy imports + switch cases)
+- Renamed "Tax & Compliance" → "Tax Configuration"
+
+#### Barrel Export Fixes
+- Added missing exports to `src/components/shared/index.ts` (4 components)
+- Added missing export to `src/hooks/index.ts` (use-direction)
+
+#### Dead Code Removal
+- Removed commented-out `handleDeleteLead` in leads-page
+- Removed unused `userRole` prop from `SettingsContent`
+
+---
+
 ### v2.1 — 2026-03-02 (i18n + RTL + Login Simplification)
 
 **Major**: Added full bilingual support (English + Arabic) with RTL layout mirroring. Simplified login to zero-friction template mode.
@@ -826,8 +926,8 @@ CREATE POLICY tenant_isolation_select ON <table>
 
 #### Files Created (~5)
 - `src/i18n/index.ts` — i18next configuration
-- `src/i18n/locales/en.json` — 2,198 English translation keys
-- `src/i18n/locales/ar.json` — 2,198 Arabic translation keys
+- `src/i18n/locales/en.json` — 2,299 English translation keys
+- `src/i18n/locales/ar.json` — 2,299 Arabic translation keys
 - `src/hooks/use-direction.ts` — RTL/LTR direction hook
 - `src/components/shared/language-switcher.tsx` — Globe icon dropdown (EN/AR)
 
@@ -860,7 +960,7 @@ CREATE POLICY tenant_isolation_select ON <table>
 - **API**: All `api/` directories deleted. All `store/` directories deleted from feature modules
 - **Services**: Entire `src/services/` directory deleted (axios-instance, endpoints, interceptors, token-service, local-storage service)
 - **Axios**: Uninstalled from npm. Removed from Vite chunk config
-- **Login**: Redesigned with modern split-screen layout, OptifySoft branding
+- **Login**: Redesigned with modern split-screen layout, OptifyServe branding
 
 #### Files Deleted (~120)
 - 35 Redux slice files + 35 saga files from all feature modules
@@ -884,4 +984,4 @@ CREATE POLICY tenant_isolation_select ON <table>
 
 ---
 
-*End of PROJECT_SPEC.md — Last generated 2026-03-02*
+*End of PROJECT_SPEC.md — Last generated 2026-03-11*

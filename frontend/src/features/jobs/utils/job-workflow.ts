@@ -9,11 +9,10 @@ import type { JobStatus } from '../types/job.types'
 
 /** Valid status transitions */
 const STATUS_TRANSITIONS: Record<JobStatus, JobStatus[]> = {
-  new: ['assigned', 'cancelled'],
-  assigned: ['scheduled', 'in_progress', 'cancelled'],
-  scheduled: ['in_progress', 'cancelled'],
-  in_progress: ['on_hold', 'completed', 'cancelled'],
-  on_hold: ['in_progress', 'cancelled'],
+  pending: ['scheduled', 'cancelled'],
+  scheduled: ['in-progress', 'cancelled'],
+  'in-progress': ['on-hold', 'completed', 'cancelled'],
+  'on-hold': ['in-progress', 'cancelled'],
   completed: ['invoiced'],
   invoiced: [],
   cancelled: [],
@@ -41,12 +40,12 @@ export function canEditJob(status: JobStatus): boolean {
 
 /** Check if technician can be assigned */
 export function canAssignTechnician(status: JobStatus): boolean {
-  return ['new', 'assigned', 'scheduled'].includes(status)
+  return ['pending', 'scheduled'].includes(status)
 }
 
 /** Check if service report can be created */
 export function canCreateServiceReport(status: JobStatus): boolean {
-  return status === 'in_progress'
+  return status === 'in-progress'
 }
 
 /** Check if job can be cancelled */
@@ -57,11 +56,10 @@ export function canCancelJob(status: JobStatus): boolean {
 /** Calculate job progress percentage based on status */
 export function getJobProgress(status: JobStatus): number {
   const progressMap: Record<JobStatus, number> = {
-    new: 0,
-    assigned: 15,
+    pending: 0,
     scheduled: 25,
-    in_progress: 50,
-    on_hold: 50,
+    'in-progress': 50,
+    'on-hold': 50,
     completed: 85,
     invoiced: 100,
     cancelled: 0,

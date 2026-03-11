@@ -8,7 +8,7 @@
 import type { StatusBadgeVariant } from '@/types/common.types'
 
 /** Attendance status */
-export type AttendanceStatus = 'present' | 'absent' | 'late' | 'half_day' | 'on_leave' | 'holiday' | 'weekend'
+export type AttendanceStatus = 'present' | 'absent' | 'late' | 'half-day' | 'on-leave' | 'holiday' | 'weekend' | 'work-from-home'
 
 /** Shift types */
 export type ShiftType = 'morning' | 'evening' | 'night' | 'general'
@@ -18,10 +18,11 @@ export const ATTENDANCE_STATUS_CONFIG: Record<AttendanceStatus, { key: string; v
   present: { key: 'status.present', variant: 'success', color: 'bg-green-500' },
   absent: { key: 'status.absent', variant: 'error', color: 'bg-red-500' },
   late: { key: 'status.late', variant: 'warning', color: 'bg-amber-500' },
-  half_day: { key: 'status.halfDay', variant: 'info', color: 'bg-blue-500' },
-  on_leave: { key: 'status.onLeave', variant: 'neutral', color: 'bg-purple-500' },
+  'half-day': { key: 'status.halfDay', variant: 'info', color: 'bg-blue-500' },
+  'on-leave': { key: 'status.onLeave', variant: 'neutral', color: 'bg-purple-500' },
   holiday: { key: 'status.holiday', variant: 'neutral', color: 'bg-teal-500' },
   weekend: { key: 'status.weekend', variant: 'neutral', color: 'bg-slate-400' },
+  'work-from-home': { key: 'status.workFromHome', variant: 'info', color: 'bg-indigo-500' },
 }
 
 /** Shift definition */

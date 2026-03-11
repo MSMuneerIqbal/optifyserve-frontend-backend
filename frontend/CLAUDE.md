@@ -1,4 +1,4 @@
-# CLAUDE CODE INSTRUCTIONS — OptifySoft ERP UI Template
+# CLAUDE CODE INSTRUCTIONS — OptifyServe ERP UI Template
 
 ## Quick Context
 
@@ -7,9 +7,9 @@
 This is a **pure UI template** for a multi-tenant SaaS ERP targeting UAE service & maintenance companies. Think of it like a ThemeForest template — all pages are built with static sample data, ready for a backend developer to integrate real APIs.
 
 - **Frontend**: React 19 + TypeScript 5.9 + Vite 7
-- **i18n**: react-i18next (English + Arabic) with RTL support — 2,198 translation keys
+- **i18n**: react-i18next (English + Arabic) with RTL support — 2,299 translation keys
 - **Auth**: React Context (`src/contexts/auth-context.tsx`) — not Redux
-- **Data**: Static sample data in `src/data/` (15 files) — no API calls
+- **Data**: Static sample data in `src/data/` (18 files) — no API calls
 - **Theme**: Redux Toolkit + Redux Saga (theme system only)
 - **Backend** (planned): ASP.NET Core + PostgreSQL 16
 - **Database**: Complete schema in `database/` folder (16 SQL files, ~84 tables)
@@ -18,17 +18,17 @@ This is a **pure UI template** for a multi-tenant SaaS ERP targeting UAE service
 
 ## Project Status — UI Template Complete
 
-All 11 frontend modules are **COMPLETE** with static sample data:
-- Auth, Dashboard, CRM, Sales, Inventory, Purchase, Accounts, HR, Jobs, Dispatcher, Settings
-- 44 pages, ~140 feature components
-- **Full i18n**: English + Arabic with RTL support (2,198 translation keys, 18 namespaces)
+All 14 frontend modules are **COMPLETE** with static sample data:
+- Auth, Dashboard, CRM, Sales, Inventory, Purchase, Accounts, HR, Jobs, Dispatcher, User Management, Platform Admin, Audit, Settings
+- 49 pages, 148 feature components
+- **Full i18n**: English + Arabic with RTL support (2,299 translation keys, 18 namespaces)
 - **No Redux in components** — only the theme system uses Redux (1 slice, 1 saga)
 - **No API calls** — all data comes from `src/data/` files
 - **No axios** — package fully removed
 - **No services directory** — deleted
 - Login page: modern split-screen design, zero-friction click-to-enter (no validation required)
 - `AUTO_LOGIN` flag in auth-context.tsx — set `true` to bypass login entirely during development
-- Branding: **OptifySoft**
+- Branding: **OptifyServe**
 - Database schema designed and verified (16 SQL files)
 
 **Next milestone**: ASP.NET Core backend development + Redux integration
@@ -124,14 +124,14 @@ Button variants: `default`, `destructive`, `outline`, `secondary`, `ghost`, `lin
 ```
 src/
 ├── app/           # App.tsx (router + providers), protected-route.tsx
-├── components/    # layout/ (6), shared/ (12 incl. language-switcher), ui/ (27 shadcn)
-├── contexts/      # auth-context.tsx (login/logout/user)
-├── data/          # 15 static sample data files (one per module)
-├── features/      # 11 modules, each with: components/ types/ pages/ [utils/]
+├── components/    # layout/ (6), shared/ (14 incl. language-switcher), ui/ (27 shadcn)
+├── contexts/      # auth-context.tsx (login/logout/user), currency-context.tsx
+├── data/          # 18 static sample data files (one per module)
+├── features/      # 14 modules, each with: components/ types/ pages/ [utils/]
 ├── hooks/         # useLocalStorage, useDebounce, usePagination, useModal, useMediaQuery, useDirection
 ├── i18n/          # i18next config + translation files
 │   ├── index.ts   # i18next initialization
-│   └── locales/   # en.json (2,198 keys), ar.json (2,198 keys)
+│   └── locales/   # en.json (2,299 keys), ar.json (2,299 keys)
 ├── lib/           # utils.ts, constants.ts, validations.ts
 ├── store/         # index.ts, rootReducer.ts (theme only), rootSaga.ts (theme only), hooks.ts
 ├── types/         # common.types.ts, api.types.ts
@@ -180,7 +180,10 @@ accounts.data.ts        — COA, JEs, AR, AP, expenses, bank, VAT, financial dat
 employees.data.ts       — employees, departments, attendance, leaves, payroll, etc.
 jobs.data.ts            — jobs, technicians, scheduling, service reports
 dispatcher.data.ts      — technician locations, unassigned jobs
-settings.data.ts        — company profile, users, roles, branches
+settings.data.ts        — company profile, branches, integrations
+users.data.ts           — users, roles, permissions
+admin.data.ts           — tenants, subscription data
+audit.data.ts           — audit log entries
 ```
 
 ---

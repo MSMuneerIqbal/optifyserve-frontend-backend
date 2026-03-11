@@ -1,4 +1,4 @@
-# OptifySoft ERP — UI Template
+# OptifyServe ERP — UI Template
 
 A production-ready **React + TypeScript** UI template for a multi-tenant ERP system designed for UAE service & maintenance companies. Built with modern tooling, full bilingual support (English + Arabic with RTL), and a comprehensive component library — ready for backend integration.
 
@@ -12,7 +12,7 @@ A production-ready **React + TypeScript** UI template for a multi-tenant ERP sys
 |--------|-------|-------------|
 | **Auth** | Login, Forgot Password | Split-screen login with branding panel |
 | **Dashboard** | Overview | KPI cards, revenue charts, recent activities |
-| **CRM** | Customers, Leads | Customer management, lead pipeline |
+| **CRM** | Customers, Leads | Customer management, lead pipeline (5 stages) |
 | **Sales** | Quotations, Invoices | Quote-to-invoice flow, VAT calculations |
 | **Inventory** | Items, Warehouses, Stock, Movements, Reports | Full warehouse management |
 | **Purchase** | Vendors, POs, GRN, Returns, Payments | Procurement lifecycle |
@@ -20,9 +20,12 @@ A production-ready **React + TypeScript** UI template for a multi-tenant ERP sys
 | **HR** | Employees, Departments, Attendance, Leaves, Documents, Payroll, Performance, EOSB, Reports, Portal | Full HR management |
 | **Jobs** | Job Cards, Technicians, Scheduling, Service Reports, Reports | Field service management |
 | **Dispatcher** | Map View | Real-time technician dispatch |
-| **Settings** | Company, Users, Roles | System configuration |
+| **User Management** | Users, Roles | User accounts & permissions |
+| **Platform Admin** | Tenants, Plans, Analytics | Super admin platform management |
+| **Audit** | Audit Logs | Activity logging & compliance |
+| **Settings** | Company, Notifications, Theme | Tenant-level configuration |
 
-**44 pages** | **143 feature components** | **27 shadcn/ui components** | **12 shared components** | **2,198 translation keys** | **EN + AR (RTL)**
+**49 pages** | **148 feature components** | **27 shadcn/ui components** | **14 shared components** | **2,299 translation keys** | **EN + AR (RTL)**
 
 ---
 
@@ -50,7 +53,7 @@ A production-ready **React + TypeScript** UI template for a multi-tenant ERP sys
 ```bash
 # Clone the repository
 git clone <repo-url>
-cd OptifySof-frontend
+cd optifyserve-frontend
 
 # Install dependencies
 npm install
@@ -85,8 +88,8 @@ src/
 │   └── ui/                 # shadcn/ui primitives (27 components)
 ├── contexts/
 │   └── auth-context.tsx    # Authentication via React Context
-├── data/                   # Static sample data (15 files, UAE-specific)
-├── features/               # 11 feature modules
+├── data/                   # Static sample data (18 files, UAE-specific)
+├── features/               # 14 feature modules
 │   ├── auth/               # Login, forgot password
 │   ├── dashboard/          # KPI overview
 │   ├── crm/                # Customers, leads
@@ -97,13 +100,16 @@ src/
 │   ├── hr/                 # HR management
 │   ├── jobs/               # Field service / job cards
 │   ├── dispatcher/         # Technician dispatch
-│   └── settings/           # Company settings + theme system
+│   ├── user-management/    # Users, roles & permissions
+│   ├── admin/              # Platform administration (super admin)
+│   ├── audit/              # Audit logs & compliance
+│   └── settings/           # Tenant settings + theme system
 ├── hooks/                  # useLocalStorage, useMediaQuery, useDebounce, useDirection
 ├── i18n/                   # Internationalization
 │   ├── index.ts            # i18next config (EN default, AR, browser detection)
 │   └── locales/
-│       ├── en.json         # English translations (2,198 keys, 18 namespaces)
-│       └── ar.json         # Arabic translations (2,198 keys, 18 namespaces)
+│       ├── en.json         # English translations (2,299 keys, 18 namespaces)
+│       └── ar.json         # Arabic translations (2,299 keys, 18 namespaces)
 ├── lib/                    # utils.ts, constants.ts, validations.ts
 ├── store/                  # Redux store (theme-only)
 ├── styles/                 # globals.css (CSS variables)
@@ -185,7 +191,7 @@ Full bilingual support with automatic RTL layout mirroring.
 | Feature | Details |
 |---------|---------|
 | **Languages** | English (default) + Arabic |
-| **Translation Keys** | 2,198 per language across 18 namespaces |
+| **Translation Keys** | 2,299 per language across 18 namespaces |
 | **RTL Support** | Automatic layout mirroring via Tailwind logical properties |
 | **Language Switcher** | Globe icon in TopNav + Settings page |
 | **Persistence** | Language preference saved in localStorage |
@@ -218,25 +224,25 @@ Complete PostgreSQL schema in `database/` folder:
 
 ```
 database/
-├── 00_extensions.sql      # UUID, pgcrypto extensions
-├── 01_enums.sql           # ~90 enum types
-├── 02_tenants.sql         # Multi-tenant core tables
-├── 03_users.sql           # Auth & user management
-├── 04_crm.sql             # Customers, leads, contacts
-├── 05_inventory.sql       # Items, warehouses, stock
-├── 06_sales.sql           # Quotations, invoices
-├── 07_purchase.sql        # Vendors, POs, GRN
-├── 08_accounts.sql        # COA, journals, AR/AP
-├── 09_hr.sql              # Employees, payroll, leaves
-├── 10_jobs.sql            # Job cards, service reports
-├── 11_dispatcher.sql      # Technician assignments
-├── 12_settings.sql        # System configuration
-├── 13_audit.sql           # Audit logging
-├── 14_rls.sql             # Row-level security policies
-├── 15_seed.sql            # Initial seed data
-├── README.md              # Setup guide
-├── LOCAL_SETUP.md         # Docker/native PostgreSQL setup
-└── db_knowledge.md        # ASP.NET Core integration guide
+├── 00_extensions.sql          # uuid-ossp, pgcrypto, btree_gist, pg_trgm
+├── 01_enums.sql               # ~90 custom enum types
+├── 02_tenants_and_auth.sql    # 7 tables (tenants, users, roles, sessions)
+├── 03_crm.sql                 # 6 tables (customers, leads, follow-ups)
+├── 04_sales.sql               # 5 tables (quotations, invoices, payments)
+├── 05_inventory.sql           # 8 tables (items, warehouses, stock)
+├── 06_purchase.sql            # 11 tables (vendors, POs, GRN, returns)
+├── 07_accounts.sql            # 14 tables (COA, journals, AR/AP, VAT)
+├── 08_hr.sql                  # 14 tables (employees, payroll, leaves)
+├── 09_jobs.sql                # 8 tables (jobs, technicians, reports)
+├── 10_dispatcher.sql          # 2 tables (locations, assignment logs)
+├── 11_settings.sql            # 7 tables + sequence_counters
+├── 12_rls_policies.sql        # RLS on ~65 tables
+├── 13_indexes.sql             # ~200 indexes
+├── 14_triggers.sql            # 20+ triggers
+├── 15_seed.sql                # Permissions, tenant, admin, COA, leave types
+├── README.md                  # Setup guide
+├── LOCAL_SETUP.md             # Docker/native PostgreSQL setup
+└── db_knowledge.md            # ASP.NET Core integration guide
 ```
 
 **~84 tables** | **~90 enums** | **UUID primary keys** | **TIMESTAMPTZ dates** | **NUMERIC(15,2) for money**
@@ -257,7 +263,7 @@ npm run lint       # ESLint check
 ## Environment Variables
 
 ```env
-VITE_APP_NAME=OptifySoft ERP
+VITE_APP_NAME=OptifyServe ERP
 VITE_APP_VERSION=1.0.0
 ```
 

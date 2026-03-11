@@ -60,7 +60,7 @@ export function DataTableToolbar<TData>({
       <div className="flex flex-1 items-center gap-2">
         {/* Search Input */}
         <div className="relative w-full sm:max-w-sm">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder={resolvedSearchPlaceholder}
             value={searchValue}
@@ -71,7 +71,7 @@ export function DataTableToolbar<TData>({
             <Button
               variant="ghost"
               size="sm"
-              className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 p-0"
+              className="absolute end-1 top-1/2 h-7 w-7 -translate-y-1/2 p-0"
               onClick={() => setSearchValue('')}
             >
               <X className="h-4 w-4" />

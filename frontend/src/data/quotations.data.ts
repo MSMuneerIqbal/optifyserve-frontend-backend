@@ -138,7 +138,7 @@ export const sampleQuotations: Quotation[] = [
     taxableAmount: 12000,
     vatAmount: 600,
     total: 12600,
-    status: 'approved',
+    status: 'accepted',
     paymentTerms: 'net-60',
     notes: 'Work to be scheduled after Ramadan.',
     createdBy: { id: 'usr_001', name: 'Sara Ahmed' },

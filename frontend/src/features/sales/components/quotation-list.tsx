@@ -405,7 +405,7 @@ export function QuotationList({ onView, onEdit, className }: QuotationListProps)
                               {t('sales.sendToCustomer')}
                             </DropdownMenuItem>
                           )}
-                          {quotation.status === 'approved' && (
+                          {quotation.status === 'accepted' && (
                             <DropdownMenuItem
                               onClick={() => setConvertConfirm({ isOpen: true, quotation })}
                             >
@@ -521,7 +521,7 @@ export function QuotationList({ onView, onEdit, className }: QuotationListProps)
                             {t('common.send')}
                           </DropdownMenuItem>
                         )}
-                        {quotation.status === 'approved' && (
+                        {quotation.status === 'accepted' && (
                           <DropdownMenuItem
                             onClick={() => setConvertConfirm({ isOpen: true, quotation })}
                           >

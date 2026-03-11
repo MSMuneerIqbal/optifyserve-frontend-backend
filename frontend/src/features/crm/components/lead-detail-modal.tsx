@@ -60,11 +60,8 @@ interface LeadDetailModalProps {
 // Stage badge configuration (labels resolved via i18n)
 const stageConfig: Record<LeadStage, { labelKey: string; className: string }> = {
   new: { labelKey: 'status.new', className: 'bg-gray-100 text-gray-800' },
-  contacted: { labelKey: 'status.contacted', className: 'bg-sky-100 text-sky-800' },
   'follow-up': { labelKey: 'crm.followUp', className: 'bg-amber-100 text-amber-800' },
   qualified: { labelKey: 'crm.qualified', className: 'bg-blue-100 text-blue-800' },
-  proposal: { labelKey: 'status.proposal', className: 'bg-primary/10 text-primary' },
-  negotiation: { labelKey: 'status.negotiation', className: 'bg-purple-100 text-purple-800' },
   'closed-won': { labelKey: 'status.won', className: 'bg-green-100 text-green-800' },
   'closed-lost': { labelKey: 'status.lost', className: 'bg-red-100 text-red-800' },
 }

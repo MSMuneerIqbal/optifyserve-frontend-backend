@@ -214,7 +214,7 @@ export function PurchaseOrderForm({ purchaseOrder, onSubmit, onCancel, isLoading
             {/* Approval Info */}
             <div className="space-y-2">
               <h4 className="text-sm font-semibold">{t('purchase.approvalRequired')}</h4>
-              <Badge variant={approvalLevel === 'auto' ? 'secondary' : approvalLevel === 'manager' ? 'default' : 'destructive'}>
+              <Badge variant={approvalLevel === 'level-1' ? 'secondary' : approvalLevel === 'level-2' ? 'default' : 'destructive'}>
                 {t(approvalInfo.key)}
               </Badge>
               <p className="text-sm text-muted-foreground">{t(approvalInfo.descriptionKey)}</p>

@@ -85,7 +85,7 @@ export function ColorCustomizer({ isOpen, onClose }: ColorCustomizerProps) {
       />
 
       {/* Drawer */}
-      <div className="fixed inset-y-0 end-0 z-50 w-full sm:w-[420px] bg-background shadow-2xl border-s flex flex-col animate-slide-in-right">
+      <div className="fixed inset-y-0 end-0 z-50 w-full max-w-[100vw] sm:w-[420px] bg-background shadow-2xl border-s flex flex-col animate-slide-in-right">
         {/* Header */}
         <div className="flex items-center justify-between border-b px-5 py-4">
           <div>

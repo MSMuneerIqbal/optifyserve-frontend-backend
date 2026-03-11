@@ -35,12 +35,6 @@ const stageStyles: Record<
     bgColor: 'bg-gray-100',
     borderColor: 'border-gray-300',
   },
-  contacted: {
-    labelKey: 'crm.contacted',
-    color: 'text-sky-700',
-    bgColor: 'bg-sky-100',
-    borderColor: 'border-sky-300',
-  },
   'follow-up': {
     labelKey: 'crm.followUp',
     color: 'text-amber-700',
@@ -52,18 +46,6 @@ const stageStyles: Record<
     color: 'text-blue-700',
     bgColor: 'bg-blue-100',
     borderColor: 'border-blue-300',
-  },
-  proposal: {
-    labelKey: 'crm.proposal',
-    color: 'text-primary',
-    bgColor: 'bg-primary/10',
-    borderColor: 'border-primary/30',
-  },
-  negotiation: {
-    labelKey: 'crm.negotiation',
-    color: 'text-purple-700',
-    bgColor: 'bg-purple-100',
-    borderColor: 'border-purple-300',
   },
   'closed-won': {
     labelKey: 'crm.closedWon',
@@ -82,11 +64,8 @@ const stageStyles: Record<
 // Active stages for main Kanban view (excluding closed stages)
 const activeStages: LeadStage[] = [
   'new',
-  'contacted',
   'follow-up',
   'qualified',
-  'proposal',
-  'negotiation',
 ]
 
 // Closed stages shown separately

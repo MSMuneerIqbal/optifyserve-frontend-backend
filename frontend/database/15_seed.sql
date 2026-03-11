@@ -76,9 +76,9 @@ INSERT INTO permissions (module, action, label, description) VALUES
 INSERT INTO tenants (id, name, name_ar, slug, trn, status, plan, enabled_modules, max_users, trial_ends_at)
 VALUES (
   'a0000000-0000-0000-0000-000000000001',
-  'OptiFy Solutions LLC',
-  'اوبتيفاي سوليوشنز',
-  'optify-solutions',
+  'OptifyServe Solutions LLC',
+  'أوبتيفاي سيرف سوليوشنز',
+  'optifyserve-solutions',
   '100234567890003',
   'active',
   'enterprise',
@@ -95,7 +95,7 @@ INSERT INTO users (id, tenant_id, email, password_hash, name, role, permissions,
 VALUES (
   'b0000000-0000-0000-0000-000000000001',
   'a0000000-0000-0000-0000-000000000001',
-  'admin@optify.ae',
+  'admin@optifyserve.com',
   '$2a$12$LQv3c1yqBo9SkvXS7QTJPOoGS3J4FQ2g0xV1qL7FOqD5A3bM3myam',  -- Admin@123
   'System Administrator',
   'admin',
@@ -373,16 +373,16 @@ INSERT INTO company_profiles (
   business_type, business_hours, address, bank_details, settings, created_by
 ) VALUES (
   'a0000000-0000-0000-0000-000000000001',
-  'OptiFy Solutions LLC',
-  'اوبتيفاي سوليوشنز',
-  'info@optify.ae',
+  'OptifyServe Solutions LLC',
+  'أوبتيفاي سيرف سوليوشنز',
+  'info@optifyserve.com',
   '+97142345678',
-  'www.optify.ae',
+  'www.optifyserve.com',
   '100234567890003',
   'maintenance',
   '{"sunday": {"open": "08:00", "close": "18:00"}, "monday": {"open": "08:00", "close": "18:00"}, "tuesday": {"open": "08:00", "close": "18:00"}, "wednesday": {"open": "08:00", "close": "18:00"}, "thursday": {"open": "08:00", "close": "18:00"}, "friday": "closed", "saturday": {"open": "09:00", "close": "14:00"}}',
   '{"street": "Business Bay", "building": "Tower A, Office 1205", "city": "Dubai", "emirate": "Dubai", "country": "UAE", "po_box": "12345"}',
-  '{"bank_name": "Emirates NBD", "account_name": "OptiFy Solutions LLC", "account_number": "1234567890", "iban": "AE070331234567890123456", "swift_code": "EABORAEAD"}',
+  '{"bank_name": "Emirates NBD", "account_name": "OptifyServe Solutions LLC", "account_number": "1234567890", "iban": "AE070331234567890123456", "swift_code": "EABORAEAD"}',
   '{"currency": "AED", "vat_rate": 5, "fiscal_year_start": "01-01", "date_format": "DD/MM/YYYY", "timezone": "Asia/Dubai"}',
   'b0000000-0000-0000-0000-000000000001'
 );

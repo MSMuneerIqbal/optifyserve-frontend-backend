@@ -137,7 +137,7 @@ export function DispatcherPage() {
       )}
 
       {/* Main Layout: Left Panel + Map */}
-      <div className="flex gap-4 h-[calc(100vh-320px)] min-h-[400px]">
+      <div className="flex gap-4 h-[calc(100vh-280px)] sm:h-[calc(100vh-320px)] min-h-[300px] sm:min-h-[400px]">
         {/* Left Panel - Jobs Tabs */}
         <div className={`w-full lg:w-80 lg:shrink-0 lg:block ${showMobilePanel ? 'block' : 'hidden'}`}>
           <Tabs value={leftPanelTab} onValueChange={(v) => setLeftPanelTab(v as 'unassigned' | 'assigned')}>

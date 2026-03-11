@@ -88,7 +88,7 @@ export function QuotationPreview({
               {t('sales.markRejected')}
             </Button>
           )}
-          {quotation.status === 'approved' && onConvert && (
+          {quotation.status === 'accepted' && onConvert && (
             <Button variant="default" onClick={onConvert} className="gap-2">
               {t('sales.convertToInvoice')}
             </Button>

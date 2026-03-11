@@ -5,41 +5,38 @@
 
 import type { StatusBadgeVariant } from '@/types/common.types'
 
-/** Job status workflow: New → Assigned → Scheduled → In Progress → On Hold → Completed → Invoiced / Cancelled */
+/** Job status workflow: Pending → Scheduled → In Progress → On Hold → Completed → Invoiced / Cancelled */
 export type JobStatus =
-  | 'new'
-  | 'assigned'
+  | 'pending'
   | 'scheduled'
-  | 'in_progress'
-  | 'on_hold'
+  | 'in-progress'
+  | 'on-hold'
   | 'completed'
   | 'invoiced'
   | 'cancelled'
 
 /** Job priority levels */
-export type JobPriority = 'low' | 'medium' | 'high' | 'urgent' | 'emergency'
+export type JobPriority = 'low' | 'medium' | 'high' | 'emergency'
 
 /** Service type categories */
 export type ServiceType =
-  | 'ac_repair'
-  | 'ac_maintenance'
-  | 'ac_installation'
+  | 'ac-repair'
+  | 'ac-maintenance'
   | 'plumbing'
   | 'electrical'
-  | 'carpentry'
   | 'painting'
   | 'cleaning'
-  | 'pest_control'
-  | 'general_maintenance'
-  | 'hvac'
-  | 'fire_safety'
+  | 'pest-control'
+  | 'carpentry'
+  | 'masonry'
+  | 'general-maintenance'
   | 'other'
 
 /** Recurring job frequency */
-export type RecurringFrequency = 'weekly' | 'biweekly' | 'monthly' | 'quarterly' | 'semi_annual' | 'annual'
+export type RecurringFrequency = 'daily' | 'weekly' | 'bi-weekly' | 'monthly' | 'quarterly' | 'semi-annual' | 'annual'
 
 /** UAE Emirates */
-export type Emirate = 'dubai' | 'abu_dhabi' | 'sharjah' | 'ajman' | 'ras_al_khaimah' | 'umm_al_quwain' | 'fujairah'
+export type Emirate = 'dubai' | 'abu-dhabi' | 'sharjah' | 'ajman' | 'rak' | 'uaq' | 'fujairah'
 
 /** Service address with GPS coordinates */
 export interface ServiceAddress {
@@ -55,11 +52,10 @@ export interface ServiceAddress {
 
 /** Job status display configuration */
 export const JOB_STATUS_CONFIG: Record<JobStatus, { key: string; variant: StatusBadgeVariant; color: string }> = {
-  new: { key: 'status.new', variant: 'info', color: 'bg-blue-100 text-blue-800' },
-  assigned: { key: 'status.assigned', variant: 'warning', color: 'bg-amber-100 text-amber-800' },
+  pending: { key: 'status.pending', variant: 'info', color: 'bg-blue-100 text-blue-800' },
   scheduled: { key: 'status.scheduled', variant: 'info', color: 'bg-primary/10 text-primary' },
-  in_progress: { key: 'status.inProgress', variant: 'warning', color: 'bg-orange-100 text-orange-800' },
-  on_hold: { key: 'status.onHold', variant: 'neutral', color: 'bg-slate-100 text-slate-800' },
+  'in-progress': { key: 'status.inProgress', variant: 'warning', color: 'bg-orange-100 text-orange-800' },
+  'on-hold': { key: 'status.onHold', variant: 'neutral', color: 'bg-slate-100 text-slate-800' },
   completed: { key: 'status.completed', variant: 'success', color: 'bg-green-100 text-green-800' },
   invoiced: { key: 'status.invoiced', variant: 'success', color: 'bg-emerald-100 text-emerald-800' },
   cancelled: { key: 'status.cancelled', variant: 'error', color: 'bg-red-100 text-red-800' },
@@ -70,35 +66,32 @@ export const JOB_PRIORITY_CONFIG: Record<JobPriority, { key: string; color: stri
   low: { key: 'status.low', color: 'bg-slate-100 text-slate-700', dotColor: 'bg-slate-400' },
   medium: { key: 'status.medium', color: 'bg-blue-100 text-blue-700', dotColor: 'bg-blue-400' },
   high: { key: 'status.high', color: 'bg-amber-100 text-amber-700', dotColor: 'bg-amber-400' },
-  urgent: { key: 'status.urgent', color: 'bg-orange-100 text-orange-700', dotColor: 'bg-orange-500' },
   emergency: { key: 'status.emergency', color: 'bg-red-100 text-red-700', dotColor: 'bg-red-500' },
 }
 
 /** Service type display configuration */
 export const SERVICE_TYPE_CONFIG: Record<ServiceType, { key: string; icon: string }> = {
-  ac_repair: { key: 'status.acRepair', icon: 'Snowflake' },
-  ac_maintenance: { key: 'status.acMaintenance', icon: 'Snowflake' },
-  ac_installation: { key: 'status.acInstallation', icon: 'Snowflake' },
+  'ac-repair': { key: 'status.acRepair', icon: 'Snowflake' },
+  'ac-maintenance': { key: 'status.acMaintenance', icon: 'Snowflake' },
   plumbing: { key: 'status.plumbing', icon: 'Wrench' },
   electrical: { key: 'status.electrical', icon: 'Zap' },
-  carpentry: { key: 'status.carpentry', icon: 'Hammer' },
   painting: { key: 'status.painting', icon: 'Paintbrush' },
   cleaning: { key: 'status.cleaning', icon: 'Sparkles' },
-  pest_control: { key: 'status.pestControl', icon: 'Bug' },
-  general_maintenance: { key: 'status.generalMaintenance', icon: 'Settings' },
-  hvac: { key: 'status.hvac', icon: 'Wind' },
-  fire_safety: { key: 'status.fireSafety', icon: 'Flame' },
+  'pest-control': { key: 'status.pestControl', icon: 'Bug' },
+  carpentry: { key: 'status.carpentry', icon: 'Hammer' },
+  masonry: { key: 'status.masonry', icon: 'Brick' },
+  'general-maintenance': { key: 'status.generalMaintenance', icon: 'Settings' },
   other: { key: 'status.other', icon: 'HelpCircle' },
 }
 
 /** Emirate display labels */
 export const EMIRATE_KEYS: Record<Emirate, string> = {
   dubai: 'emirates.dubai',
-  abu_dhabi: 'emirates.abuDhabi',
+  'abu-dhabi': 'emirates.abuDhabi',
   sharjah: 'emirates.sharjah',
   ajman: 'emirates.ajman',
-  ras_al_khaimah: 'emirates.rasAlKhaimah',
-  umm_al_quwain: 'emirates.ummAlQuwain',
+  rak: 'emirates.rasAlKhaimah',
+  uaq: 'emirates.ummAlQuwain',
   fujairah: 'emirates.fujairah',
 }
 
@@ -258,8 +251,7 @@ export interface JobFilters {
 /** Job summary / KPIs */
 export interface JobSummary {
   totalJobs: number
-  newJobs: number
-  assignedJobs: number
+  pendingJobs: number
   inProgressJobs: number
   completedJobs: number
   cancelledJobs: number

@@ -8,10 +8,10 @@
 import type { StatusBadgeVariant } from '@/types/common.types'
 
 /** Review period */
-export type ReviewPeriod = 'quarterly' | 'semi_annual' | 'annual'
+export type ReviewPeriod = 'monthly' | 'quarterly' | 'semi-annual' | 'annual'
 
 /** Review status */
-export type ReviewStatus = 'draft' | 'self_assessment' | 'manager_review' | 'completed'
+export type ReviewStatus = 'draft' | 'self-assessment' | 'manager-review' | 'completed' | 'acknowledged'
 
 /** Rating scale */
 export type RatingScore = 1 | 2 | 3 | 4 | 5
@@ -19,9 +19,10 @@ export type RatingScore = 1 | 2 | 3 | 4 | 5
 /** Review status config */
 export const REVIEW_STATUS_CONFIG: Record<ReviewStatus, { key: string; variant: StatusBadgeVariant }> = {
   draft: { key: 'status.draft', variant: 'neutral' },
-  self_assessment: { key: 'status.selfAssessment', variant: 'warning' },
-  manager_review: { key: 'status.managerReview', variant: 'info' },
+  'self-assessment': { key: 'status.selfAssessment', variant: 'warning' },
+  'manager-review': { key: 'status.managerReview', variant: 'info' },
   completed: { key: 'status.completed', variant: 'success' },
+  acknowledged: { key: 'status.acknowledged', variant: 'success' },
 }
 
 /** Rating labels */
@@ -67,7 +68,7 @@ export interface PerformanceGoal {
   title: string
   description: string
   targetDate: string
-  status: 'not_started' | 'in_progress' | 'completed' | 'cancelled'
+  status: 'not-started' | 'in-progress' | 'completed' | 'deferred' | 'cancelled'
   progress: number
 }
 

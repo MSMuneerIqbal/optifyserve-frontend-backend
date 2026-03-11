@@ -90,7 +90,6 @@ export function SettingsDrawer({
             <div className="p-4 sm:p-6 max-w-4xl">
               <SettingsContent
                 activeCategory={activeCategory}
-                userRole={userRole}
               />
             </div>
           </div>

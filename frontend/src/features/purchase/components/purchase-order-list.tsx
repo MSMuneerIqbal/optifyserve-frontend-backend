@@ -298,7 +298,7 @@ export function PurchaseOrderList({ onView, onEdit, onApprove, className }: Purc
                     </TableCell>
                     <TableCell>
                       <Badge variant="outline" className="text-xs">
-                        {po.approvalLevel === 'auto' ? t('purchase.approvalAuto') : po.approvalLevel === 'manager' ? t('purchase.approvalManager') : t('purchase.approvalOwner')}
+                        {po.approvalLevel === 'level-1' ? t('purchase.approvalAuto') : po.approvalLevel === 'level-2' ? t('purchase.approvalManager') : t('purchase.approvalOwner')}
                       </Badge>
                     </TableCell>
                     <TableCell>
@@ -406,7 +406,7 @@ export function PurchaseOrderList({ onView, onEdit, onApprove, className }: Purc
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge variant="outline" className="text-xs">
-                        {po.approvalLevel === 'auto' ? t('purchase.approvalAuto') : po.approvalLevel === 'manager' ? t('purchase.approvalManager') : t('purchase.approvalOwner')}
+                        {po.approvalLevel === 'level-1' ? t('purchase.approvalAuto') : po.approvalLevel === 'level-2' ? t('purchase.approvalManager') : t('purchase.approvalOwner')}
                       </Badge>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>

@@ -28,16 +28,6 @@ export const SETTINGS_NAVIGATION: SettingsNavGroup[] = [
     ],
   },
   {
-    label: 'Users & Permissions',
-    icon: 'Users',
-    adminOnly: true,
-    items: [
-      { id: 'users-list', label: 'Users', icon: 'Users', adminOnly: true },
-      { id: 'users-roles', label: 'Roles & Permissions', icon: 'Shield', adminOnly: true },
-      { id: 'users-invitations', label: 'Invitations', icon: 'Mail', adminOnly: true },
-    ],
-  },
-  {
     label: 'Subscription',
     icon: 'CreditCard',
     adminOnly: true,
@@ -96,30 +86,18 @@ export const SETTINGS_NAVIGATION: SettingsNavGroup[] = [
     ],
   },
   {
-    label: 'Tax & Compliance',
+    label: 'Tax Configuration',
     icon: 'Calculator',
     adminOnly: true,
     items: [
       { id: 'tax-configuration', label: 'VAT Configuration', icon: 'Calculator', adminOnly: true },
-      { id: 'audit-logs', label: 'Audit Logs', icon: 'ScrollText', adminOnly: true },
-    ],
-  },
-  {
-    label: 'Super Admin',
-    icon: 'Crown',
-    superAdminOnly: true,
-    items: [
-      { id: 'super-admin-tenants', label: 'Tenant Management', icon: 'Building', superAdminOnly: true },
-      { id: 'super-admin-plans', label: 'Subscription Plans', icon: 'CreditCard', superAdminOnly: true },
-      { id: 'super-admin-modules', label: 'Module Assignment', icon: 'Puzzle', superAdminOnly: true },
-      { id: 'super-admin-analytics', label: 'Platform Analytics', icon: 'BarChart3', superAdminOnly: true },
     ],
   },
 ]
 
 /** Get the default category for a given role */
 export function getDefaultCategory(role: string): SettingsCategory {
-  if (role === 'super_admin') return 'super-admin-tenants'
+  if (role === 'super_admin') return 'company-profile'
   if (role === 'admin') return 'company-profile'
   return 'personal-profile'
 }

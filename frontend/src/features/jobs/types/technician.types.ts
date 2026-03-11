@@ -9,7 +9,7 @@ import type { ServiceType } from './job.types'
 export type SkillLevel = 'beginner' | 'intermediate' | 'expert'
 
 /** Technician availability status */
-export type TechnicianStatus = 'available' | 'busy' | 'off_duty' | 'on_break' | 'on_leave'
+export type TechnicianStatus = 'available' | 'busy' | 'on-leave' | 'offline' | 'en-route'
 
 /** Technician skill */
 export interface TechnicianSkill {
@@ -61,9 +61,9 @@ export interface VehicleInfo {
 export const TECHNICIAN_STATUS_CONFIG: Record<TechnicianStatus, { key: string; color: string; dotColor: string }> = {
   available: { key: 'status.available', color: 'bg-green-100 text-green-800', dotColor: 'bg-green-500' },
   busy: { key: 'status.busy', color: 'bg-orange-100 text-orange-800', dotColor: 'bg-orange-500' },
-  off_duty: { key: 'status.offDuty', color: 'bg-slate-100 text-slate-800', dotColor: 'bg-slate-400' },
-  on_break: { key: 'status.onBreak', color: 'bg-blue-100 text-blue-800', dotColor: 'bg-blue-400' },
-  on_leave: { key: 'status.onLeave', color: 'bg-purple-100 text-purple-800', dotColor: 'bg-purple-400' },
+  'on-leave': { key: 'status.onLeave', color: 'bg-purple-100 text-purple-800', dotColor: 'bg-purple-400' },
+  offline: { key: 'status.offline', color: 'bg-slate-100 text-slate-800', dotColor: 'bg-slate-400' },
+  'en-route': { key: 'status.enRoute', color: 'bg-blue-100 text-blue-800', dotColor: 'bg-blue-400' },
 }
 
 /** Skill level display config */

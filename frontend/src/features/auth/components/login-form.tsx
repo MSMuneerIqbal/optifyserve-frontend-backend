@@ -154,7 +154,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
           control={form.control}
           name="rememberMe"
           render={({ field }) => (
-            <FormItem className="flex items-center space-x-2 space-y-0">
+            <FormItem className="flex items-center gap-2 space-y-0">
               <FormControl>
                 <Checkbox
                   checked={field.value}

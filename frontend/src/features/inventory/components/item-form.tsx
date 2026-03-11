@@ -33,7 +33,7 @@ function createItemFormSchema(t: (key: string) => string) {
     serialNumber: z.string().optional(),
     description: z.string().optional(),
     categoryId: z.string().min(1, t('validation.categoryRequired')),
-    unitOfMeasure: z.enum(['pcs', 'box', 'carton', 'kg', 'grams', 'liters', 'ml', 'meters', 'm2', 'feet', 'hours', 'days', 'sets', 'services']),
+    unitOfMeasure: z.enum(['piece', 'set', 'box', 'kg', 'gram', 'liter', 'ml', 'meter', 'sqm', 'hour', 'day', 'service']),
     costPrice: z.number().min(0, t('validation.costPricePositive')),
     sellingPrice: z.number().min(0, t('validation.sellingPricePositive')),
     reorderPoint: z.number().min(0, t('validation.reorderPointPositive')),
@@ -95,7 +95,7 @@ export function ItemForm({ item, onSubmit, onCancel, isLoading = false }: ItemFo
     } : {
       name: '',
       sku: '',
-      unitOfMeasure: 'pcs',
+      unitOfMeasure: 'piece',
       costPrice: 0,
       sellingPrice: 0,
       reorderPoint: 10,

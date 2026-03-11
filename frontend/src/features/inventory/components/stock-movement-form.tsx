@@ -96,28 +96,28 @@ export function StockMovementForm({ onSuccess, onCancel, defaultType = 'in' }: S
             <div className="space-y-3">
               <Label>{t('inventory.movementType')}</Label>
               <RadioGroup value={movementType} onValueChange={(v) => setMovementType(v as MovementType)} className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <div className="flex items-center space-x-2 p-3 border rounded-lg cursor-pointer hover:bg-muted/50">
+                <div className="flex items-center gap-2 p-3 border rounded-lg cursor-pointer hover:bg-muted/50">
                   <RadioGroupItem value="in" id="in" />
                   <Label htmlFor="in" className="flex items-center gap-2 cursor-pointer flex-1">
                     <ArrowDown className="h-4 w-4 text-green-600" />
                     <span className="text-sm">{t('inventory.stockIn')}</span>
                   </Label>
                 </div>
-                <div className="flex items-center space-x-2 p-3 border rounded-lg cursor-pointer hover:bg-muted/50">
+                <div className="flex items-center gap-2 p-3 border rounded-lg cursor-pointer hover:bg-muted/50">
                   <RadioGroupItem value="out" id="out" />
                   <Label htmlFor="out" className="flex items-center gap-2 cursor-pointer flex-1">
                     <ArrowUp className="h-4 w-4 text-red-600" />
                     <span className="text-sm">{t('inventory.stockOut')}</span>
                   </Label>
                 </div>
-                <div className="flex items-center space-x-2 p-3 border rounded-lg cursor-pointer hover:bg-muted/50">
+                <div className="flex items-center gap-2 p-3 border rounded-lg cursor-pointer hover:bg-muted/50">
                   <RadioGroupItem value="transfer" id="transfer" />
                   <Label htmlFor="transfer" className="flex items-center gap-2 cursor-pointer flex-1">
                     <ArrowRight className="h-4 w-4 text-blue-600" />
                     <span className="text-sm">{t('inventory.transfer')}</span>
                   </Label>
                 </div>
-                <div className="flex items-center space-x-2 p-3 border rounded-lg cursor-pointer hover:bg-muted/50">
+                <div className="flex items-center gap-2 p-3 border rounded-lg cursor-pointer hover:bg-muted/50">
                   <RadioGroupItem value="adjustment" id="adjustment" />
                   <Label htmlFor="adjustment" className="flex items-center gap-2 cursor-pointer flex-1">
                     <Wrench className="h-4 w-4 text-orange-600" />

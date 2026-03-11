@@ -77,7 +77,7 @@ export function LostReasonDialog({
               {LOST_REASONS.map((reason) => (
                 <div
                   key={reason}
-                  className="flex items-center space-x-3 rounded-lg border p-3 hover:bg-muted/50 cursor-pointer"
+                  className="flex items-center gap-3 rounded-lg border p-3 hover:bg-muted/50 cursor-pointer"
                   onClick={() => setSelectedReason(reason)}
                 >
                   <RadioGroupItem value={reason} id={reason} />

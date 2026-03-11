@@ -10,7 +10,7 @@ import { PageHeader } from '@/components/layout/page-header'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import {
-  Building2, Users, Shield, Bell, Plug, ScrollText, Settings, Lock,
+  Building2, Bell, Plug, Settings, Lock,
   CreditCard, Database, User, Palette, Globe,
 } from 'lucide-react'
 import { SettingsDrawer } from '../components/settings-drawer'
@@ -27,14 +27,11 @@ export function SettingsPage() {
 
   const QUICK_ACCESS = [
     { label: t('settings.companyProfile'), icon: Building2, category: 'company-profile' as SettingsCategory, adminOnly: true },
-    { label: t('settings.users'), icon: Users, category: 'users-list' as SettingsCategory, adminOnly: true },
-    { label: t('settings.rolesPermissions'), icon: Shield, category: 'users-roles' as SettingsCategory, adminOnly: true },
     { label: t('settings.notifications'), icon: Bell, category: 'notifications-channels' as SettingsCategory, adminOnly: false },
     { label: t('settings.integrations'), icon: Plug, category: 'integrations-whatsapp' as SettingsCategory, adminOnly: true },
     { label: t('settings.security'), icon: Lock, category: 'security-password' as SettingsCategory, adminOnly: true },
     { label: t('settings.subscription'), icon: CreditCard, category: 'subscription-plan' as SettingsCategory, adminOnly: true },
     { label: t('settings.dataManagement'), icon: Database, category: 'data-backup' as SettingsCategory, adminOnly: true },
-    { label: t('settings.auditLog'), icon: ScrollText, category: 'audit-logs' as SettingsCategory, adminOnly: true },
     { label: t('settings.appearance'), icon: Palette, category: 'appearance-theme' as SettingsCategory, adminOnly: true },
     { label: t('settings.myProfile'), icon: User, category: 'personal-profile' as SettingsCategory, adminOnly: false },
     { label: t('settings.language'), icon: Globe, category: 'appearance-theme' as SettingsCategory, adminOnly: false },
@@ -74,7 +71,7 @@ export function SettingsPage() {
       </div>
 
       {/* Quick Access Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3">
+      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3">
         {quickAccess.map((item, index) => (
           <Card
             key={`${item.category}-${index}`}

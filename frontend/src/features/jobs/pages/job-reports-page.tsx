@@ -31,7 +31,7 @@ export function JobReportsPage() {
     )
   }
 
-  const activeJobs = summary.inProgressJobs + summary.assignedJobs
+  const activeJobs = summary.inProgressJobs + summary.pendingJobs
   const completionRate = summary.totalJobs > 0
     ? Math.round((summary.completedJobs / summary.totalJobs) * 100)
     : 0
@@ -46,8 +46,7 @@ export function JobReportsPage() {
   ]
 
   const statusData = [
-    { status: t('status.new'), count: summary.newJobs },
-    { status: t('status.assigned'), count: summary.assignedJobs },
+    { status: t('status.pending'), count: summary.pendingJobs },
     { status: t('status.inProgress'), count: summary.inProgressJobs },
     { status: t('status.completed'), count: summary.completedJobs },
     { status: t('status.cancelled'), count: summary.cancelledJobs },

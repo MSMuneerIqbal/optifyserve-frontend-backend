@@ -52,8 +52,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
-import type { Tenant, TenantFormData, SubscriptionPlan } from '../../types/settings.types';
-import { sampleTenants as mockTenants } from '@/data/settings.data';
+import type { Tenant, TenantFormData, SubscriptionPlan } from '../types/admin.types';
+import { sampleTenants as mockTenants } from '@/data/admin.data';
 
 const AVAILABLE_MODULES = [
   'CRM',

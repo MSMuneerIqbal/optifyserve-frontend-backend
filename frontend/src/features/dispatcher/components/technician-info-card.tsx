@@ -182,7 +182,7 @@ export function TechnicianInfoCard({
               size="sm"
               className="flex-1 h-8 text-xs"
               onClick={onAssignJob}
-              disabled={technician.status === 'off_duty' || technician.status === 'on_leave'}
+              disabled={technician.status === 'offline' || technician.status === 'on-leave'}
             >
               <UserPlus className="h-3 w-3 me-1" />
               {t('dispatcher.assignJob')}

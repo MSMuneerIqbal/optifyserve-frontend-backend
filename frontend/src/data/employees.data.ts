@@ -29,7 +29,7 @@ export const sampleBranches: Branch[] = [
     address: 'Office 1204, Al Ghurair Tower, Al Rigga Road, Deira, Dubai',
     emirate: 'Dubai',
     phone: '+971 4 123 4567',
-    email: 'dubai@optifytechnical.ae',
+    email: 'dubai@optifyserve.com',
     status: 'active',
   },
   {
@@ -39,7 +39,7 @@ export const sampleBranches: Branch[] = [
     address: 'Office 501, Al Markaziya Tower, Hamdan Street, Abu Dhabi',
     emirate: 'Abu Dhabi',
     phone: '+971 2 234 5678',
-    email: 'abudhabi@optifytechnical.ae',
+    email: 'abudhabi@optifyserve.com',
     status: 'active',
   },
   {
@@ -49,7 +49,7 @@ export const sampleBranches: Branch[] = [
     address: 'Office 309, Sharjah Tower, King Faisal Road, Al Qasimia, Sharjah',
     emirate: 'Sharjah',
     phone: '+971 6 345 6789',
-    email: 'sharjah@optifytechnical.ae',
+    email: 'sharjah@optifyserve.com',
     status: 'active',
   },
 ]
@@ -195,7 +195,7 @@ export const sampleEmployees: Employee[] = [
     reportingManagerId: 'emp_002', reportingManagerName: 'Sara Ahmed Al Mansoori', status: 'active',
     emiratesId: { number: '784-1988-1234567-1', expiryDate: '2027-03-14', verified: true },
     passport: { number: 'A12345678', nationality: 'United Arab Emirates', issueDate: '2019-03-15', expiryDate: '2029-03-14', placeOfIssue: 'Dubai' },
-    visa: { number: '201/2021/1234567', type: 'employment', issueDate: '2021-03-25', expiryDate: '2025-03-24', sponsoredBy: 'Optify Technical Services LLC', status: 'active' },
+    visa: { number: '201/2021/1234567', type: 'employment', issueDate: '2021-03-25', expiryDate: '2025-03-24', sponsoredBy: 'OptifyServe Technical Services LLC', status: 'active' },
     laborCard: { number: 'MOL/2021/456789', issueDate: '2021-04-01', expiryDate: '2025-03-31', status: 'active' },
     salary: { basicSalary: 12000, housingAllowance: 3000, transportAllowance: 1000, mobileAllowance: 300, otherAllowances: 700, totalSalary: 17000 },
     bankDetails: { bankName: 'Emirates NBD', accountNumber: '1012345678901', iban: 'AE070331234567890123456', branchName: 'Deira Branch' },
@@ -213,7 +213,7 @@ export const sampleEmployees: Employee[] = [
     branchId: 'branch_001', branchName: 'Dubai Main Office', status: 'active',
     emiratesId: { number: '784-1985-7654321-2', expiryDate: '2026-07-21', verified: true },
     passport: { number: 'B98765432', nationality: 'United Arab Emirates', issueDate: '2018-07-22', expiryDate: '2028-07-21', placeOfIssue: 'Abu Dhabi' },
-    visa: { number: '201/2020/9876543', type: 'employment', issueDate: '2020-01-10', expiryDate: '2026-01-09', sponsoredBy: 'Optify Technical Services LLC', status: 'active' },
+    visa: { number: '201/2020/9876543', type: 'employment', issueDate: '2020-01-10', expiryDate: '2026-01-09', sponsoredBy: 'OptifyServe Technical Services LLC', status: 'active' },
     laborCard: { number: 'MOL/2020/654321', issueDate: '2020-01-15', expiryDate: '2026-01-14', status: 'active' },
     salary: { basicSalary: 18000, housingAllowance: 5000, transportAllowance: 1500, mobileAllowance: 500, otherAllowances: 1000, totalSalary: 26000 },
     bankDetails: { bankName: 'First Abu Dhabi Bank (FAB)', accountNumber: '5009876543210', iban: 'AE340090005009876543210', branchName: 'Sheikh Zayed Road Branch' },
@@ -232,7 +232,7 @@ export const sampleEmployees: Employee[] = [
     reportingManagerId: 'emp_001', reportingManagerName: 'Mohammed Al Rashidi', status: 'active',
     emiratesId: { number: '784-1990-2345678-3', expiryDate: '2025-11-07', verified: true },
     passport: { number: 'P1234567', nationality: 'India', issueDate: '2017-11-08', expiryDate: '2027-11-07', placeOfIssue: 'Mumbai' },
-    visa: { number: '201/2022/2345678', type: 'employment', issueDate: '2022-02-20', expiryDate: '2025-02-19', sponsoredBy: 'Optify Technical Services LLC', status: 'active' },
+    visa: { number: '201/2022/2345678', type: 'employment', issueDate: '2022-02-20', expiryDate: '2025-02-19', sponsoredBy: 'OptifyServe Technical Services LLC', status: 'active' },
     laborCard: { number: 'MOL/2022/234567', issueDate: '2022-03-01', expiryDate: '2025-02-28', status: 'active' },
     salary: { basicSalary: 5500, housingAllowance: 1000, transportAllowance: 500, mobileAllowance: 200, otherAllowances: 300, totalSalary: 7500 },
     bankDetails: { bankName: 'Mashreq Bank', accountNumber: '0191234567890', iban: 'AE240190000191234567890', branchName: 'Al Quoz Branch' },
@@ -251,7 +251,7 @@ export const sampleEmployees: Employee[] = [
     reportingManagerId: 'emp_007', reportingManagerName: 'Ahmed Hassan Ibrahim', status: 'active',
     emiratesId: { number: '784-1993-3456789-4', expiryDate: '2026-05-29', verified: true },
     passport: { number: 'EC1234567', nationality: 'Philippines', issueDate: '2019-05-30', expiryDate: '2029-05-29', placeOfIssue: 'Manila' },
-    visa: { number: '201/2023/3456789', type: 'employment', issueDate: '2023-01-01', expiryDate: '2026-12-31', sponsoredBy: 'Optify Technical Services LLC', status: 'active' },
+    visa: { number: '201/2023/3456789', type: 'employment', issueDate: '2023-01-01', expiryDate: '2026-12-31', sponsoredBy: 'OptifyServe Technical Services LLC', status: 'active' },
     laborCard: { number: 'MOL/2023/345678', issueDate: '2023-01-10', expiryDate: '2026-01-09', status: 'active' },
     salary: { basicSalary: 3500, housingAllowance: 700, transportAllowance: 300, mobileAllowance: 100, otherAllowances: 400, totalSalary: 5000 },
     bankDetails: { bankName: 'Emirates NBD', accountNumber: '1023456789012', iban: 'AE070331023456789012345', branchName: 'Business Bay Branch' },
@@ -270,7 +270,7 @@ export const sampleEmployees: Employee[] = [
     reportingManagerId: 'emp_010', reportingManagerName: 'Nadia Al Farsi', status: 'active',
     emiratesId: { number: '784-1987-4567890-5', expiryDate: '2026-09-11', verified: true },
     passport: { number: 'A9876543', nationality: 'Egypt', issueDate: '2018-09-12', expiryDate: '2028-09-11', placeOfIssue: 'Cairo' },
-    visa: { number: '201/2021/4567890', type: 'employment', issueDate: '2021-06-20', expiryDate: '2025-06-19', sponsoredBy: 'Optify Technical Services LLC', status: 'active' },
+    visa: { number: '201/2021/4567890', type: 'employment', issueDate: '2021-06-20', expiryDate: '2025-06-19', sponsoredBy: 'OptifyServe Technical Services LLC', status: 'active' },
     laborCard: { number: 'MOL/2021/456789', issueDate: '2021-07-01', expiryDate: '2025-06-30', status: 'active' },
     salary: { basicSalary: 7000, housingAllowance: 1500, transportAllowance: 600, mobileAllowance: 200, otherAllowances: 700, totalSalary: 10000 },
     bankDetails: { bankName: 'Abu Dhabi Commercial Bank (ADCB)', accountNumber: '1234567890123', iban: 'AE460030001234567890123', branchName: 'Karama Branch' },
@@ -289,7 +289,7 @@ export const sampleEmployees: Employee[] = [
     reportingManagerId: 'emp_003', reportingManagerName: 'Rajesh Kumar', status: 'active',
     emiratesId: { number: '784-1992-5678901-6', expiryDate: '2025-01-24', verified: true },
     passport: { number: 'BK1234567', nationality: 'Pakistan', issueDate: '2018-01-25', expiryDate: '2028-01-24', placeOfIssue: 'Karachi' },
-    visa: { number: '201/2022/5678901', type: 'employment', issueDate: '2022-08-01', expiryDate: '2025-07-31', sponsoredBy: 'Optify Technical Services LLC', status: 'active' },
+    visa: { number: '201/2022/5678901', type: 'employment', issueDate: '2022-08-01', expiryDate: '2025-07-31', sponsoredBy: 'OptifyServe Technical Services LLC', status: 'active' },
     laborCard: { number: 'MOL/2022/567890', issueDate: '2022-08-15', expiryDate: '2025-08-14', status: 'active' },
     salary: { basicSalary: 4000, housingAllowance: 800, transportAllowance: 400, mobileAllowance: 150, otherAllowances: 150, totalSalary: 5500 },
     bankDetails: { bankName: 'RAK Bank', accountNumber: '0126789012345', iban: 'AE020400000126789012345', branchName: 'Abu Dhabi Branch' },
@@ -307,7 +307,7 @@ export const sampleEmployees: Employee[] = [
     branchId: 'branch_001', branchName: 'Dubai Main Office', status: 'active',
     emiratesId: { number: '784-1982-6789012-7', expiryDate: '2028-06-17', verified: true },
     passport: { number: 'E7654321', nationality: 'Jordan', issueDate: '2020-06-18', expiryDate: '2030-06-17', placeOfIssue: 'Amman' },
-    visa: { number: '201/2019/6789012', type: 'employment', issueDate: '2019-04-20', expiryDate: '2027-04-19', sponsoredBy: 'Optify Technical Services LLC', status: 'active' },
+    visa: { number: '201/2019/6789012', type: 'employment', issueDate: '2019-04-20', expiryDate: '2027-04-19', sponsoredBy: 'OptifyServe Technical Services LLC', status: 'active' },
     laborCard: { number: 'MOL/2019/678901', issueDate: '2019-05-01', expiryDate: '2027-04-30', status: 'active' },
     salary: { basicSalary: 15000, housingAllowance: 4000, transportAllowance: 1200, mobileAllowance: 400, otherAllowances: 400, totalSalary: 21000 },
     bankDetails: { bankName: 'Dubai Islamic Bank', accountNumber: '0234567890123', iban: 'AE150240000234567890123', branchName: 'Al Barsha Branch' },
@@ -323,10 +323,10 @@ export const sampleEmployees: Employee[] = [
     contractType: 'unlimited', contractStartDate: '2022-11-01',
     departmentId: 'dept_005', departmentName: 'Human Resources', designationId: 'desig_012', designationName: 'HR Executive',
     branchId: 'branch_001', branchName: 'Dubai Main Office',
-    reportingManagerId: 'emp_007', reportingManagerName: 'Ahmed Hassan Ibrahim', status: 'on_leave',
+    reportingManagerId: 'emp_007', reportingManagerName: 'Ahmed Hassan Ibrahim', status: 'active',
     emiratesId: { number: '784-1991-8901234-9', expiryDate: '2027-12-02', verified: true },
     passport: { number: 'Z2345678', nationality: 'United Arab Emirates', issueDate: '2019-12-03', expiryDate: '2029-12-02', placeOfIssue: 'Dubai' },
-    visa: { number: '201/2022/8901234', type: 'employment', issueDate: '2022-10-20', expiryDate: '2026-10-19', sponsoredBy: 'Optify Technical Services LLC', status: 'active' },
+    visa: { number: '201/2022/8901234', type: 'employment', issueDate: '2022-10-20', expiryDate: '2026-10-19', sponsoredBy: 'OptifyServe Technical Services LLC', status: 'active' },
     laborCard: { number: 'MOL/2022/890123', issueDate: '2022-11-01', expiryDate: '2026-10-31', status: 'active' },
     salary: { basicSalary: 8000, housingAllowance: 2000, transportAllowance: 800, mobileAllowance: 300, otherAllowances: 900, totalSalary: 12000 },
     bankDetails: { bankName: 'Emirates Islamic', accountNumber: '0348901234567', iban: 'AE990340000348901234567', branchName: 'Deira City Centre Branch' },
@@ -344,7 +344,7 @@ export const sampleEmployees: Employee[] = [
     branchId: 'branch_001', branchName: 'Dubai Main Office', status: 'active',
     emiratesId: { number: '784-1984-9012345-0', expiryDate: '2026-08-18', verified: true },
     passport: { number: 'C5678901', nationality: 'United Arab Emirates', issueDate: '2020-08-19', expiryDate: '2030-08-18', placeOfIssue: 'Dubai' },
-    visa: { number: '201/2020/9012345', type: 'employment', issueDate: '2020-08-25', expiryDate: '2026-08-24', sponsoredBy: 'Optify Technical Services LLC', status: 'active' },
+    visa: { number: '201/2020/9012345', type: 'employment', issueDate: '2020-08-25', expiryDate: '2026-08-24', sponsoredBy: 'OptifyServe Technical Services LLC', status: 'active' },
     laborCard: { number: 'MOL/2020/901234', issueDate: '2020-09-01', expiryDate: '2026-08-31', status: 'active' },
     salary: { basicSalary: 20000, housingAllowance: 5000, transportAllowance: 1500, mobileAllowance: 500, otherAllowances: 3000, totalSalary: 30000 },
     bankDetails: { bankName: 'First Abu Dhabi Bank (FAB)', accountNumber: '5010012345678', iban: 'AE340090005010012345678', branchName: 'DIFC Branch' },
@@ -362,7 +362,7 @@ export const sampleEmployees: Employee[] = [
     branchId: 'branch_001', branchName: 'Dubai Main Office', status: 'active',
     emiratesId: { number: '784-1980-4567123-5', expiryDate: '2028-11-29', verified: true },
     passport: { number: 'HK4567123', nationality: 'Pakistan', issueDate: '2022-11-30', expiryDate: '2032-11-29', placeOfIssue: 'Lahore' },
-    visa: { number: '201/2020/4567123', type: 'employment', issueDate: '2020-05-20', expiryDate: '2028-05-19', sponsoredBy: 'Optify Technical Services LLC', status: 'active' },
+    visa: { number: '201/2020/4567123', type: 'employment', issueDate: '2020-05-20', expiryDate: '2028-05-19', sponsoredBy: 'OptifyServe Technical Services LLC', status: 'active' },
     laborCard: { number: 'MOL/2020/456712', issueDate: '2020-06-01', expiryDate: '2028-05-31', status: 'active' },
     salary: { basicSalary: 25000, housingAllowance: 7000, transportAllowance: 2000, mobileAllowance: 700, otherAllowances: 5300, totalSalary: 40000 },
     bankDetails: { bankName: 'First Abu Dhabi Bank (FAB)', accountNumber: '5014567123456', iban: 'AE340090005014567123456', branchName: 'DIFC Branch' },
@@ -384,11 +384,11 @@ export const sampleAttendanceRecords: AttendanceRecord[] = [
   { id: 'att_emp_005_2026-02-16', employeeId: 'emp_005', employeeName: 'Khalid Hassan Ibrahim', departmentName: 'Finance & Accounts', date: '2026-02-16', shift: 'general', status: 'absent', workingHours: 0, overtimeHours: 0, lateMinutes: 0, earlyDepartureMinutes: 0, notes: 'No show - follow up required', isManualEntry: false, createdAt: '2026-02-16T09:00:00.000Z' },
   { id: 'att_emp_006_2026-02-16', employeeId: 'emp_006', employeeName: 'Imran Ali Siddiqui', departmentName: 'Technical Services', date: '2026-02-16', shift: 'morning', checkInTime: '08:45', checkOutTime: '20:00', status: 'late', workingHours: 10.25, overtimeHours: 1.25, lateMinutes: 30, earlyDepartureMinutes: 0, isManualEntry: false, createdAt: '2026-02-16T08:45:00.000Z' },
   { id: 'att_emp_007_2026-02-16', employeeId: 'emp_007', employeeName: 'Ahmed Hassan Ibrahim', departmentName: 'Administration', date: '2026-02-16', shift: 'general', checkInTime: '08:15', checkOutTime: '17:15', status: 'present', workingHours: 8.0, overtimeHours: 0, lateMinutes: 0, earlyDepartureMinutes: 0, isManualEntry: false, createdAt: '2026-02-16T08:15:00.000Z' },
-  { id: 'att_emp_009_2026-02-16', employeeId: 'emp_009', employeeName: 'Ali Hassan Al Zaabi', departmentName: 'Human Resources', date: '2026-02-16', shift: 'general', status: 'on_leave', workingHours: 0, overtimeHours: 0, lateMinutes: 0, earlyDepartureMinutes: 0, notes: 'Annual leave approved', isManualEntry: false, createdAt: '2026-02-16T09:00:00.000Z' },
+  { id: 'att_emp_009_2026-02-16', employeeId: 'emp_009', employeeName: 'Ali Hassan Al Zaabi', departmentName: 'Human Resources', date: '2026-02-16', shift: 'general', status: 'on-leave', workingHours: 0, overtimeHours: 0, lateMinutes: 0, earlyDepartureMinutes: 0, notes: 'Annual leave approved', isManualEntry: false, createdAt: '2026-02-16T09:00:00.000Z' },
   { id: 'att_emp_010_2026-02-16', employeeId: 'emp_010', employeeName: 'Nadia Al Farsi', departmentName: 'Finance & Accounts', date: '2026-02-16', shift: 'general', checkInTime: '08:05', checkOutTime: '18:20', status: 'present', workingHours: 9.25, overtimeHours: 0.25, lateMinutes: 0, earlyDepartureMinutes: 0, isManualEntry: false, createdAt: '2026-02-16T08:05:00.000Z' },
   { id: 'att_emp_015_2026-02-16', employeeId: 'emp_015', employeeName: 'Tariq Mahmood', departmentName: 'Operations', date: '2026-02-16', shift: 'general', checkInTime: '07:45', checkOutTime: '18:45', status: 'present', workingHours: 10.0, overtimeHours: 1.0, lateMinutes: 0, earlyDepartureMinutes: 0, isManualEntry: false, createdAt: '2026-02-16T07:45:00.000Z' },
   { id: 'att_emp_001_2026-02-14', employeeId: 'emp_001', employeeName: 'Mohammed Al Rashidi', departmentName: 'Operations', date: '2026-02-14', shift: 'general', status: 'weekend', workingHours: 0, overtimeHours: 0, lateMinutes: 0, earlyDepartureMinutes: 0, isManualEntry: false, createdAt: '2026-02-14T09:00:00.000Z' },
-  { id: 'att_emp_004_2026-02-15', employeeId: 'emp_004', employeeName: 'Maria Santos', departmentName: 'Administration', date: '2026-02-15', shift: 'general', checkInTime: '08:00', checkOutTime: '13:00', status: 'half_day', workingHours: 4.0, overtimeHours: 0, lateMinutes: 0, earlyDepartureMinutes: 0, notes: 'Approved half-day', isManualEntry: false, createdAt: '2026-02-15T08:00:00.000Z' },
+  { id: 'att_emp_004_2026-02-15', employeeId: 'emp_004', employeeName: 'Maria Santos', departmentName: 'Administration', date: '2026-02-15', shift: 'general', checkInTime: '08:00', checkOutTime: '13:00', status: 'half-day', workingHours: 4.0, overtimeHours: 0, lateMinutes: 0, earlyDepartureMinutes: 0, notes: 'Approved half-day', isManualEntry: false, createdAt: '2026-02-15T08:00:00.000Z' },
 ]
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -518,9 +518,9 @@ function buildCategoryRatings(selfScores: number[], managerScores: number[]): Ca
 
 function buildGoals(completed: boolean): PerformanceGoal[] {
   return [
-    { id: completed ? 'goal_prev_001' : 'goal_new_001', title: 'Complete advanced certification', description: 'Obtain relevant industry certification to enhance technical skills.', targetDate: '2026-06-30', status: completed ? 'completed' : 'in_progress', progress: completed ? 100 : 60 },
-    { id: completed ? 'goal_prev_002' : 'goal_new_002', title: 'Improve customer satisfaction score', description: 'Achieve a customer satisfaction score of 4.5 or above in all handled cases.', targetDate: '2026-09-30', status: 'in_progress', progress: 45 },
-    { id: completed ? 'goal_prev_003' : 'goal_new_003', title: 'Lead cross-functional project', description: 'Take ownership of at least one cross-department initiative.', targetDate: '2026-12-31', status: 'not_started', progress: 0 },
+    { id: completed ? 'goal_prev_001' : 'goal_new_001', title: 'Complete advanced certification', description: 'Obtain relevant industry certification to enhance technical skills.', targetDate: '2026-06-30', status: completed ? 'completed' : 'in-progress', progress: completed ? 100 : 60 },
+    { id: completed ? 'goal_prev_002' : 'goal_new_002', title: 'Improve customer satisfaction score', description: 'Achieve a customer satisfaction score of 4.5 or above in all handled cases.', targetDate: '2026-09-30', status: 'in-progress', progress: 45 },
+    { id: completed ? 'goal_prev_003' : 'goal_new_003', title: 'Lead cross-functional project', description: 'Take ownership of at least one cross-department initiative.', targetDate: '2026-12-31', status: 'not-started', progress: 0 },
   ]
 }
 
@@ -554,7 +554,7 @@ export const samplePerformanceReviews: PerformanceReview[] = reviewData.map((emp
   const managerAvg = weightedAvg(catRatings, 'managerRating')
   const overall = Math.round(((selfAvg + managerAvg) / 2) * 100) / 100
   const isCompleted = i % 3 !== 2
-  const period: 'annual' | 'semi_annual' = i % 2 === 0 ? 'annual' : 'semi_annual'
+  const period: 'annual' | 'semi-annual' = i % 2 === 0 ? 'annual' : 'semi-annual'
 
   return {
     id: `rev_${String(i + 1).padStart(3, '0')}`,
@@ -570,7 +570,7 @@ export const samplePerformanceReviews: PerformanceReview[] = reviewData.map((emp
     year: 2025,
     startDate: period === 'annual' ? '2025-01-01' : '2025-07-01',
     endDate: '2025-12-31',
-    status: isCompleted ? 'completed' : 'manager_review',
+    status: isCompleted ? 'completed' : 'manager-review',
     categoryRatings: catRatings,
     overallSelfRating: selfAvg,
     overallManagerRating: managerAvg,

@@ -8,7 +8,7 @@
 import type { PaginatedResponse, StatusBadgeVariant } from '@/types/common.types'
 
 /** Employee status */
-export type EmployeeStatus = 'active' | 'inactive' | 'on_leave' | 'terminated' | 'probation'
+export type EmployeeStatus = 'active' | 'probation' | 'notice-period' | 'terminated' | 'resigned' | 'absconded' | 'suspended'
 
 /** Contract type as per UAE Labor Law */
 export type ContractType = 'limited' | 'unlimited'
@@ -22,10 +22,12 @@ export type MaritalStatus = 'single' | 'married' | 'divorced' | 'widowed'
 /** Employee status config for badges */
 export const EMPLOYEE_STATUS_CONFIG: Record<EmployeeStatus, { key: string; variant: StatusBadgeVariant }> = {
   active: { key: 'status.active', variant: 'success' },
-  inactive: { key: 'status.inactive', variant: 'neutral' },
-  on_leave: { key: 'status.onLeave', variant: 'warning' },
-  terminated: { key: 'status.terminated', variant: 'error' },
   probation: { key: 'status.probation', variant: 'info' },
+  'notice-period': { key: 'status.noticePeriod', variant: 'warning' },
+  terminated: { key: 'status.terminated', variant: 'error' },
+  resigned: { key: 'status.resigned', variant: 'neutral' },
+  absconded: { key: 'status.absconded', variant: 'error' },
+  suspended: { key: 'status.suspended', variant: 'warning' },
 }
 
 /** Emirates ID information */

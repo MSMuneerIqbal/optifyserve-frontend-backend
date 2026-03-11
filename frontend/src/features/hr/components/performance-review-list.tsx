@@ -106,8 +106,8 @@ export function PerformanceReviewList({ reviews, isLoading, onViewReview }: Perf
                           className={cn(
                             'text-xs',
                             review.status === 'completed' && 'bg-green-100 text-green-800',
-                            review.status === 'manager_review' && 'bg-blue-100 text-blue-800',
-                            review.status === 'self_assessment' && 'bg-amber-100 text-amber-800',
+                            review.status === 'manager-review' && 'bg-blue-100 text-blue-800',
+                            review.status === 'self-assessment' && 'bg-amber-100 text-amber-800',
                             review.status === 'draft' && 'bg-slate-100 text-slate-800',
                           )}
                         >

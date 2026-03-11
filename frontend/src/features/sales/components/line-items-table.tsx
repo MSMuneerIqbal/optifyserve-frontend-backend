@@ -384,7 +384,7 @@ export function LineItemsTable({
                     variant="ghost"
                     size="icon"
                     onClick={() => handleRemoveItem(item.id)}
-                    className="absolute top-2 right-2 h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                    className="absolute top-1 end-1 sm:top-2 sm:end-2 h-9 w-9 text-destructive hover:text-destructive hover:bg-destructive/10"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

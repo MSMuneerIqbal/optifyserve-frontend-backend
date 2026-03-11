@@ -188,7 +188,7 @@ export function DispatcherMap({
 
   if (isLoading) {
     return (
-      <Card className="relative flex items-center justify-center bg-slate-100" style={{ height: '100%', minHeight: 400 }}>
+      <Card className="relative flex items-center justify-center bg-slate-100" style={{ height: '100%', minHeight: 300 }}>
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
       </Card>
     )
@@ -198,7 +198,7 @@ export function DispatcherMap({
     <Card
       ref={mapContainerRef}
       className="relative overflow-hidden bg-gradient-to-br from-sky-50 via-blue-50 to-cyan-50 select-none"
-      style={{ height: '100%', minHeight: 400, cursor: 'grab' }}
+      style={{ height: '100%', minHeight: 300, cursor: 'grab' }}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
@@ -349,7 +349,7 @@ export function DispatcherMap({
               {/* Tooltip */}
               {(isHovered || isSelected) && (
                 <Card
-                  className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 p-2 bg-white shadow-lg z-30 min-w-[180px] pointer-events-none"
+                  className="absolute bottom-full start-1/2 -translate-x-1/2 mb-2 p-2 bg-white shadow-lg z-30 min-w-[160px] max-w-[calc(100vw-16px)] pointer-events-none"
                   style={{ transform: `translate(-50%, 0) scale(${1 / zoom})`, transformOrigin: 'bottom center' }}
                 >
                   <div className="space-y-1">
@@ -393,7 +393,7 @@ export function DispatcherMap({
           )
           const isSelected = selectedJobId === job.id
           const isHovered = hoveredMarker === `job-${job.id}`
-          const isUrgent = job.priority === 'urgent' || job.priority === 'emergency'
+          const isUrgent = job.priority === 'emergency'
 
           return (
             <div
@@ -428,7 +428,7 @@ export function DispatcherMap({
               {/* Tooltip */}
               {(isHovered || isSelected) && (
                 <Card
-                  className="absolute bottom-full left-1/2 mb-2 p-2 bg-white shadow-lg z-30 min-w-[180px] pointer-events-none"
+                  className="absolute bottom-full start-1/2 mb-2 p-2 bg-white shadow-lg z-30 min-w-[160px] max-w-[calc(100vw-16px)] pointer-events-none"
                   style={{ transform: `translate(-50%, 0) scale(${1 / zoom})`, transformOrigin: 'bottom center' }}
                 >
                   <div className="space-y-1">
@@ -483,7 +483,7 @@ export function DispatcherMap({
 
               {isHovered && (
                 <Card
-                  className="absolute bottom-full left-1/2 mb-2 p-2 bg-white shadow-lg z-30 min-w-[160px] pointer-events-none"
+                  className="absolute bottom-full start-1/2 mb-2 p-2 bg-white shadow-lg z-30 min-w-[140px] max-w-[calc(100vw-16px)] pointer-events-none"
                   style={{ transform: `translate(-50%, 0) scale(${1 / zoom})`, transformOrigin: 'bottom center' }}
                 >
                   <div className="space-y-1">

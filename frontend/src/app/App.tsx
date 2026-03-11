@@ -84,6 +84,18 @@ const JobReportsPage = lazy(() => import('@/features/jobs/pages/job-reports-page
 // Dispatcher
 const DispatcherPage = lazy(() => import('@/features/dispatcher/pages/dispatcher-page').then(m => ({ default: m.DispatcherPage })))
 
+// User Management
+const UsersPage = lazy(() => import('@/features/user-management/pages/users-page').then(m => ({ default: m.UsersPage })))
+const RolesPage = lazy(() => import('@/features/user-management/pages/roles-page').then(m => ({ default: m.RolesPage })))
+
+// Platform Administration
+const TenantsPage = lazy(() => import('@/features/admin/pages/tenants-page').then(m => ({ default: m.TenantsPage })))
+const PlansPage = lazy(() => import('@/features/admin/pages/plans-page').then(m => ({ default: m.PlansPage })))
+const AdminAnalyticsPage = lazy(() => import('@/features/admin/pages/analytics-page').then(m => ({ default: m.AnalyticsPage })))
+
+// Audit Logs
+const AuditPage = lazy(() => import('@/features/audit/pages/audit-page').then(m => ({ default: m.AuditPage })))
+
 // Settings
 const SettingsPage = lazy(() => import('@/features/settings/pages/settings-page').then(m => ({ default: m.SettingsPage })))
 
@@ -140,12 +152,12 @@ function App() {
         <Suspense fallback={<PageLoader />}>
         <Routes>
           {/* Public Routes */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
           {/* Protected Routes - Wrapped in AppLayout with ProtectedRoute */}
           <Route element={<ProtectedLayout />}>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             {/* CRM Routes */}
             <Route path="/crm" element={<Navigate to="/crm/customers" replace />} />
@@ -200,6 +212,17 @@ function App() {
             <Route path="/jobs/analytics" element={<JobReportsPage />} />
             {/* Dispatcher Routes */}
             <Route path="/dispatcher" element={<DispatcherPage />} />
+            {/* User Management Routes */}
+            <Route path="/users" element={<Navigate to="/users/list" replace />} />
+            <Route path="/users/list" element={<UsersPage />} />
+            <Route path="/users/roles" element={<RolesPage />} />
+            {/* Platform Administration Routes */}
+            <Route path="/admin" element={<Navigate to="/admin/tenants" replace />} />
+            <Route path="/admin/tenants" element={<TenantsPage />} />
+            <Route path="/admin/plans" element={<PlansPage />} />
+            <Route path="/admin/analytics" element={<AdminAnalyticsPage />} />
+            {/* Audit Logs Route */}
+            <Route path="/audit" element={<AuditPage />} />
             <Route path="/settings/*" element={<SettingsPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>

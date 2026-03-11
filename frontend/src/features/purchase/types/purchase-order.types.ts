@@ -47,7 +47,7 @@ export type ApprovalStatus = 'pending' | 'approved' | 'rejected'
 /**
  * Approval level
  */
-export type ApprovalLevel = 'auto' | 'manager' | 'owner'
+export type ApprovalLevel = 'level-1' | 'level-2' | 'level-3'
 
 /**
  * Approval record

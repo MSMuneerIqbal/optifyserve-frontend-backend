@@ -406,8 +406,8 @@ The seed file (`15_seed.sql`) creates:
 | Category | Records | Description |
 |----------|---------|-------------|
 | Permissions | 51 | CRUD per module (dashboard, crm, sales, inventory, purchase, accounts, hr, jobs, dispatcher, settings) |
-| Tenant | 1 | OptiFy Solutions LLC (enterprise plan, all modules enabled) |
-| Admin User | 1 | admin@optify.ae / Admin@123 (full access) |
+| Tenant | 1 | OptifyServe Solutions LLC (enterprise plan, all modules enabled) |
+| Admin User | 1 | admin@optifyserve.com / Admin@123 (full access) |
 | System Roles | 4 | Administrator, Manager, Staff, Technician |
 | Leave Types | 9 | UAE labor law: annual (30d), sick (90d), maternity (60d), paternity (5d), compassionate (5d), hajj (30d), unpaid, study (10d), emergency (5d) |
 | Chart of Accounts | 80+ | UAE standard template (1xxx assets, 2xxx liabilities, 3xxx equity, 4xxx revenue, 5xxx COGS, 6xxx expenses) with full parent-child hierarchy |

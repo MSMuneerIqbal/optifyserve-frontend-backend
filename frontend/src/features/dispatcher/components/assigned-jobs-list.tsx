@@ -96,9 +96,9 @@ export function AssignedJobsList({
                     <span
                       className={cn(
                         'h-1.5 w-1.5 rounded-full',
-                        job.status === 'in_progress'
+                        job.status === 'in-progress'
                           ? 'bg-orange-500'
-                          : job.status === 'assigned'
+                          : job.status === 'scheduled'
                             ? 'bg-amber-500'
                             : 'bg-primary'
                       )}

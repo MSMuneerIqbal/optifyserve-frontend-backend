@@ -134,7 +134,7 @@ export const MARKER_COLORS: Record<MapMarkerType, string> = {
 export const TECH_MARKER_COLORS: Record<TechnicianStatus, string> = {
   available: '#22c55e',   // green
   busy: '#f59e0b',        // yellow/amber
-  off_duty: '#94a3b8',    // gray
-  on_break: '#3b82f6',    // blue
-  on_leave: '#a855f7',    // purple
+  offline: '#94a3b8',     // gray
+  'en-route': '#3b82f6',  // blue
+  'on-leave': '#a855f7',  // purple
 }

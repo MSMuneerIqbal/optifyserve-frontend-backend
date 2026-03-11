@@ -17,7 +17,7 @@ import type { VendorPayment } from '@/features/purchase/types/payment.types'
 
 const UAE_VAT_RATE = 5
 const COMPANY_TRN = '100000000000001'
-const COMPANY_NAME = 'OptifySoft Technical Services LLC'
+const COMPANY_NAME = 'OptifyServe Technical Services LLC'
 const COMPANY_ADDRESS = 'Business Bay, Tower A, Office 1204, Dubai, UAE'
 
 // ---------------------------------------------------------------------------
@@ -89,11 +89,11 @@ export const samplePurchaseOrders: PurchaseOrder[] = [
     pendingAmount: 0,
     status: 'closed',
     paymentTerms: 'net-30',
-    approvalLevel: 'manager',
+    approvalLevel: 'level-2',
     approvals: [
       {
         id: 'apr_001',
-        level: 'manager',
+        level: 'level-2',
         approverId: 'usr_002',
         approverName: 'Mohammed Ali',
         status: 'approved',
@@ -175,11 +175,11 @@ export const samplePurchaseOrders: PurchaseOrder[] = [
     pendingAmount: 2050,
     status: 'partially-received',
     paymentTerms: 'net-60',
-    approvalLevel: 'manager',
+    approvalLevel: 'level-2',
     approvals: [
       {
         id: 'apr_002',
-        level: 'manager',
+        level: 'level-2',
         approverId: 'usr_002',
         approverName: 'Mohammed Ali',
         status: 'approved',
@@ -277,11 +277,11 @@ export const samplePurchaseOrders: PurchaseOrder[] = [
     pendingAmount: 16117.5,
     status: 'sent',
     paymentTerms: 'net-30',
-    approvalLevel: 'manager',
+    approvalLevel: 'level-2',
     approvals: [
       {
         id: 'apr_003',
-        level: 'manager',
+        level: 'level-2',
         approverId: 'usr_002',
         approverName: 'Mohammed Ali',
         status: 'approved',
@@ -346,7 +346,7 @@ export const samplePurchaseOrders: PurchaseOrder[] = [
     pendingAmount: 16800,
     status: 'pending-approval',
     paymentTerms: 'cod',
-    approvalLevel: 'manager',
+    approvalLevel: 'level-2',
     approvals: [],
     companyTRN: COMPANY_TRN,
     companyName: COMPANY_NAME,
@@ -437,7 +437,7 @@ export const samplePurchaseOrders: PurchaseOrder[] = [
     pendingAmount: 4851,
     status: 'draft',
     paymentTerms: 'net-30',
-    approvalLevel: 'auto',
+    approvalLevel: 'level-1',
     approvals: [],
     companyTRN: COMPANY_TRN,
     companyName: COMPANY_NAME,
@@ -527,11 +527,11 @@ export const samplePurchaseOrders: PurchaseOrder[] = [
     pendingAmount: 0,
     status: 'fully-received',
     paymentTerms: 'net-15',
-    approvalLevel: 'auto',
+    approvalLevel: 'level-1',
     approvals: [
       {
         id: 'apr_006',
-        level: 'auto',
+        level: 'level-1',
         approverId: 'system',
         approverName: 'System',
         status: 'approved',
@@ -612,11 +612,11 @@ export const samplePurchaseOrders: PurchaseOrder[] = [
     pendingAmount: 13956.6,
     status: 'approved',
     paymentTerms: 'net-30',
-    approvalLevel: 'manager',
+    approvalLevel: 'level-2',
     approvals: [
       {
         id: 'apr_007',
-        level: 'manager',
+        level: 'level-2',
         approverId: 'usr_002',
         approverName: 'Mohammed Ali',
         status: 'approved',
@@ -679,11 +679,11 @@ export const samplePurchaseOrders: PurchaseOrder[] = [
     pendingAmount: 0,
     status: 'cancelled',
     paymentTerms: 'net-30',
-    approvalLevel: 'auto',
+    approvalLevel: 'level-1',
     approvals: [
       {
         id: 'apr_008',
-        level: 'auto',
+        level: 'level-1',
         approverId: 'system',
         approverName: 'System',
         status: 'approved',

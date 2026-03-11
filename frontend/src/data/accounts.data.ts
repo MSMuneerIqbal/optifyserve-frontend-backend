@@ -1044,7 +1044,7 @@ export const sampleVATReturns: VATReturn[] = [
   {
     id: 'vat_001', returnNumber: 'VAT-2025-Q4', periodType: 'quarterly',
     periodFrom: '2024-10-01', periodTo: '2024-12-31',
-    companyTRN: '100000000000001', companyName: 'OptifySoft Technical Services LLC',
+    companyTRN: '100000000000001', companyName: 'OptifyServe Technical Services LLC',
     boxes: vatBoxesQ4_2024,
     status: 'filed', filingDeadline: '2025-01-28',
     filedDate: '2025-01-25', paymentDate: '2025-01-26', paymentReference: 'FTA-2025-0001',
@@ -1055,7 +1055,7 @@ export const sampleVATReturns: VATReturn[] = [
   {
     id: 'vat_002', returnNumber: 'VAT-2025-01', periodType: 'monthly',
     periodFrom: '2025-01-01', periodTo: '2025-01-31',
-    companyTRN: '100000000000001', companyName: 'OptifySoft Technical Services LLC',
+    companyTRN: '100000000000001', companyName: 'OptifyServe Technical Services LLC',
     boxes: vatBoxesJan2025,
     status: 'paid', filingDeadline: '2025-02-28',
     filedDate: '2025-02-20', paymentDate: '2025-02-22', paymentReference: 'FTA-2025-0002',
@@ -1066,7 +1066,7 @@ export const sampleVATReturns: VATReturn[] = [
   {
     id: 'vat_003', returnNumber: 'VAT-2025-02', periodType: 'monthly',
     periodFrom: '2025-02-01', periodTo: '2025-02-28',
-    companyTRN: '100000000000001', companyName: 'OptifySoft Technical Services LLC',
+    companyTRN: '100000000000001', companyName: 'OptifyServe Technical Services LLC',
     boxes: vatBoxesFeb2025,
     status: 'calculated', filingDeadline: '2025-03-28',
     preparedBy: { id: 'usr_001', name: 'Sara Ahmed' },

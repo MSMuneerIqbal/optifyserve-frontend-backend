@@ -207,7 +207,7 @@ SELECT count(*) FROM pg_tables WHERE schemaname = 'public' AND rowsecurity = tru
 -- Test seed data
 SET app.current_tenant = 'a0000000-0000-0000-0000-000000000001';
 SELECT name, email, role FROM users;
--- Should return: System Administrator | admin@optify.ae | admin
+-- Should return: System Administrator | admin@optifyserve.com | admin
 
 -- Test auto-number
 INSERT INTO customers (tenant_id, name, email, phone)

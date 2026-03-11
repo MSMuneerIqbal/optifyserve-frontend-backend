@@ -1,6 +1,6 @@
 /**
  * Audit Log Component
- * Phase 13: Settings Module
+ * Extracted from settings module for standalone audit feature
  */
 
 import { useTranslation } from 'react-i18next'
@@ -14,7 +14,7 @@ import {
   Search, Loader2, Download, Clock, User, Globe,
   FileText, Shield, Trash2, Edit2, LogIn, CheckCircle, Send,
 } from 'lucide-react'
-import type { AuditLogEntry, AuditLogFilters } from '../types/settings.types'
+import type { AuditLogEntry, AuditLogFilters } from '../types/audit.types'
 
 const ACTION_CONFIG: Record<string, { icon: React.ElementType; color: string }> = {
   create: { icon: FileText, color: 'text-green-600 bg-green-50' },

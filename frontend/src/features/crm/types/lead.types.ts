@@ -11,7 +11,7 @@ export type LeadSource = 'website' | 'referral' | 'cold-call' | 'exhibition' | '
 /**
  * Lead pipeline stages
  */
-export type LeadStage = 'new' | 'contacted' | 'follow-up' | 'qualified' | 'proposal' | 'negotiation' | 'closed-won' | 'closed-lost'
+export type LeadStage = 'new' | 'follow-up' | 'qualified' | 'closed-won' | 'closed-lost'
 
 /**
  * Follow-up types

@@ -51,6 +51,10 @@ import {
   MapPin,
   ClipboardCheck,
   Radio,
+  ShieldCheck,
+  Shield,
+  Crown,
+  ScrollText,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
@@ -163,6 +167,26 @@ const navigation: NavigationItem[] = [
     href: '/dispatcher',
     icon: Radio,
   },
+  {
+    nameKey: 'nav.userManagement',
+    href: '/users',
+    icon: ShieldCheck,
+    subItems: [
+      { nameKey: 'nav.users', href: '/users/list', icon: Users },
+      { nameKey: 'nav.rolesPermissions', href: '/users/roles', icon: Shield },
+    ]
+  },
+  {
+    nameKey: 'nav.platformAdmin',
+    href: '/admin',
+    icon: Crown,
+    subItems: [
+      { nameKey: 'nav.tenants', href: '/admin/tenants', icon: Building2 },
+      { nameKey: 'nav.subscriptionPlans', href: '/admin/plans', icon: CreditCard },
+      { nameKey: 'nav.platformAnalytics', href: '/admin/analytics', icon: BarChart3 },
+    ]
+  },
+  { nameKey: 'nav.auditLogs', href: '/audit', icon: ScrollText },
   { nameKey: 'nav.settings', href: '/settings', icon: Settings },
 ]
 
@@ -353,9 +377,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
           )}
         >
           <Link to="/dashboard" className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ backgroundColor: themeColors.primary }}>
-              <Building2 className="h-5 w-5 text-white" />
-            </div>
+            <img src="/logo.png" alt="OptifyServe" className="h-9 w-9 rounded-lg object-contain" />
             {!isCollapsed && (
               <span className="text-lg font-semibold tracking-tight">{t('nav.brandName')}</span>
             )}

@@ -13,39 +13,35 @@ import type { PaginatedResponse, UserReference, StatusBadgeVariant } from '@/typ
  * UAE common units for trade and service
  */
 export type UnitOfMeasure =
-  | 'pcs'           // Pieces
-  | 'box'           // Box
-  | 'carton'        // Carton
-  | 'kg'            // Kilogram
-  | 'grams'          // Gram
-  | 'liters'        // Liter
-  | 'ml'            // Milliliter
-  | 'meters'        // Meters
-  | 'm2'            // Square meters
-  | 'feet'           // Linear feet
-  | 'hours'          // Hours (service)
-  | 'days'           // Days (rental/service)
-  | 'sets'           // Sets
-  | 'services'       // Services (intangible)
+  | 'piece'        // Pieces
+  | 'set'          // Set
+  | 'box'          // Box
+  | 'kg'           // Kilogram
+  | 'gram'         // Gram
+  | 'liter'        // Liter
+  | 'ml'           // Milliliter
+  | 'meter'        // Meter
+  | 'sqm'          // Square meters
+  | 'hour'         // Hours (service)
+  | 'day'          // Days (rental/service)
+  | 'service'      // Services (intangible)
 
 /**
  * Unit of measure labels
  */
 export const UNIT_OF_MEASURE_KEYS: Record<UnitOfMeasure, string> = {
-  pcs: 'status.pieces',
+  piece: 'status.pieces',
+  set: 'status.sets',
   box: 'status.box',
-  carton: 'status.carton',
   kg: 'status.kilograms',
-  grams: 'status.grams',
-  liters: 'status.liters',
+  gram: 'status.grams',
+  liter: 'status.liters',
   ml: 'status.milliliters',
-  meters: 'status.meters',
-  m2: 'status.squareMeters',
-  feet: 'status.linearFeet',
-  hours: 'status.hours',
-  days: 'status.days',
-  sets: 'status.sets',
-  services: 'status.services',
+  meter: 'status.meters',
+  sqm: 'status.squareMeters',
+  hour: 'status.hours',
+  day: 'status.days',
+  service: 'status.services',
 }
 
 export const UNIT_OF_MEASURE_OPTIONS: { value: UnitOfMeasure; key: string }[] = Object.entries(UNIT_OF_MEASURE_KEYS).map(([value, key]) => ({ value: value as UnitOfMeasure, key }))

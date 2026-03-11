@@ -24,7 +24,7 @@ import type { RatingScore } from '../types/performance.types'
 function createReviewSchema(t: (key: string) => string) {
   return z.object({
     employeeId: z.string().min(1, t('validation.employeeRequired')),
-    period: z.enum(['quarterly', 'semi_annual', 'annual'] as const),
+    period: z.enum(['quarterly', 'semi-annual', 'annual'] as const),
     year: z.coerce.number().min(2020).max(2030),
     startDate: z.string().min(1, t('validation.required')),
     endDate: z.string().min(1, t('validation.required')),
@@ -113,7 +113,7 @@ export function PerformanceReviewForm({ isOpen, onClose, onSubmit, isLoading, em
                         <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
                         <SelectContent>
                           <SelectItem value="quarterly">{t('hr.quarterly')}</SelectItem>
-                          <SelectItem value="semi_annual">{t('hr.semiAnnual')}</SelectItem>
+                          <SelectItem value="semi-annual">{t('hr.semiAnnual')}</SelectItem>
                           <SelectItem value="annual">{t('hr.annual')}</SelectItem>
                         </SelectContent>
                       </Select>

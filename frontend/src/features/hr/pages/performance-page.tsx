@@ -89,8 +89,8 @@ export function PerformancePage() {
                     className={cn(
                       'text-xs',
                       viewingReview.status === 'completed' && 'bg-green-100 text-green-800',
-                      viewingReview.status === 'manager_review' && 'bg-blue-100 text-blue-800',
-                      viewingReview.status === 'self_assessment' && 'bg-amber-100 text-amber-800',
+                      viewingReview.status === 'manager-review' && 'bg-blue-100 text-blue-800',
+                      viewingReview.status === 'self-assessment' && 'bg-amber-100 text-amber-800',
                       viewingReview.status === 'draft' && 'bg-slate-100 text-slate-800',
                     )}
                   >

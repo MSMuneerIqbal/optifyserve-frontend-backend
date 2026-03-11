@@ -104,10 +104,6 @@ export function LeadsPage() {
     }, 100)
   }, [])
 
-  // Delete handler - will be used when delete button is added to UI
-  // const handleDeleteLead = useCallback((leadId: string) => {
-  //   setLeadToDelete(leadId)
-  // }, [])
 
   const handleFormSubmit = useCallback(
     (_data: LeadFormData) => {

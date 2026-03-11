@@ -96,7 +96,7 @@ export function POApprovalModal({
                   <p className="font-semibold text-lg">{po.poNumber}</p>
                   <p className="text-sm text-muted-foreground">{po.vendor.name}</p>
                 </div>
-                <Badge variant={po.approvalLevel === 'manager' ? 'default' : 'destructive'}>
+                <Badge variant={po.approvalLevel === 'level-2' ? 'default' : 'destructive'}>
                   {t(`purchase.approvalLevelLabel.${po.approvalLevel}`)}
                 </Badge>
               </div>

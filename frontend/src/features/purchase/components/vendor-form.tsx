@@ -263,7 +263,7 @@ export function VendorForm({ vendor, onSubmit, onCancel, isLoading }: VendorForm
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="bankName">{t('purchase.bankName')}</Label>
-              <Input id="bankName" {...register('bankDetails.bankName')} placeholder="e.g., Emirates NBD" />
+              <Input id="bankName" {...register('bankDetails.bankName')} placeholder={t('purchase.placeholderBankName')} />
             </div>
             <div>
               <Label htmlFor="accountNumber">{t('purchase.accountNumber')}</Label>

@@ -1,6 +1,6 @@
-# OptifySoft - SaaS ERP System
+# OptifyServe - SaaS ERP System
 
-OptifySoft SaaS Product Development
+OptifyServe SaaS Product Development
 
 ---
 

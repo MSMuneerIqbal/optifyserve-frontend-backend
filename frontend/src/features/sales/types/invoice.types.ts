@@ -27,11 +27,12 @@ export const INVOICE_TYPE_KEYS: Record<InvoiceType, string> = {
 export type InvoiceStatus =
   | 'draft'
   | 'sent'
+  | 'viewed'
   | 'partially-paid'
   | 'paid'
   | 'overdue'
   | 'cancelled'
-  | 'void'
+  | 'credited'
 
 /**
  * Invoice status configuration for UI display
@@ -39,17 +40,18 @@ export type InvoiceStatus =
 export const INVOICE_STATUS_CONFIG: Record<InvoiceStatus, { key: string; variant: StatusBadgeVariant }> = {
   draft: { key: 'status.draft', variant: 'neutral' },
   sent: { key: 'status.sent', variant: 'info' },
+  viewed: { key: 'status.viewed', variant: 'info' },
   'partially-paid': { key: 'status.partiallyPaid', variant: 'warning' },
   paid: { key: 'status.paid', variant: 'success' },
   overdue: { key: 'status.overdue', variant: 'error' },
   cancelled: { key: 'status.cancelled', variant: 'neutral' },
-  void: { key: 'status.void', variant: 'neutral' },
+  credited: { key: 'status.credited', variant: 'neutral' },
 }
 
 /**
  * VAT status for line items
  */
-export type VatStatus = 'standard' | 'zero-rated' | 'exempt'
+export type VatStatus = 'standard' | 'zero-rated' | 'exempt' | 'out-of-scope' | 'reverse-charge'
 
 /**
  * VAT status labels
@@ -58,6 +60,8 @@ export const VAT_STATUS_KEYS: Record<VatStatus, string> = {
   standard: 'status.standardRate',
   'zero-rated': 'status.zeroRated',
   exempt: 'status.vatExempt',
+  'out-of-scope': 'status.outOfScope',
+  'reverse-charge': 'status.reverseCharge',
 }
 
 /**
@@ -67,6 +71,8 @@ export const VAT_RATES: Record<VatStatus, number> = {
   standard: 0.05,
   'zero-rated': 0,
   exempt: 0,
+  'out-of-scope': 0,
+  'reverse-charge': 0,
 }
 
 /**

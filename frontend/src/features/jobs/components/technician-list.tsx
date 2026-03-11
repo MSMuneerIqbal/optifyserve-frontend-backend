@@ -22,9 +22,9 @@ import type { TechnicianListItem, TechnicianFilters, TechnicianStatus } from '..
 const STATUS_CONFIG: Record<TechnicianStatus, { labelKey: string; color: string }> = {
   available: { labelKey: 'status.available', color: 'bg-green-100 text-green-700' },
   busy: { labelKey: 'status.busy', color: 'bg-blue-100 text-blue-700' },
-  on_leave: { labelKey: 'status.onLeave', color: 'bg-amber-100 text-amber-700' },
-  off_duty: { labelKey: 'status.offDuty', color: 'bg-slate-100 text-slate-700' },
-  on_break: { labelKey: 'status.onBreak', color: 'bg-purple-100 text-purple-700' },
+  'on-leave': { labelKey: 'status.onLeave', color: 'bg-amber-100 text-amber-700' },
+  offline: { labelKey: 'status.offline', color: 'bg-slate-100 text-slate-700' },
+  'en-route': { labelKey: 'status.enRoute', color: 'bg-purple-100 text-purple-700' },
 }
 
 interface TechnicianListProps {

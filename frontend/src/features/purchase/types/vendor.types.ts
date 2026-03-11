@@ -25,32 +25,26 @@ export const VENDOR_STATUS_CONFIG: Record<VendorStatus, { key: string; variant: 
  * Vendor category
  */
 export type VendorCategory =
-  | 'equipment-supplier'
   | 'spare-parts'
+  | 'tools-equipment'
   | 'consumables'
-  | 'raw-materials'
   | 'services'
-  | 'tools'
-  | 'safety-equipment'
-  | 'electrical'
-  | 'plumbing'
-  | 'hvac'
+  | 'raw-materials'
+  | 'office-supplies'
+  | 'it-equipment'
   | 'other'
 
 /**
  * Vendor category labels
  */
 export const VENDOR_CATEGORY_KEYS: Record<VendorCategory, string> = {
-  'equipment-supplier': 'status.equipmentSupplier',
   'spare-parts': 'status.spareParts',
+  'tools-equipment': 'status.toolsEquipment',
   consumables: 'status.consumables',
-  'raw-materials': 'status.rawMaterials',
   services: 'status.services',
-  tools: 'status.toolsEquipment',
-  'safety-equipment': 'status.safetyEquipment',
-  electrical: 'status.electricalSupplies',
-  plumbing: 'status.plumbingSupplies',
-  hvac: 'status.hvacParts',
+  'raw-materials': 'status.rawMaterials',
+  'office-supplies': 'status.officeSupplies',
+  'it-equipment': 'status.itEquipment',
   other: 'status.other',
 }
 

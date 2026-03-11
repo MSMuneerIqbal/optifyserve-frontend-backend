@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { SUBSCRIPTION_PLANS } from '../../types/settings.types';
+import { SUBSCRIPTION_PLANS } from '../types/admin.types';
 
 const CURRENT_PLAN = 'premium';
 

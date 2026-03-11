@@ -38,7 +38,7 @@ export function QuotationsPage() {
     totalQuotations: list.length,
     draftCount: list.filter((q) => q.status === 'draft').length,
     sentCount: list.filter((q) => q.status === 'sent').length,
-    approvedCount: list.filter((q) => q.status === 'approved').length,
+    acceptedCount: list.filter((q) => q.status === 'accepted').length,
     rejectedCount: list.filter((q) => q.status === 'rejected').length,
     conversionRate: list.length > 0
       ? (list.filter((q) => q.status === 'converted').length / list.length) * 100
@@ -117,7 +117,7 @@ export function QuotationsPage() {
         quotation={selectedQuotation}
         onBack={handleBackToList}
         onSend={selectedQuotation.status === 'draft' ? handleSend : undefined}
-        onConvert={selectedQuotation.status === 'approved' ? handleConvert : undefined}
+        onConvert={selectedQuotation.status === 'accepted' ? handleConvert : undefined}
       />
     )
   }
@@ -156,8 +156,8 @@ export function QuotationsPage() {
             variant="info"
           />
           <SummaryCard
-            label={t('sales.approvedQuotations')}
-            value={summary.approvedCount}
+            label={t('sales.acceptedQuotations')}
+            value={summary.acceptedCount}
             variant="success"
           />
           <SummaryCard

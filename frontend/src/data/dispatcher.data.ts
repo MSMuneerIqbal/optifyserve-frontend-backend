@@ -15,7 +15,7 @@ import type {
 
 // ---------------------------------------------------------------------------
 // Technician Locations (GPS coordinates in Dubai / Sharjah)
-// 3 available, 2 busy, 1 on_break
+// 3 available, 2 busy, 1 en-route
 // ---------------------------------------------------------------------------
 
 export const sampleTechnicianLocations: TechnicianLocation[] = [
@@ -32,7 +32,7 @@ export const sampleTechnicianLocations: TechnicianLocation[] = [
       accuracy: 12,
     },
     activeJobCount: 0,
-    primarySkill: 'ac_repair',
+    primarySkill: 'ac-repair',
     avgRating: 4.8,
     vehiclePlateNumber: 'Dubai A-12345',
   },
@@ -83,7 +83,7 @@ export const sampleTechnicianLocations: TechnicianLocation[] = [
       accuracy: 10,
     },
     activeJobCount: 2,
-    primarySkill: 'ac_maintenance',
+    primarySkill: 'ac-maintenance',
     avgRating: 4.9,
     currentJobId: 'job-active-001',
     currentJobTitle: 'AC Preventive Maintenance - Emaar Tower',
@@ -102,7 +102,7 @@ export const sampleTechnicianLocations: TechnicianLocation[] = [
       accuracy: 9,
     },
     activeJobCount: 1,
-    primarySkill: 'ac_repair',
+    primarySkill: 'ac-repair',
     avgRating: 4.3,
     currentJobId: 'job-active-002',
     currentJobTitle: 'Split AC Compressor Replacement',
@@ -113,7 +113,7 @@ export const sampleTechnicianLocations: TechnicianLocation[] = [
     name: 'Youssef Ibrahim Darwish',
     phone: '+971506789012',
     photo: undefined,
-    status: 'on_break',
+    status: 'en-route',
     currentLocation: {
       latitude: 25.2285,
       longitude: 55.2866,
@@ -128,7 +128,7 @@ export const sampleTechnicianLocations: TechnicianLocation[] = [
 ]
 
 // ---------------------------------------------------------------------------
-// Unassigned Jobs (status: 'new', pending dispatch)
+// Unassigned Jobs (status: 'pending', pending dispatch)
 // ---------------------------------------------------------------------------
 
 export const sampleUnassignedJobs: JobLocation[] = [
@@ -138,9 +138,9 @@ export const sampleUnassignedJobs: JobLocation[] = [
     title: 'Central AC Not Cooling - Villa',
     customerName: 'Fatima Al Suwaidi',
     customerPhone: '+971551112233',
-    serviceType: 'ac_repair',
-    priority: 'urgent',
-    status: 'new',
+    serviceType: 'ac-repair',
+    priority: 'emergency',
+    status: 'pending',
     serviceAddress: {
       building: 'Villa 14',
       street: 'Al Wasl Road',
@@ -162,7 +162,7 @@ export const sampleUnassignedJobs: JobLocation[] = [
     customerPhone: '+971552223344',
     serviceType: 'plumbing',
     priority: 'high',
-    status: 'new',
+    status: 'pending',
     serviceAddress: {
       building: 'Apartment 802, Marina Heights',
       street: 'Al Marsa Street',
@@ -184,7 +184,7 @@ export const sampleUnassignedJobs: JobLocation[] = [
     customerPhone: '+971563334455',
     serviceType: 'electrical',
     priority: 'medium',
-    status: 'new',
+    status: 'pending',
     serviceAddress: {
       building: 'Sharjah Co-op Branch 7',
       street: 'King Faisal Street',
@@ -206,12 +206,12 @@ export const sampleUnassignedJobs: JobLocation[] = [
     customerPhone: '+971554445566',
     serviceType: 'plumbing',
     priority: 'low',
-    status: 'new',
+    status: 'pending',
     serviceAddress: {
       building: 'Villa 9, Al Raha Gardens',
       street: 'Al Raha Beach Road',
       area: 'Al Raha',
-      emirate: 'abu_dhabi',
+      emirate: 'abu-dhabi',
       latitude: 24.4539,
       longitude: 54.6156,
       landmark: 'Near Al Raha Mall',
@@ -224,11 +224,11 @@ export const sampleUnassignedJobs: JobLocation[] = [
     id: 'job-new-005',
     jobNumber: 'JOB-2026-0046',
     title: 'Emergency AC Leak - Server Room',
-    customerName: 'Optify Technologies LLC',
+    customerName: 'OptifyServe Technologies LLC',
     customerPhone: '+971555556677',
-    serviceType: 'ac_repair',
+    serviceType: 'ac-repair',
     priority: 'emergency',
-    status: 'new',
+    status: 'pending',
     serviceAddress: {
       building: 'Office 301, Business Bay Tower',
       street: 'Marasi Drive',
@@ -245,7 +245,7 @@ export const sampleUnassignedJobs: JobLocation[] = [
 ]
 
 // ---------------------------------------------------------------------------
-// Active Jobs (status: 'in_progress', with assigned technicians)
+// Active Jobs (status: 'in-progress', with assigned technicians)
 // ---------------------------------------------------------------------------
 
 export const sampleActiveJobs: JobLocation[] = [
@@ -255,9 +255,9 @@ export const sampleActiveJobs: JobLocation[] = [
     title: 'AC Preventive Maintenance - Emaar Tower',
     customerName: 'Emaar Properties PJSC',
     customerPhone: '+971541112233',
-    serviceType: 'ac_maintenance',
+    serviceType: 'ac-maintenance',
     priority: 'medium',
-    status: 'in_progress',
+    status: 'in-progress',
     serviceAddress: {
       building: 'Emaar Square, Building 4',
       street: 'Sheikh Mohammed bin Rashid Blvd',
@@ -279,9 +279,9 @@ export const sampleActiveJobs: JobLocation[] = [
     title: 'Split AC Compressor Replacement',
     customerName: 'Rashid Al Maktoum',
     customerPhone: '+971542223344',
-    serviceType: 'ac_repair',
+    serviceType: 'ac-repair',
     priority: 'high',
-    status: 'in_progress',
+    status: 'in-progress',
     serviceAddress: {
       building: 'Apt 1205, JBR Shams Tower',
       street: 'The Walk',
@@ -305,7 +305,7 @@ export const sampleActiveJobs: JobLocation[] = [
     customerPhone: '+971543334455',
     serviceType: 'electrical',
     priority: 'medium',
-    status: 'in_progress',
+    status: 'in-progress',
     serviceAddress: {
       building: 'Al Futtaim Tower',
       street: 'Dubai Festival City',
@@ -329,7 +329,7 @@ export const sampleActiveJobs: JobLocation[] = [
     customerPhone: '+971544445566',
     serviceType: 'plumbing',
     priority: 'high',
-    status: 'in_progress',
+    status: 'in-progress',
     serviceAddress: {
       building: 'Flat 503, Al Nahda Tower',
       street: 'Al Nahda Street',
@@ -357,7 +357,7 @@ export const sampleTechnicianUtilization: TechnicianUtilization[] = [
     name: 'Ahmed Al Mansouri',
     photo: undefined,
     status: 'available',
-    primarySkill: 'ac_repair',
+    primarySkill: 'ac-repair',
     activeJobCount: 0,
     completedToday: 2,
     totalCapacity: 6,
@@ -396,7 +396,7 @@ export const sampleTechnicianUtilization: TechnicianUtilization[] = [
     name: 'Saeed Abdullah Al Blooshi',
     photo: undefined,
     status: 'busy',
-    primarySkill: 'ac_maintenance',
+    primarySkill: 'ac-maintenance',
     activeJobCount: 2,
     completedToday: 1,
     totalCapacity: 5,
@@ -409,7 +409,7 @@ export const sampleTechnicianUtilization: TechnicianUtilization[] = [
     name: 'Faisal Nasser Al Ketbi',
     photo: undefined,
     status: 'busy',
-    primarySkill: 'ac_repair',
+    primarySkill: 'ac-repair',
     activeJobCount: 1,
     completedToday: 2,
     totalCapacity: 6,
@@ -421,7 +421,7 @@ export const sampleTechnicianUtilization: TechnicianUtilization[] = [
     id: 'tech-006',
     name: 'Youssef Ibrahim Darwish',
     photo: undefined,
-    status: 'on_break',
+    status: 'en-route',
     primarySkill: 'plumbing',
     activeJobCount: 0,
     completedToday: 4,

@@ -184,7 +184,7 @@ export function StockAdjustmentForm({
                 type="number"
                 step="1"
                 {...form.register('quantity', { valueAsNumber: true })}
-                placeholder="-5 or 5"
+                placeholder={t('inventory.placeholderQuantityAdjustment')}
                 className={cn(
                   'text-lg font-medium',
                   isNegativeAdjustment && 'border-amber-500 text-amber-600'
@@ -221,7 +221,7 @@ export function StockAdjustmentForm({
                   <div
                     key={r.value}
                     className={cn(
-                      'flex items-center space-x-2 p-3 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors',
+                      'flex items-center gap-2 p-3 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors',
                       form.watch('reason') === r.value && 'border-primary bg-primary/5'
                     )}
                   >

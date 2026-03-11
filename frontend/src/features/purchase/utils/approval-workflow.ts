@@ -21,12 +21,12 @@ const APPROVAL_THRESHOLDS = {
  */
 export function getApprovalLevel(totalAmount: number): ApprovalLevel {
   if (totalAmount < APPROVAL_THRESHOLDS.AUTO_APPROVE_LIMIT) {
-    return 'auto'
+    return 'level-1'
   }
   if (totalAmount <= APPROVAL_THRESHOLDS.MANAGER_APPROVE_LIMIT) {
-    return 'manager'
+    return 'level-2'
   }
-  return 'owner'
+  return 'level-3'
 }
 
 /**
@@ -38,23 +38,29 @@ export function getApprovalLevelInfo(level: ApprovalLevel): {
   requiredApprovers: string[]
 } {
   switch (level) {
-    case 'auto':
+    case 'level-1':
       return {
         key: 'purchase.approvalLevelLabel.auto',
         descriptionKey: 'purchase.approvalDescAuto',
         requiredApprovers: [],
       }
-    case 'manager':
+    case 'level-2':
       return {
         key: 'purchase.approvalLevelLabel.manager',
         descriptionKey: 'purchase.approvalDescManager',
         requiredApprovers: ['Manager'],
       }
-    case 'owner':
+    case 'level-3':
       return {
         key: 'purchase.approvalLevelLabel.owner',
         descriptionKey: 'purchase.approvalDescOwner',
         requiredApprovers: ['Manager', 'Owner'],
+      }
+    default:
+      return {
+        key: 'purchase.approvalLevelLabel.auto',
+        descriptionKey: 'purchase.approvalDescAuto',
+        requiredApprovers: [],
       }
   }
 }
@@ -73,15 +79,15 @@ export function canApprove(
   if (userId === creatorId) return false
 
   // Auto-approved POs don't need manual approval
-  if (approvalLevel === 'auto') return false
+  if (approvalLevel === 'level-1') return false
 
   // Manager level: managers and owners can approve
-  if (approvalLevel === 'manager') {
+  if (approvalLevel === 'level-2') {
     return userRole === 'manager' || userRole === 'admin'
   }
 
   // Owner level: only admin/owner can approve
-  if (approvalLevel === 'owner') {
+  if (approvalLevel === 'level-3') {
     return userRole === 'admin'
   }
 

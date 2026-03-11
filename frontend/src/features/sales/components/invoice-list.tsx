@@ -500,7 +500,7 @@ export function InvoiceList({
                             {t('common.shareEmail')}
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          {invoice.status !== 'cancelled' && invoice.status !== 'void' && invoice.status !== 'paid' && (
+                          {invoice.status !== 'cancelled' && invoice.status !== 'credited' && invoice.status !== 'paid' && (
                             <DropdownMenuItem
                               onClick={() => setCancelConfirm({ isOpen: true, invoice })}
                               className="text-destructive focus:text-destructive"

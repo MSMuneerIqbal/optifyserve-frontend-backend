@@ -2,7 +2,7 @@
  * Lead Sample Data
  * Extracted from CRM lead mock API for standalone usage.
  * All data is UAE-specific with AED currency, +971 phones.
- * Covers all pipeline stages: new, contacted, follow-up, qualified, proposal, negotiation, closed-won, closed-lost.
+ * Covers all pipeline stages: new, follow-up, qualified, closed-won, closed-lost.
  */
 
 import type { Lead, FollowUp } from '@/features/crm/types/lead.types'
@@ -58,7 +58,7 @@ export const sampleLeads: Lead[] = [
     updatedAt: '2025-02-06T14:30:00Z',
   },
 
-  // --- Contacted Leads ---
+  // --- Follow-up Leads ---
   {
     id: 'lead_003',
     leadNumber: 'LEAD-2025-0004',
@@ -67,7 +67,7 @@ export const sampleLeads: Lead[] = [
     email: 'noura@marinahotels.ae',
     phone: '+971 4 555 1234',
     source: 'exhibition',
-    stage: 'contacted',
+    stage: 'follow-up',
     priority: 'urgent',
     estimatedValue: { min: 200000, max: 350000, currency: 'AED' },
     expectedCloseDate: '2025-04-30',
@@ -142,7 +142,7 @@ export const sampleLeads: Lead[] = [
     updatedAt: '2025-02-06T14:00:00Z',
   },
 
-  // --- Proposal Stage ---
+  // --- Qualified Leads ---
   {
     id: 'lead_006',
     leadNumber: 'LEAD-2025-0010',
@@ -151,7 +151,7 @@ export const sampleLeads: Lead[] = [
     email: 'yusuf@oasismall.ae',
     phone: '+971 7 111 2222',
     source: 'referral',
-    stage: 'proposal',
+    stage: 'qualified',
     priority: 'urgent',
     estimatedValue: { min: 180000, max: 220000, currency: 'AED' },
     expectedCloseDate: '2025-02-25',
@@ -170,7 +170,7 @@ export const sampleLeads: Lead[] = [
     updatedAt: '2025-02-05T12:00:00Z',
   },
 
-  // --- Negotiation Stage ---
+  // --- Qualified Leads ---
   {
     id: 'lead_007',
     leadNumber: 'LEAD-2025-0011',
@@ -179,7 +179,7 @@ export const sampleLeads: Lead[] = [
     email: 'hamad@rakcement.ae',
     phone: '+971 7 555 6666',
     source: 'website',
-    stage: 'negotiation',
+    stage: 'qualified',
     priority: 'urgent',
     estimatedValue: { min: 250000, max: 280000, currency: 'AED' },
     expectedCloseDate: '2025-02-20',

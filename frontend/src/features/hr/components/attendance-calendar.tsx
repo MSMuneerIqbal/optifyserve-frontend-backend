@@ -48,8 +48,8 @@ export function AttendanceCalendar({ month, year, data, onPrevMonth, onNextMonth
       case 'present': return 'bg-green-500'
       case 'absent': return 'bg-red-500'
       case 'late': return 'bg-amber-500'
-      case 'half_day': return 'bg-blue-500'
-      case 'on_leave': return 'bg-purple-500'
+      case 'half-day': return 'bg-blue-500'
+      case 'on-leave': return 'bg-purple-500'
       case 'holiday': return 'bg-teal-500'
       case 'weekend': return 'bg-slate-300'
       default: return ''
@@ -62,7 +62,7 @@ export function AttendanceCalendar({ month, year, data, onPrevMonth, onNextMonth
       if (d.status === 'present') acc.present++
       else if (d.status === 'absent') acc.absent++
       else if (d.status === 'late') acc.late++
-      else if (d.status === 'on_leave') acc.leave++
+      else if (d.status === 'on-leave') acc.leave++
       return acc
     },
     { present: 0, absent: 0, late: 0, leave: 0 }

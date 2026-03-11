@@ -34,9 +34,9 @@ export function scoreAssignment(
   } else if (tech.status === 'busy') {
     score += SCORE_WEIGHTS.availability * 0.3
     reasons.push('Currently busy - may become available')
-  } else if (tech.status === 'on_break') {
+  } else if (tech.status === 'en-route') {
     score += SCORE_WEIGHTS.availability * 0.5
-    reasons.push('On break - will be available soon')
+    reasons.push('En route - will be available soon')
   }
 
   // 2. Skill match (30 points)
@@ -108,7 +108,7 @@ export function getAssignmentSuggestions(
   count: number = 3
 ): DispatcherAssignmentSuggestion[] {
   const suggestions = technicians
-    .filter(t => t.status !== 'off_duty' && t.status !== 'on_leave')
+    .filter(t => t.status !== 'offline' && t.status !== 'on-leave')
     .map(t => scoreAssignment(t, job))
     .sort((a, b) => b.score - a.score)
     .slice(0, count)
