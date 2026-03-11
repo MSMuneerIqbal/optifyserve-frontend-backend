@@ -1832,12 +1832,14 @@
     "presetName": {
       "corporate-navy": "الأزرق المؤسسي",
       "modern-teal": "التركوازي العصري",
-      "uae-premium": "الإماراتي المميز"
+      "uae-premium": "الإماراتي المميز",
+      "optifyserve": "أوبتيفاي سيرف"
     },
     "presetDescription": {
       "corporate-navy": "درجات زرقاء احترافية للمؤسسات",
       "modern-teal": "لوحة تركوازية عصرية بلمسات حيوية",
-      "uae-premium": "أزرق أنيق مصمم للأعمال الإماراتية"
+      "uae-premium": "أزرق أنيق مصمم للأعمال الإماراتية",
+      "optifyserve": "تدرج أزرق إلى أخضر زمردي مستوحى من العلامة التجارية"
     },
     "exportModuleCRM": "إدارة العملاء",
     "exportModuleSales": "المبيعات",

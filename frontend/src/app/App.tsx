@@ -152,12 +152,12 @@ function App() {
         <Suspense fallback={<PageLoader />}>
         <Routes>
           {/* Public Routes */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
           {/* Protected Routes - Wrapped in AppLayout with ProtectedRoute */}
           <Route element={<ProtectedLayout />}>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             {/* CRM Routes */}
             <Route path="/crm" element={<Navigate to="/crm/customers" replace />} />

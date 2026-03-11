@@ -77,6 +77,21 @@ export const THEME_PRESETS: ThemePreset[] = [
       background: '#F9FAFB',
     },
   },
+  {
+    id: 'optifyserve',
+    name: 'OptifyServe',
+    description: 'Blue-to-emerald gradient inspired by the brand',
+    colors: {
+      primary: '#1565C0',
+      secondary: '#00ACC1',
+      sidebarBg: '#0B1929',
+      sidebarText: '#B2EBF2',
+      success: '#00B377',
+      warning: '#F59E0B',
+      error: '#EF4444',
+      background: '#F0F7FF',
+    },
+  },
 ]
 
 export interface ThemeState {

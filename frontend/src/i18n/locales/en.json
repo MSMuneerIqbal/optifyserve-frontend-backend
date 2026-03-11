@@ -1832,12 +1832,14 @@
     "presetName": {
       "corporate-navy": "Corporate Navy",
       "modern-teal": "Modern Teal",
-      "uae-premium": "UAE Premium"
+      "uae-premium": "UAE Premium",
+      "optifyserve": "OptifyServe"
     },
     "presetDescription": {
       "corporate-navy": "Professional blue tones for enterprise",
       "modern-teal": "Fresh teal palette with vibrant accents",
-      "uae-premium": "Elegant blue designed for UAE business"
+      "uae-premium": "Elegant blue designed for UAE business",
+      "optifyserve": "Blue-to-emerald gradient inspired by the brand"
     },
     "exportModuleCRM": "CRM",
     "exportModuleSales": "Sales",

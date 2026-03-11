@@ -8,7 +8,8 @@
       "Bash(node -e:*)",
       "Bash(python:*)",
       "Bash(npm install:*)",
-      "WebFetch(domain:www.optifyserve.com)"
+      "WebFetch(domain:www.optifyserve.com)",
+      "Bash(test:*)"
     ]
   }
 }
