@@ -1,6 +1,6 @@
 # PROJECT SPECIFICATION — OptifyServe ERP SaaS Platform
 
-> **Version**: 2.2 | **Last Updated**: 2026-03-11
+> **Version**: 2.3 | **Last Updated**: 2026-03-11
 > **Purpose**: Complete technical specification for rebuilding context across sessions. Read this file first when making any future changes.
 
 ---
@@ -51,8 +51,8 @@
 | 13 | **Audit** | Audit log viewer with filters | 1 |
 | 14 | **Settings** | Company profile, notifications, integrations, security, theme | 1 |
 
-**Total**: 49 pages, 148 feature components, 27 shadcn/ui components, 14 shared components, 6 layout components
-**i18n**: 2,299 translation keys per language (English + Arabic), 18 namespaces, full RTL support
+**Total**: 49 pages, 149 feature components, 27 shadcn/ui components, 14 shared components, 6 layout components
+**i18n**: 3,501 translation keys per language (English + Arabic), 18 namespaces, full RTL support
 
 ---
 
@@ -347,8 +347,8 @@ Full bilingual support: English (default) + Arabic with automatic RTL layout mir
 src/i18n/
 ├── index.ts           # i18next init: browser detection, localStorage persistence, fallback 'en'
 └── locales/
-    ├── en.json        # 2,299 English keys across 18 namespaces
-    └── ar.json        # 2,299 Arabic keys across 18 namespaces
+    ├── en.json        # 3,501 English keys across 18 namespaces
+    └── ar.json        # 3,501 Arabic keys across 18 namespaces
 
 src/hooks/use-direction.ts         # Sets document.dir (rtl/ltr) + document.lang on language change
 src/components/shared/language-switcher.tsx  # Globe icon dropdown (EN/AR) in TopNav
@@ -357,22 +357,22 @@ src/components/shared/language-switcher.tsx  # Globe icon dropdown (EN/AR) in To
 ### Translation Namespaces (18)
 | Namespace | Keys | Covers |
 |-----------|------|--------|
-| `common` | 115 | Save, Cancel, Delete, Add, Edit, Search, Filter, Export, etc. |
-| `nav` | 46 | Sidebar navigation labels |
+| `common` | 309 | Save, Cancel, Delete, Add, Edit, Search, Filter, Export, placeholders, etc. |
+| `nav` | 54 | Sidebar navigation labels |
 | `topNav` | 16 | TopNav search, notifications, user menu |
-| `breadcrumb` | 54 | Breadcrumb segment labels |
-| `auth` | 45 | Login page, forgot password |
+| `breadcrumb` | 61 | Breadcrumb segment labels |
+| `auth` | 46 | Login page, forgot password |
 | `dashboard` | 27 | KPI labels, chart titles |
-| `crm` | 157 | Customer/lead forms, table headers |
-| `sales` | 191 | Quotation/invoice labels, VAT |
-| `inventory` | 98 | Item/warehouse/stock labels |
-| `purchase` | 92 | Vendor/PO/GRN labels |
-| `accounts` | 171 | COA, journal, AR/AP, expenses, VAT |
-| `hr` | 237 | Employee, payroll, leave, EOSB, performance |
-| `jobs` | 47 | Job cards, technicians, scheduling |
-| `dispatcher` | 11 | Map view labels |
-| `settings` | 480 | All settings categories and fields |
-| `status` | 271 | All status/badge labels (active, paid, etc.) |
+| `crm` | 204 | Customer/lead forms, table headers |
+| `sales` | 226 | Quotation/invoice labels, VAT |
+| `inventory` | 303 | Item/warehouse/stock labels, forms, categories |
+| `purchase` | 309 | Vendor/PO/GRN labels, approval workflow |
+| `accounts` | 225 | COA, journal, AR/AP, expenses, VAT |
+| `hr` | 396 | Employee, payroll, leave, EOSB, performance |
+| `jobs` | 202 | Job cards, technicians, scheduling, service reports |
+| `dispatcher` | 60 | Map view labels, assignment |
+| `settings` | 631 | All settings categories and fields |
+| `status` | 291 | All status/badge labels (active, paid, etc.) |
 | `validation` | 133 | Form validation error messages |
 | `emirates` | 7 | UAE emirate names |
 
@@ -438,12 +438,13 @@ src/features/settings/theme/
     └── theme-preview.tsx          # Live preview of current colors
 ```
 
-### Theme Presets (3)
+### Theme Presets (4)
 | Preset | Primary | Description |
 |--------|---------|-------------|
 | Corporate Navy | `#1E3A5F` | Professional blue tones for enterprise |
 | Modern Teal | `#0D9488` | Fresh teal palette with vibrant accents |
 | UAE Premium | `#1D4ED8` | Elegant blue designed for UAE business (default) |
+| OptifyServe | `#1565C0` | Modern blue with futuristic navy sidebar (`#0A1628`) |
 
 ### Default Theme Colors
 | Color | Hex | Usage |
@@ -598,7 +599,7 @@ Only these files use `useAppSelector(s => s.theme)`:
 - Notification preferences
 - Integration settings
 - Security settings
-- Theme customization (3 presets + full color picker)
+- Theme customization (4 presets + full color picker)
 - Subscription & billing view
 - Tax configuration
 
@@ -855,6 +856,53 @@ CREATE POLICY tenant_isolation_select ON <table>
 
 ## 15. Changelog
 
+### v2.3 — 2026-03-11 (UX Polish + Comprehensive i18n Audit)
+
+**Major**: Added page/button animations, fixed expense view action, fixed Settings drawer positioning, and resolved 1,193 missing translation keys across all modules.
+
+#### UX & Animation Enhancements
+- **Page transitions**: Route-change animation with opacity fade and staggered child entrance (`animate-page-enter` + `cardEnter` with 60ms delays per child)
+- **Button micro-interactions**: Hover lift (`-translate-y-[1px]`), shadow elevation (`hover:shadow-md`), press feedback (`active:scale-[0.96]`) on all button variants
+- **Sidebar animations**: Nav item hover effects, icon micro-animations, submenu expand transitions
+- **Theme preset #4 (OptifyServe)**: Refined sidebar to deeper navy-midnight (`#0A1628`) with cool off-white text (`#E8EDF5`)
+
+#### Bug Fixes (3)
+- **Expense View action**: Created `expense-detail-modal.tsx` — full read-only expense detail dialog with amount breakdown, approval history, VAT info. Wired into `expenses-page.tsx` with `isViewOpen` state
+- **Settings drawer half-showing**: CSS `transform` on animated `<main>` broke `position: fixed` for the Settings drawer. Fixed with `createPortal(... , document.body)` in `settings-drawer.tsx`
+- **Audit log raw keys**: Added 20 missing translation keys for audit module/action filters (`settings.allModules`, `settings.auditModule.*`, `settings.auditAction.*`)
+
+#### Comprehensive i18n Audit (+1,193 keys)
+- Programmatic audit found 1,196 translation keys used in source code but missing from locale files
+- Auto-generated English translations from camelCase key names with 157 manual overrides for critical keys
+- Synced all missing keys to Arabic locale (English fallback until professional translation)
+- **Total keys**: 2,299 → 3,501 per language (EN + AR)
+- All modules now show proper labels instead of raw key names (e.g., `inventory.basicInfo` → "Basic Info")
+
+#### Code Quality Fixes
+- Fixed ESLint `prefer-const` in `useThemeApplicator.ts`
+- Fixed `as any` type cast in `stock-history-timeline.tsx` (replaced `Badge` with `StatusBadge`)
+- TypeScript: zero errors, ESLint: clean
+
+#### Files Created (1)
+- `src/features/accounts/components/expense-detail-modal.tsx` — Expense detail view dialog
+
+#### Files Modified (13)
+- `src/components/layout/app-layout.tsx` — Page transition animation with `key={location.pathname}`
+- `src/components/layout/sidebar.tsx` — Sidebar hover animations, brighter text opacity
+- `src/components/layout/mobile-sidebar.tsx` — Same sidebar enhancements
+- `src/components/ui/button.tsx` — Hover lift + shadow + press animations on all variants
+- `src/styles/globals.css` — Page enter animation, staggered card entrance, sidebar animations
+- `src/features/settings/components/settings-drawer.tsx` — `createPortal` fix for position:fixed
+- `src/features/settings/theme/themeTypes.ts` — OptifyServe preset color refinement
+- `src/features/settings/theme/useThemeApplicator.ts` — ESLint prefer-const fix
+- `src/features/inventory/components/stock-history-timeline.tsx` — Badge → StatusBadge type fix
+- `src/features/accounts/pages/expenses-page.tsx` — Wired expense detail modal
+- `src/features/accounts/components/index.ts` — Added expense-detail-modal export
+- `src/i18n/locales/en.json` — +1,193 missing translation keys
+- `src/i18n/locales/ar.json` — +1,193 missing translation keys (English fallback)
+
+---
+
 ### v2.2 — 2026-03-11 (Module Extraction + Backend Alignment Audit)
 
 **Major**: Extracted User Management, Platform Administration, and Audit Logs from Settings into standalone modules. Comprehensive audit aligned all frontend TypeScript enums with the PostgreSQL database schema.
@@ -897,7 +945,7 @@ All `src/data/*.data.ts` files updated to use new enum values
 #### i18n Updates (+101 keys)
 - Added missing translation keys for new enum values (both EN + AR)
 - Replaced hardcoded placeholders with `t()` calls
-- Total keys: 2,198 → 2,299 per language
+- Total keys: 2,198 → 2,299 per language (before v2.3 audit)
 
 #### Settings Cleanup
 - Removed Super Admin group, Audit Logs item from Settings navigation

@@ -7,7 +7,7 @@
 This is a **pure UI template** for a multi-tenant SaaS ERP targeting UAE service & maintenance companies. Think of it like a ThemeForest template — all pages are built with static sample data, ready for a backend developer to integrate real APIs.
 
 - **Frontend**: React 19 + TypeScript 5.9 + Vite 7
-- **i18n**: react-i18next (English + Arabic) with RTL support — 2,299 translation keys
+- **i18n**: react-i18next (English + Arabic) with RTL support — 3,501 translation keys
 - **Auth**: React Context (`src/contexts/auth-context.tsx`) — not Redux
 - **Data**: Static sample data in `src/data/` (18 files) — no API calls
 - **Theme**: Redux Toolkit + Redux Saga (theme system only)
@@ -20,8 +20,8 @@ This is a **pure UI template** for a multi-tenant SaaS ERP targeting UAE service
 
 All 14 frontend modules are **COMPLETE** with static sample data:
 - Auth, Dashboard, CRM, Sales, Inventory, Purchase, Accounts, HR, Jobs, Dispatcher, User Management, Platform Admin, Audit, Settings
-- 49 pages, 148 feature components
-- **Full i18n**: English + Arabic with RTL support (2,299 translation keys, 18 namespaces)
+- 49 pages, 149 feature components
+- **Full i18n**: English + Arabic with RTL support (3,501 translation keys, 18 namespaces)
 - **No Redux in components** — only the theme system uses Redux (1 slice, 1 saga)
 - **No API calls** — all data comes from `src/data/` files
 - **No axios** — package fully removed
@@ -158,7 +158,7 @@ theme/
 ├── themeSaga.ts             # localStorage persistence (no API calls)
 ├── useThemeApplicator.ts    # Applies colors → CSS variables on <html>
 └── components/
-    ├── theme-preset-selector.tsx  # 3 clickable preset cards
+    ├── theme-preset-selector.tsx  # 4 clickable preset cards
     ├── color-customizer.tsx       # Drawer with all 8 color pickers
     ├── color-picker-field.tsx     # Single color picker input
     └── theme-preview.tsx          # Live component preview
