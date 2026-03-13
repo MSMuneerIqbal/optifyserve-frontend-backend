@@ -68,15 +68,17 @@ SET app.current_user = 'b0000000-0000-0000-0000-000000000001';
 SELECT * FROM customers;  -- Only returns tenant's customers
 ```
 
-### In Application Code (ASP.NET Core)
+### In Application Code (Node.js + Prisma)
 
-```csharp
+```typescript
 // Middleware to set tenant context on every request
-public class TenantContextMiddleware
-{
-    private readonly RequestDelegate _next;
+import { PrismaClient } from '@prisma/client'
 
-    public TenantContextMiddleware(RequestDelegate next) => _next = next;
+const prisma = new PrismaClient()
+
+async function setTenantContext(tenantId: string, userId: string) {
+  await prisma.$executeRawUnsafe(`SET app.current_tenant = '${tenantId}'`)
+  await prisma.$executeRawUnsafe(`SET app.current_user = '${userId}'`)
 
     public async Task InvokeAsync(HttpContext context, NpgsqlConnection db)
     {
@@ -514,11 +516,9 @@ All 16 SQL files have been verified:
 
 ## Migration Strategy
 
-For production deployments with ASP.NET Core, use one of these migration tools:
-- **EF Core Migrations** — built-in with Entity Framework Core (`dotnet ef migrations add`, `dotnet ef database update`)
-- **FluentMigrator** — code-first migrations in C# with fluent API
-- **DbUp** — lightweight, runs raw SQL files in order (best fit for this schema)
-- **Evolve** — cross-platform, SQL-based migrations for .NET
+For production deployments with Node.js + Prisma, use:
+- **Prisma Migrate** — `npx prisma migrate dev` (development), `npx prisma migrate deploy` (production)
+- **Raw SQL migrations** — for triggers, extensions, RLS policies, and check constraints that Prisma doesn't natively support
 
 Each SQL file in this directory represents a migration step. Run them in numerical order.
 

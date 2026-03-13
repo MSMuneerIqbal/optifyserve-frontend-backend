@@ -7,7 +7,7 @@ import type { UserRole } from '../types/settings.types'
 
 /** Role hierarchy from highest to lowest privilege */
 const ROLE_HIERARCHY: Record<UserRole, number> = {
-  super_admin: 100,
+  'super-admin': 100,
   admin: 80,
   manager: 60,
   staff: 40,
@@ -21,7 +21,7 @@ export function hasMinimumRole(userRole: UserRole, minimumRole: UserRole): boole
 
 /** Check if user is a super admin */
 export function isSuperAdmin(role: UserRole): boolean {
-  return role === 'super_admin'
+  return role === 'super-admin'
 }
 
 /** Check if user is a company admin or higher */
@@ -37,7 +37,7 @@ export function isManager(role: UserRole): boolean {
 /** Get role display label */
 export function getRoleLabel(role: UserRole): string {
   const labels: Record<UserRole, string> = {
-    super_admin: 'Super Admin',
+    'super-admin': 'Super Admin',
     admin: 'Administrator',
     manager: 'Manager',
     staff: 'Staff',
@@ -49,7 +49,7 @@ export function getRoleLabel(role: UserRole): string {
 /** Get role badge color */
 export function getRoleColor(role: UserRole): string {
   const colors: Record<UserRole, string> = {
-    super_admin: 'bg-red-100 text-red-700',
+    'super-admin': 'bg-red-100 text-red-700',
     admin: 'bg-purple-100 text-purple-700',
     manager: 'bg-blue-100 text-blue-700',
     staff: 'bg-primary/10 text-primary',

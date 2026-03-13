@@ -65,7 +65,7 @@ export const EXPENSE_STATUS_CONFIG: Record<ExpenseStatus, { key: string; variant
 /**
  * Payment method for expenses
  */
-export type ExpensePaymentMethod = 'cash' | 'card' | 'bank-transfer' | 'petty-cash'
+export type ExpensePaymentMethod = 'cash' | 'credit-card' | 'bank-transfer' | 'petty-cash'
 
 /**
  * Expense entity

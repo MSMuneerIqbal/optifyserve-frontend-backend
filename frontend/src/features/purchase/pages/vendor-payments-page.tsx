@@ -88,7 +88,7 @@ export function VendorPaymentsPage() {
         return pd.getMonth() === now.getMonth() && pd.getFullYear() === now.getFullYear()
       })
       .reduce((sum, p) => sum + (p.amount || 0), 0),
-    bouncedCount: paymentList.filter((p) => p.status === 'bounced').length,
+    failedCount: paymentList.filter((p) => p.status === 'failed').length,
   } : null
 
   const handleSearch = () => {
@@ -144,7 +144,7 @@ export function VendorPaymentsPage() {
           <SummaryCard label={t('purchase.totalPayments')} value={summary.totalPayments} variant="default" />
           <SummaryCard label={t('purchase.totalAmount')} value={formatAmount(summary.totalAmount)} variant="info" />
           <SummaryCard label={t('purchase.thisMonth')} value={formatAmount(summary.thisMonthTotal)} variant="success" />
-          <SummaryCard label={t('purchase.bounced')} value={summary.bouncedCount} variant="error" />
+          <SummaryCard label={t('purchase.failed')} value={summary.failedCount} variant="error" />
         </div>
       )}
 
@@ -209,7 +209,7 @@ export function VendorPaymentsPage() {
                         <SelectItem value="all">{t('common.all')}</SelectItem>
                         <SelectItem value="pending">{t('status.pending')}</SelectItem>
                         <SelectItem value="completed">{t('status.completed')}</SelectItem>
-                        <SelectItem value="bounced">{t('status.bounced')}</SelectItem>
+                        <SelectItem value="failed">{t('status.failed')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

@@ -142,7 +142,7 @@ Each module under `src/features/<module>/` follows this pattern:
 
 ### Future: Backend Integration
 
-When connecting to a backend (e.g., ASP.NET Core), you would:
+When connecting to a backend (e.g., Node.js + Express), you would:
 
 1. Install an HTTP client (`axios`, `fetch` wrapper, etc.)
 2. Create API service files in each feature module
@@ -237,12 +237,12 @@ database/
 ├── 10_dispatcher.sql          # 2 tables (locations, assignment logs)
 ├── 11_settings.sql            # 7 tables + sequence_counters
 ├── 12_rls_policies.sql        # RLS on ~65 tables
-├── 13_indexes.sql             # ~200 indexes
-├── 14_triggers.sql            # 20+ triggers
+├── 13_indexes.sql             # 235 indexes
+├── 14_triggers.sql            # 22 triggers
 ├── 15_seed.sql                # Permissions, tenant, admin, COA, leave types
 ├── README.md                  # Setup guide
 ├── LOCAL_SETUP.md             # Docker/native PostgreSQL setup
-└── db_knowledge.md            # ASP.NET Core integration guide
+└── db_knowledge.md            # Node.js + Prisma integration guide
 ```
 
 **~84 tables** | **~90 enums** | **UUID primary keys** | **TIMESTAMPTZ dates** | **NUMERIC(15,2) for money**

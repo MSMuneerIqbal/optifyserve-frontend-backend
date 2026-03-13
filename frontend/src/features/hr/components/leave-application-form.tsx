@@ -54,7 +54,7 @@ function createLeaveApplicationSchema(t: (key: string) => string) {
       leaveTypeId: z.string().min(1, t('validation.leaveTypeRequired')),
       startDate: z.string().min(1, t('validation.startDateRequired')),
       endDate: z.string().min(1, t('validation.endDateRequired')),
-      duration: z.enum(['full_day', 'half_day_morning', 'half_day_afternoon']),
+      duration: z.enum(['full-day', 'half-day-morning', 'half-day-afternoon']),
       reason: z.string().min(10, t('validation.reasonMin10')),
       attachmentUrl: z.string().optional(),
     })
@@ -96,7 +96,7 @@ function calcTotalDays(
   }
 
   // Half-day cases: only subtract 0.5 if single day
-  if (duration !== 'full_day' && days === 1) return 0.5
+  if (duration !== 'full-day' && days === 1) return 0.5
   return days
 }
 
@@ -133,7 +133,7 @@ export function LeaveApplicationForm({
       leaveTypeId: '',
       startDate: today,
       endDate: today,
-      duration: 'full_day',
+      duration: 'full-day',
       reason: '',
       attachmentUrl: '',
     },
@@ -146,7 +146,7 @@ export function LeaveApplicationForm({
         leaveTypeId: '',
         startDate: today,
         endDate: today,
-        duration: 'full_day',
+        duration: 'full-day',
         reason: '',
         attachmentUrl: '',
       })
@@ -297,9 +297,9 @@ export function LeaveApplicationForm({
                     >
                       {(
                         [
-                          { value: 'full_day', label: t('hr.fullDay') },
-                          { value: 'half_day_morning', label: t('hr.halfDayMorning') },
-                          { value: 'half_day_afternoon', label: t('hr.halfDayAfternoon') },
+                          { value: 'full-day', label: t('hr.fullDay') },
+                          { value: 'half-day-morning', label: t('hr.halfDayMorning') },
+                          { value: 'half-day-afternoon', label: t('hr.halfDayAfternoon') },
                         ] as { value: LeaveDuration; label: string }[]
                       ).map((opt) => (
                         <div key={opt.value} className="flex items-center gap-2">

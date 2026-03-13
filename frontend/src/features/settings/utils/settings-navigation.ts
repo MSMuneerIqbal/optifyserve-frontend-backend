@@ -97,14 +97,14 @@ export const SETTINGS_NAVIGATION: SettingsNavGroup[] = [
 
 /** Get the default category for a given role */
 export function getDefaultCategory(role: string): SettingsCategory {
-  if (role === 'super_admin') return 'company-profile'
+  if (role === 'super-admin') return 'company-profile'
   if (role === 'admin') return 'company-profile'
   return 'personal-profile'
 }
 
 /** Filter navigation groups based on user role */
 export function getFilteredNavigation(role: string): SettingsNavGroup[] {
-  const isSuperAdmin = role === 'super_admin'
+  const isSuperAdmin = role === 'super-admin'
   const isAdmin = role === 'admin' || isSuperAdmin
 
   return SETTINGS_NAVIGATION.filter(group => {

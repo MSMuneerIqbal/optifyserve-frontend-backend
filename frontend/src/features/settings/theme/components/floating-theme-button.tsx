@@ -1,7 +1,7 @@
 /**
  * Floating Theme Button
  * Fixed position button (bottom-right) that opens the color customizer drawer.
- * Only visible for admin/super_admin roles.
+ * Only visible for admin/super-admin roles.
  */
 
 import { useState } from 'react'
@@ -16,8 +16,8 @@ export function FloatingThemeButton() {
   const [isOpen, setIsOpen] = useState(false)
   const { user } = useAuth()
 
-  // Only show for admin or super_admin
-  const canCustomize = user?.role === 'admin' || user?.role === 'super_admin'
+  // Only show for admin or super-admin
+  const canCustomize = user?.role === 'admin' || user?.role === 'super-admin'
   if (!canCustomize) return null
 
   return (

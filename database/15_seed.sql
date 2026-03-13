@@ -121,15 +121,15 @@ INSERT INTO roles (tenant_id, name, description, permissions, is_system) VALUES
   'Manager',
   'Department manager with broad access',
   ARRAY[
-    'dashboard:view', 'crm:view', 'crm:create', 'crm:update', 'crm:export',
-    'sales:view', 'sales:create', 'sales:update', 'sales:approve', 'sales:export',
-    'inventory:view', 'inventory:create', 'inventory:update', 'inventory:adjust', 'inventory:transfer',
-    'purchase:view', 'purchase:create', 'purchase:update', 'purchase:approve', 'purchase:receive',
-    'accounts:view', 'accounts:create', 'accounts:update', 'accounts:approve',
-    'hr:view', 'hr:create', 'hr:update', 'hr:approve-leave', 'hr:view-salary',
-    'jobs:view', 'jobs:create', 'jobs:update', 'jobs:assign', 'jobs:complete',
-    'dispatcher:view', 'dispatcher:assign',
-    'settings:view'
+    'dashboard.view', 'crm.view', 'crm.create', 'crm.update', 'crm.export',
+    'sales.view', 'sales.create', 'sales.update', 'sales.approve', 'sales.export',
+    'inventory.view', 'inventory.create', 'inventory.update', 'inventory.adjust', 'inventory.transfer',
+    'purchase.view', 'purchase.create', 'purchase.update', 'purchase.approve', 'purchase.receive',
+    'accounts.view', 'accounts.create', 'accounts.update', 'accounts.approve',
+    'hr.view', 'hr.create', 'hr.update', 'hr.approve-leave', 'hr.view-salary',
+    'jobs.view', 'jobs.create', 'jobs.update', 'jobs.assign', 'jobs.complete',
+    'dispatcher.view', 'dispatcher.assign',
+    'settings.view'
   ],
   true
 ),
@@ -138,14 +138,14 @@ INSERT INTO roles (tenant_id, name, description, permissions, is_system) VALUES
   'Staff',
   'Regular staff member',
   ARRAY[
-    'dashboard:view',
-    'crm:view', 'crm:create', 'crm:update',
-    'sales:view', 'sales:create', 'sales:update',
-    'inventory:view',
-    'purchase:view', 'purchase:create',
-    'accounts:view',
-    'hr:view',
-    'jobs:view', 'jobs:create', 'jobs:update'
+    'dashboard.view',
+    'crm.view', 'crm.create', 'crm.update',
+    'sales.view', 'sales.create', 'sales.update',
+    'inventory.view',
+    'purchase.view', 'purchase.create',
+    'accounts.view',
+    'hr.view',
+    'jobs.view', 'jobs.create', 'jobs.update'
   ],
   true
 ),
@@ -154,9 +154,9 @@ INSERT INTO roles (tenant_id, name, description, permissions, is_system) VALUES
   'Technician',
   'Field technician with limited access',
   ARRAY[
-    'dashboard:view',
-    'jobs:view', 'jobs:update', 'jobs:complete',
-    'inventory:view'
+    'dashboard.view',
+    'jobs.view', 'jobs.update', 'jobs.complete',
+    'inventory.view'
   ],
   true
 );

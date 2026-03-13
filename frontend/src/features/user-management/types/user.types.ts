@@ -7,7 +7,7 @@
 // USER MANAGEMENT
 // ============================================
 
-export type UserRole = 'super_admin' | 'admin' | 'manager' | 'staff' | 'technician'
+export type UserRole = 'super-admin' | 'admin' | 'manager' | 'staff' | 'technician'
 export type UserStatus = 'active' | 'inactive' | 'suspended' | 'invited'
 
 export interface SystemUser {

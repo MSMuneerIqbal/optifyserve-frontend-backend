@@ -152,9 +152,9 @@ export function LeaveApprovalModal({
                 <span>
                   <strong>{request.totalDays}</strong>{' '}
                   {request.totalDays === 1 ? t('hr.day') : t('hr.days')}
-                  {request.duration !== 'full_day' && (
+                  {request.duration !== 'full-day' && (
                     <span className="ms-1 text-muted-foreground text-xs">
-                      ({request.duration === 'half_day_morning' ? t('hr.morning') : t('hr.afternoon')})
+                      ({request.duration === 'half-day-morning' ? t('hr.morning') : t('hr.afternoon')})
                     </span>
                   )}
                 </span>

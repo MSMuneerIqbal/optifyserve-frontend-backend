@@ -11,7 +11,7 @@ This is a **pure UI template** for a multi-tenant SaaS ERP targeting UAE service
 - **Auth**: React Context (`src/contexts/auth-context.tsx`) — not Redux
 - **Data**: Static sample data in `src/data/` (18 files) — no API calls
 - **Theme**: Redux Toolkit + Redux Saga (theme system only)
-- **Backend** (planned): ASP.NET Core + PostgreSQL 16
+- **Backend** (planned): Node.js + Express.js + Prisma + PostgreSQL 16
 - **Database**: Complete schema in `database/` folder (16 SQL files, ~84 tables)
 
 ---
@@ -31,7 +31,7 @@ All 14 frontend modules are **COMPLETE** with static sample data:
 - Branding: **OptifyServe**
 - Database schema designed and verified (16 SQL files)
 
-**Next milestone**: ASP.NET Core backend development + Redux integration
+**Next milestone**: Node.js/Express backend development + Redux integration
 
 ---
 
@@ -202,7 +202,7 @@ audit.data.ts           — audit log entries
 | Colors | CSS variables + Tailwind | Theme-aware, no hardcoded colors |
 | Theme default | UAE Premium (#1D4ED8) | Professional blue for UAE business |
 | DB | PostgreSQL + RLS | Multi-tenant isolation at DB level |
-| Backend | ASP.NET Core | Client preference, enterprise ecosystem |
+| Backend | Node.js + Express.js + Prisma | Flexible, TypeScript across full stack |
 
 ---
 
@@ -234,7 +234,7 @@ audit.data.ts           — audit log entries
 
 ## When Adding Backend Integration (Future)
 
-When the ASP.NET Core backend is ready:
+When the Node.js/Express backend is ready:
 1. Install axios: `npm install axios`
 2. Create `src/services/api/axios-instance.ts` with interceptors
 3. Create Redux slices + sagas per module in `src/features/<module>/store/`

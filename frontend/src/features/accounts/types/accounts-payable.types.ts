@@ -67,7 +67,7 @@ export interface VendorPayment {
   vendorName: string
   date: string
   amount: number
-  paymentMethod: 'cash' | 'card' | 'bank-transfer' | 'cheque'
+  paymentMethod: 'cash' | 'credit-card' | 'bank-transfer' | 'cheque'
   referenceNumber?: string
   chequeNumber?: string
   bankName?: string

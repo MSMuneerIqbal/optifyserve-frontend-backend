@@ -1,4 +1,7 @@
 /**
+ * DISPLAY-ONLY — Uses JS floating-point math. Do NOT use for authoritative
+ * financial totals. Backend must recompute all monetary values with decimal.js.
+ *
  * EOSB (End of Service Benefits) Calculator
  * Phase 10: HR Module
  *

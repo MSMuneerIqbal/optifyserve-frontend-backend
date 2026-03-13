@@ -111,7 +111,7 @@ export interface ServiceReportFormData {
 
 /** Default checklist items for service types */
 export const DEFAULT_CHECKLISTS: Record<string, { label: string; isRequired: boolean }[]> = {
-  ac_repair: [
+  'ac-repair': [
     { label: 'Inspect compressor', isRequired: true },
     { label: 'Check refrigerant levels', isRequired: true },
     { label: 'Clean filters', isRequired: true },
@@ -121,7 +121,7 @@ export const DEFAULT_CHECKLISTS: Record<string, { label: string; isRequired: boo
     { label: 'Check drainage', isRequired: true },
     { label: 'Test cooling performance', isRequired: true },
   ],
-  plumbing: [
+  'plumbing-repair': [
     { label: 'Locate water shut-off', isRequired: true },
     { label: 'Inspect pipes for leaks', isRequired: true },
     { label: 'Check water pressure', isRequired: true },
@@ -129,7 +129,7 @@ export const DEFAULT_CHECKLISTS: Record<string, { label: string; isRequired: boo
     { label: 'Inspect fixtures', isRequired: false },
     { label: 'Check water heater', isRequired: false },
   ],
-  electrical: [
+  'electrical-repair': [
     { label: 'Turn off main breaker', isRequired: true },
     { label: 'Inspect wiring', isRequired: true },
     { label: 'Test circuits', isRequired: true },

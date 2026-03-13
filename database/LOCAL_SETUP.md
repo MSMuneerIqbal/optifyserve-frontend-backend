@@ -73,14 +73,18 @@ docker stop erp-postgres    # Stop (data preserved)
 docker start erp-postgres   # Start again
 ```
 
-### Connection String for ASP.NET Core
+### Connection String for Node.js (Prisma)
 
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Port=5432;Database=erp_db;Username=erp_app;Password=erp_dev_password"
-  }
-}
+```env
+# .env
+DATABASE_URL="postgresql://erp_app:erp_dev_password@localhost:5432/erp_db?schema=public"
+```
+
+```bash
+# Prisma commands
+npx prisma migrate dev    # Run migrations
+npx prisma db seed        # Seed database
+npx prisma studio         # Open Prisma Studio GUI
 ```
 
 ---
@@ -144,14 +148,18 @@ CREATE DATABASE erp_db OWNER erp_app;
 -- Then re-run all SQL files
 ```
 
-### Connection String for ASP.NET Core
+### Connection String for Node.js (Prisma)
 
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Port=5432;Database=erp_db;Username=erp_app;Password=erp_dev_password"
-  }
-}
+```env
+# .env
+DATABASE_URL="postgresql://erp_app:erp_dev_password@localhost:5432/erp_db?schema=public"
+```
+
+```bash
+# Prisma commands
+npx prisma migrate dev    # Run migrations
+npx prisma db seed        # Seed database
+npx prisma studio         # Open Prisma Studio GUI
 ```
 
 ---

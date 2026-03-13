@@ -8,13 +8,13 @@
 import type { StatusBadgeVariant } from '@/types/common.types'
 
 /** Leave type identifiers */
-export type LeaveTypeId = 'annual' | 'sick' | 'maternity' | 'paternity' | 'emergency' | 'unpaid' | 'hajj' | 'bereavement'
+export type LeaveTypeId = 'annual' | 'sick' | 'maternity' | 'paternity' | 'compassionate' | 'hajj' | 'unpaid' | 'study' | 'emergency'
 
 /** Leave request status */
 export type LeaveStatus = 'pending' | 'approved' | 'rejected' | 'cancelled'
 
 /** Leave duration type */
-export type LeaveDuration = 'full_day' | 'half_day_morning' | 'half_day_afternoon'
+export type LeaveDuration = 'full-day' | 'half-day-morning' | 'half-day-afternoon'
 
 /** Leave status config */
 export const LEAVE_STATUS_CONFIG: Record<LeaveStatus, { key: string; variant: StatusBadgeVariant }> = {
@@ -133,8 +133,8 @@ export const UAE_LEAVE_TYPES: LeaveType[] = [
     encashable: false,
   },
   {
-    id: 'bereavement',
-    name: 'Bereavement Leave',
+    id: 'compassionate',
+    name: 'Compassionate Leave',
     daysPerYear: 5,
     isPaid: true,
     payPercentage: 100,

@@ -22,7 +22,7 @@ const mockUser: User = {
   id: 'usr_001',
   email: 'admin@uaeservice.ae',
   name: 'Ahmed Al Maktoum',
-  role: 'super_admin',
+  role: 'super-admin',
   permissions: [
     'manage_users', 'manage_settings', 'manage_roles',
     'view_dashboard', 'manage_crm', 'manage_sales',

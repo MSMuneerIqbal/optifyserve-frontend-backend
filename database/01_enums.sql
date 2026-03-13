@@ -4,7 +4,7 @@
 -- ============================================================
 
 -- ==================== AUTH ====================
-CREATE TYPE user_role AS ENUM ('admin', 'manager', 'staff', 'technician');
+CREATE TYPE user_role AS ENUM ('super-admin', 'admin', 'manager', 'staff', 'technician');
 CREATE TYPE user_status AS ENUM ('active', 'inactive', 'suspended', 'pending');
 
 -- ==================== CRM ====================
@@ -36,10 +36,10 @@ CREATE TYPE warehouse_status AS ENUM ('active', 'inactive', 'maintenance');
 CREATE TYPE vendor_status AS ENUM ('active', 'inactive', 'blocked', 'pending-approval');
 CREATE TYPE vendor_category AS ENUM ('spare-parts', 'tools-equipment', 'consumables', 'services', 'raw-materials', 'office-supplies', 'it-equipment', 'other');
 CREATE TYPE vendor_payment_terms AS ENUM ('immediate', 'net-15', 'net-30', 'net-45', 'net-60', 'net-90');
-CREATE TYPE po_status AS ENUM ('draft', 'pending-approval', 'approved', 'sent', 'partially-received', 'fully-received', 'cancelled', 'closed');
+CREATE TYPE po_status AS ENUM ('draft', 'pending-approval', 'approved', 'rejected', 'sent', 'confirmed', 'partially-received', 'fully-received', 'cancelled', 'closed');
 CREATE TYPE approval_status AS ENUM ('pending', 'approved', 'rejected');
 CREATE TYPE approval_level AS ENUM ('level-1', 'level-2', 'level-3');
-CREATE TYPE grn_status AS ENUM ('draft', 'inspecting', 'completed', 'partial');
+CREATE TYPE grn_status AS ENUM ('draft', 'inspecting', 'accepted', 'partially-accepted', 'rejected');
 CREATE TYPE purchase_return_status AS ENUM ('draft', 'pending-approval', 'approved', 'shipped', 'completed', 'cancelled');
 CREATE TYPE return_reason AS ENUM ('defective', 'wrong-item', 'damaged', 'quality-issue', 'excess-quantity', 'other');
 CREATE TYPE return_type AS ENUM ('full', 'partial');
@@ -86,7 +86,7 @@ CREATE TYPE shift_type AS ENUM ('morning', 'evening', 'night', 'split', 'flexibl
 CREATE TYPE attendance_status AS ENUM ('present', 'absent', 'late', 'half-day', 'on-leave', 'holiday', 'weekend', 'work-from-home');
 CREATE TYPE leave_type_id AS ENUM ('annual', 'sick', 'maternity', 'paternity', 'compassionate', 'hajj', 'unpaid', 'study', 'emergency');
 CREATE TYPE leave_status AS ENUM ('pending', 'approved', 'rejected', 'cancelled');
-CREATE TYPE leave_duration AS ENUM ('full-day', 'half-day', 'hourly');
+CREATE TYPE leave_duration AS ENUM ('full-day', 'half-day-morning', 'half-day-afternoon');
 CREATE TYPE payroll_status AS ENUM ('draft', 'processing', 'processed', 'approved', 'paid', 'cancelled');
 CREATE TYPE payslip_status AS ENUM ('draft', 'generated', 'approved', 'paid', 'cancelled');
 CREATE TYPE allowance_type AS ENUM ('housing', 'transport', 'mobile', 'food', 'education', 'medical', 'other');

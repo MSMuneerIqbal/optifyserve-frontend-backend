@@ -83,18 +83,18 @@
 ### Backend (Planned)
 | Layer | Technology |
 |-------|-----------|
-| Framework | ASP.NET Core |
-| ORM | Dapper and/or EF Core with Npgsql |
+| Framework | Express.js (Node.js + TypeScript) |
+| ORM | Prisma |
 | Database | PostgreSQL 16 |
-| Migrations | DbUp (raw SQL) |
+| Migrations | Prisma Migrate + raw SQL |
 | Auth | JWT (access + refresh tokens) |
 
 ### Infrastructure
 | Layer | Options |
 |-------|---------|
 | Dev Database | Docker PostgreSQL (local) |
-| Staging Database | Neon Serverless (free tier) |
-| Production Database | Azure Database for PostgreSQL / Neon Scale |
+| Staging Database | Railway PostgreSQL |
+| Production Database | Azure Database for PostgreSQL |
 
 ---
 
@@ -117,12 +117,12 @@ optifyserve-frontend/
 │   ├── 10_dispatcher.sql              # 2 tables
 │   ├── 11_settings.sql                # 7 tables + sequence_counters
 │   ├── 12_rls_policies.sql            # RLS on ~65 tables
-│   ├── 13_indexes.sql                 # ~200 indexes
-│   ├── 14_triggers.sql                # 20+ triggers
+│   ├── 13_indexes.sql                 # 235 indexes
+│   ├── 14_triggers.sql                # 22 triggers
 │   ├── 15_seed.sql                    # Permissions, tenant, admin user, COA, leave types
 │   ├── README.md                      # Setup guide
 │   ├── LOCAL_SETUP.md                 # Docker/native/Neon setup
-│   └── db_knowledge.md                # ASP.NET Core integration guide
+│   └── db_knowledge.md                # Node.js + Prisma integration guide
 ├── src/
 │   ├── app/
 │   │   ├── App.tsx                    # Router + AuthProvider + Redux Provider (theme)
@@ -619,7 +619,7 @@ interface Address { street: string; city: string; emirate: string; country: stri
 
 ### Auth Types
 ```typescript
-type UserRole = 'super_admin' | 'admin' | 'manager' | 'staff' | 'technician'
+type UserRole = 'super-admin' | 'admin' | 'manager' | 'staff' | 'technician'
 interface User { id: string; email: string; name: string; role: UserRole; permissions: string[]; companyId: string; companyName: string; tenantId: string; avatar?: string; phone?: string; department?: string; }
 ```
 
@@ -629,7 +629,7 @@ interface User { id: string; email: string; name: string; role: UserRole; permis
 
 ## 10. API Endpoints (Backend Reference)
 
-> These endpoints are **not implemented** in the frontend. They serve as the contract for the backend developer building the ASP.NET Core API. When the backend is ready, the frontend will be updated to call these endpoints.
+> These endpoints are **not implemented** in the frontend. They serve as the contract for the backend developer building the Node.js + Express.js API. When the backend is ready, the frontend will be updated to call these endpoints.
 
 ### Auth
 ```
@@ -729,8 +729,8 @@ GET    /api/audit-logs              → PaginatedResponse<AuditLog>
 ### Overview
 - **Total Tables**: ~84 + `sequence_counters`
 - **Total Enum Types**: ~90
-- **Total Indexes**: ~200
-- **Total Triggers**: 20+
+- **Total Indexes**: 235
+- **Total Triggers**: 22
 - **RLS-Protected Tables**: ~65
 
 ### Table Count by Module
@@ -762,7 +762,7 @@ GET    /api/audit-logs              → PaginatedResponse<AuditLog>
 | **Auto Numbers** | `sequence_counters` table + trigger per entity per tenant |
 
 ### Seed Data (in `15_seed.sql`)
-- 71 permissions (CRUD per module + specialized actions)
+- 52 permissions (CRUD per module + specialized actions)
 - 1 test tenant: OptifyServe Solutions LLC (TRN: 100234567890003)
 - 1 admin user: admin@optifyserve.com / Admin@123
 - 4 system roles: Administrator, Manager, Staff, Technician

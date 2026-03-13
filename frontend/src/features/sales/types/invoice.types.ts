@@ -78,14 +78,14 @@ export const VAT_RATES: Record<VatStatus, number> = {
 /**
  * Payment method
  */
-export type PaymentMethod = 'cash' | 'card' | 'bank-transfer' | 'cheque'
+export type PaymentMethod = 'cash' | 'credit-card' | 'bank-transfer' | 'cheque'
 
 /**
  * Payment method labels
  */
 export const PAYMENT_METHOD_KEYS: Record<PaymentMethod, string> = {
   cash: 'status.cash',
-  card: 'status.creditDebitCard',
+  'credit-card': 'status.creditDebitCard',
   'bank-transfer': 'status.bankTransfer',
   cheque: 'status.cheque',
 }

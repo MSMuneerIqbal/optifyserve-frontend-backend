@@ -366,7 +366,7 @@ export const sampleInvoices: Invoice[] = [
         invoiceId: 'inv_005',
         date: '2025-02-01',
         amount: 2205,
-        paymentMethod: 'card',
+        paymentMethod: 'credit-card',
         referenceNumber: 'CC-2025-00567',
         recordedBy: { id: 'usr_001', name: 'Sara Ahmed' },
         createdAt: '2025-02-01T16:00:00Z',

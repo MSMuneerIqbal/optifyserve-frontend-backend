@@ -54,7 +54,7 @@ export function SettingsPage() {
     i18n.changeLanguage(newLang)
   }
 
-  const isAdmin = userRole === 'admin' || userRole === 'super_admin'
+  const isAdmin = userRole === 'admin' || userRole === 'super-admin'
   const quickAccess = QUICK_ACCESS.filter(item => !item.adminOnly || isAdmin)
 
   return (

@@ -146,7 +146,7 @@ export const DATE_FORMATS = {
 } as const
 
 // Stock Movement Types
-export const STOCK_MOVEMENT_TYPES = ['in', 'out', 'transfer', 'adjustment'] as const
+export const STOCK_MOVEMENT_TYPES = ['in', 'out', 'transfer', 'adjustment', 'return', 'consumption'] as const
 export type StockMovementType = (typeof STOCK_MOVEMENT_TYPES)[number]
 
 export const STOCK_MOVEMENT_LABELS: Record<StockMovementType, string> = {
@@ -154,6 +154,8 @@ export const STOCK_MOVEMENT_LABELS: Record<StockMovementType, string> = {
   out: 'Stock Out',
   transfer: 'Transfer',
   adjustment: 'Adjustment',
+  return: 'Return',
+  consumption: 'Consumption',
 }
 
 // Job Status

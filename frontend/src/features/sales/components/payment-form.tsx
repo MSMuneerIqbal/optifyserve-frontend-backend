@@ -49,7 +49,7 @@ function createPaymentFormSchema(t: (key: string) => string) {
   return z.object({
     amount: z.number().min(0.01, t('validation.amountGreaterZero')),
     paymentDate: z.date({ message: t('validation.paymentDateRequired') }),
-    paymentMethod: z.enum(['cash', 'card', 'bank-transfer', 'cheque']),
+    paymentMethod: z.enum(['cash', 'credit-card', 'bank-transfer', 'cheque']),
     referenceNumber: z.string().optional(),
     chequeNumber: z.string().optional(),
     bankName: z.string().optional(),

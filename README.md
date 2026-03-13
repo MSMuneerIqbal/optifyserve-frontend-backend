@@ -26,10 +26,10 @@ OptifyServe is a full-stack ERP system designed for maintenance, cleaning, pest 
 optifyserve-frontend-backend/
 ├── frontend/                  # React UI Template (complete)
 │   ├── src/                   # Application source code
-│   ├── database/              # PostgreSQL schema (complete)
 │   ├── PROJECT_SPEC.md        # Detailed technical specification
 │   └── CLAUDE.md              # AI coding instructions
-├── backend/                   # ASP.NET Core API (planned)
+├── backend/                   # Node.js + Express + Prisma API (planned)
+├── database/                  # PostgreSQL schema (complete)
 └── README.md                  # This file
 ```
 
@@ -47,7 +47,7 @@ optifyserve-frontend-backend/
 | **Charts** | Recharts | Complete |
 | **Tables** | TanStack React Table | Complete |
 | **Database** | PostgreSQL 16 (schema designed) | Complete |
-| **Backend** | ASP.NET Core + Dapper/EF Core | Planned |
+| **Backend** | Node.js + Express.js + Prisma ORM | Planned |
 | **Auth** | JWT (access + refresh tokens) | Planned |
 
 ---
@@ -87,7 +87,7 @@ Open `http://localhost:5173` — click **Sign In** to enter (no credentials requ
 
 ### Database
 
-PostgreSQL schema files are in `frontend/database/`. See [`frontend/database/LOCAL_SETUP.md`](frontend/database/LOCAL_SETUP.md) for Docker, native, and Neon setup instructions.
+PostgreSQL schema files are in `database/`. See [`database/LOCAL_SETUP.md`](database/LOCAL_SETUP.md) for Docker, native, and Neon setup instructions.
 
 ```bash
 # Docker example
@@ -96,7 +96,7 @@ docker run -d --name optifyserve-db -p 5432:5432 \
   postgres:16
 
 # Apply schema (in order)
-cd frontend/database
+cd database
 psql -U postgres -d optifyserve -f 00_extensions.sql
 psql -U postgres -d optifyserve -f 01_enums.sql
 # ... through 15_seed.sql
@@ -104,7 +104,7 @@ psql -U postgres -d optifyserve -f 01_enums.sql
 
 ### Backend (Planned)
 
-ASP.NET Core Web API will be added in the `backend/` directory. The frontend is pre-designed with API endpoint contracts documented in [`frontend/PROJECT_SPEC.md`](frontend/PROJECT_SPEC.md#10-api-endpoints-backend-reference).
+A Node.js + Express.js + Prisma ORM Web API will be added in the `backend/` directory. The frontend is pre-designed with API endpoint contracts documented in [`frontend/PROJECT_SPEC.md`](frontend/PROJECT_SPEC.md#10-api-endpoints-backend-reference).
 
 ---
 
@@ -135,9 +135,9 @@ For full technical details, see [`frontend/PROJECT_SPEC.md`](frontend/PROJECT_SP
 | Dispatcher | 2 | technician_locations, job_assignment_logs |
 | Settings | 8 | company_profiles, audit_logs, sequence_counters |
 
-**Key patterns**: UUID primary keys, `NUMERIC(15,2)` for money, `TIMESTAMPTZ` for dates, `tenant_id` on every business table, RLS policies on ~65 tables, ~200 indexes, 20+ triggers.
+**Key patterns**: UUID primary keys, `NUMERIC(15,2)` for money, `TIMESTAMPTZ` for dates, `tenant_id` on every business table, RLS policies on ~65 tables, 235 indexes, 22 triggers.
 
-For setup guide and ASP.NET Core integration, see [`frontend/database/db_knowledge.md`](frontend/database/db_knowledge.md).
+For setup guide and Node.js integration, see [`database/db_knowledge.md`](database/db_knowledge.md).
 
 ---
 
@@ -166,11 +166,11 @@ For setup guide and ASP.NET Core integration, see [`frontend/database/db_knowled
                                                │ REST API (JSON)
                                                ▼
                                   ┌──────────────────────────┐
-                                  │ ASP.NET Core Web API     │
+                                  │ Node.js + Express.js     │
                                   │ JWT Auth, RBAC           │
                                   │ Business Logic           │
                                   └────────────┬─────────────┘
-                                               │ Dapper / EF Core
+                                               │ Prisma ORM
                                                ▼
                                   ┌──────────────────────────┐
                                   │ PostgreSQL 16            │
@@ -183,9 +183,9 @@ For setup guide and ASP.NET Core integration, see [`frontend/database/db_knowled
 
 ## Security
 
-- **Multi-tenancy**: Row-Level Security (RLS) on all business tables
+- **Multi-tenancy**: Row-Level Security (RLS) on ~65 business tables
 - **Authentication**: JWT access tokens (15min) + refresh tokens (7d)
-- **Authorization**: Role-Based Access Control — 71 granular permissions
+- **Authorization**: Role-Based Access Control — 52 granular permissions
 - **Data**: `tenant_id` isolation, soft deletes, full audit logging
 
 ---
@@ -237,7 +237,7 @@ The ERP system provides modules for CRM, Sales, Inventory, Purchase, Accounts, H
 
 #### 2.1 Product Perspective
 
-Web-based SaaS ERP application: React frontend, ASP.NET Core Web API backend, PostgreSQL database. Multi-tenant architecture with row-level security.
+Web-based SaaS ERP application: React frontend, Node.js + Express.js backend with Prisma ORM, PostgreSQL database. Multi-tenant architecture with row-level security.
 
 #### 2.2 Product Functions
 
@@ -274,7 +274,7 @@ Web-based SaaS ERP application: React frontend, ASP.NET Core Web API backend, Po
 
 #### 3.1 Core System
 - Consolidated dashboard with KPIs, charts, urgent jobs, and activity feed
-- Role-based access control with 71 granular permissions
+- Role-based access control with 52 granular permissions
 - Secure JWT authentication with refresh tokens
 
 #### 3.2 CRM Module

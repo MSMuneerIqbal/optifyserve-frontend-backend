@@ -10,7 +10,7 @@ import type { PaginatedResponse, StatusBadgeVariant } from '@/types/common.types
 /**
  * Payment method
  */
-export type VendorPaymentMethod = 'cash' | 'bank-transfer' | 'cheque' | 'card' | 'online'
+export type VendorPaymentMethod = 'cash' | 'bank-transfer' | 'cheque' | 'credit-card' | 'online'
 
 /**
  * Payment method labels
@@ -19,22 +19,23 @@ export const VENDOR_PAYMENT_METHOD_KEYS: Record<VendorPaymentMethod, string> = {
   cash: 'status.cash',
   'bank-transfer': 'status.bankTransfer',
   cheque: 'status.cheque',
-  card: 'status.creditDebitCard',
+  'credit-card': 'status.creditDebitCard',
   online: 'status.onlinePayment',
 }
 
 /**
  * Payment status
  */
-export type VendorPaymentStatus = 'pending' | 'completed' | 'bounced' | 'cancelled'
+export type VendorPaymentStatus = 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled'
 
 /**
  * Payment status configuration
  */
 export const VENDOR_PAYMENT_STATUS_CONFIG: Record<VendorPaymentStatus, { key: string; variant: StatusBadgeVariant }> = {
   pending: { key: 'status.pending', variant: 'warning' },
+  processing: { key: 'status.processing', variant: 'info' },
   completed: { key: 'status.completed', variant: 'success' },
-  bounced: { key: 'status.bounced', variant: 'error' },
+  failed: { key: 'status.failed', variant: 'error' },
   cancelled: { key: 'status.cancelled', variant: 'neutral' },
 }
 
@@ -140,7 +141,7 @@ export interface PaymentSummary {
   totalAmount: number
   pendingCount: number
   completedCount: number
-  bouncedCount: number
+  failedCount: number
   thisMonthTotal: number
   lastMonthTotal: number
 }

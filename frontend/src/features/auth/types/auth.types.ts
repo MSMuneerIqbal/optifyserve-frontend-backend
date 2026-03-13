@@ -6,7 +6,7 @@
 /**
  * User roles in the ERP system
  */
-export type UserRole = 'super_admin' | 'admin' | 'manager' | 'staff' | 'technician'
+export type UserRole = 'super-admin' | 'admin' | 'manager' | 'staff' | 'technician'
 
 /**
  * Authenticated user information

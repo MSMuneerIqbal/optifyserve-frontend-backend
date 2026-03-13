@@ -120,7 +120,7 @@ export function JobList({
                 <SelectItem value="new">{t('status.new')}</SelectItem>
                 <SelectItem value="assigned">{t('status.assigned')}</SelectItem>
                 <SelectItem value="scheduled">{t('status.scheduled')}</SelectItem>
-                <SelectItem value="in_progress">{t('status.inProgress')}</SelectItem>
+                <SelectItem value="in-progress">{t('status.inProgress')}</SelectItem>
                 <SelectItem value="completed">{t('status.completed')}</SelectItem>
                 <SelectItem value="invoiced">{t('status.invoiced')}</SelectItem>
                 <SelectItem value="cancelled">{t('status.cancelled')}</SelectItem>
