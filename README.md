@@ -1,22 +1,27 @@
-# OptifyServe — SaaS ERP Platform
+# OptifyServe ERP — SaaS Platform for UAE Service Companies
 
-> Multi-tenant SaaS ERP for UAE service & maintenance companies
+> Multi-tenant SaaS ERP for maintenance, cleaning, pest control, HVAC, plumbing, electrical, and facilities management companies operating in the UAE.
+
+**Live Demo**: [app.optifyserve.com](https://app.optifyserve.com) (click Sign In to enter, or visit [/signup](https://app.optifyserve.com/signup) for the registration flow)
 
 ---
 
-## Project Overview
-
-OptifyServe is a full-stack ERP system designed for maintenance, cleaning, pest control, HVAC, plumbing, electrical, and facilities management companies operating in the UAE. It supports multi-tenancy with row-level security, bilingual UI (English + Arabic with RTL), and UAE-specific compliance (VAT, WPS, labor law).
+## At a Glance
 
 | Stat | Value |
 |------|-------|
 | Modules | 14 |
-| Frontend Pages | 49 |
-| Feature Components | 149 |
-| Translation Keys | 3,501 per language (EN + AR with RTL) |
-| Theme Presets | 4 |
+| Frontend Pages | 50 |
+| Feature Components | 152 |
+| Shared / UI / Layout Components | 15 / 27 / 6 |
+| Translation Keys | 3,580 per language (EN + AR with RTL) |
+| Translation Namespaces | 18 |
+| Theme Presets | 4 (UAE Premium, Corporate Navy, Modern Teal, OptifyServe) |
 | Database Tables | ~84 with RLS |
-| Database Enums | ~90 |
+| Database Enums | ~90 (kebab-case) |
+| Database Indexes | 235 |
+| Database Triggers | 22 |
+| License | Apache 2.0 |
 
 ---
 
@@ -24,13 +29,49 @@ OptifyServe is a full-stack ERP system designed for maintenance, cleaning, pest 
 
 ```
 optifyserve-frontend-backend/
-├── frontend/                  # React UI Template (complete)
-│   ├── src/                   # Application source code
-│   ├── PROJECT_SPEC.md        # Detailed technical specification
-│   └── CLAUDE.md              # AI coding instructions
-├── backend/                   # Node.js + Express + Prisma API (planned)
-├── database/                  # PostgreSQL schema (complete)
-└── README.md                  # This file
+├── frontend/                     # React UI Template (complete)
+│   ├── src/                      # Application source code
+│   │   ├── app/                  # App.tsx (router + providers), protected-route.tsx
+│   │   ├── components/           # layout/ (6), shared/ (15), ui/ (27 shadcn)
+│   │   ├── contexts/             # auth-context.tsx, currency-context.tsx
+│   │   ├── data/                 # 18 static sample data files
+│   │   ├── features/             # 14 feature modules (components/ types/ pages/)
+│   │   ├── hooks/                # 6 custom hooks
+│   │   ├── i18n/                 # i18next config + EN/AR translation files
+│   │   ├── lib/                  # utils.ts, constants.ts, validations.ts
+│   │   ├── store/                # Redux store (theme system only)
+│   │   ├── styles/               # globals.css (CSS variables)
+│   │   └── types/                # Shared TypeScript types
+│   ├── public/                   # Static assets (logos, favicon)
+│   ├── CLAUDE.md                 # AI coding instructions
+│   ├── PROJECT_SPEC.md           # Detailed frontend specification
+│   └── RESPONSIVE_REQUIREMENTS.md # WCAG 2.2 responsive design spec
+├── backend/                      # Node.js + Express + Prisma API (planned)
+│   ├── BACKEND_SPECIFICATION.md  # Complete backend architecture spec
+│   └── PLAN.md                   # 12-phase implementation plan
+├── database/                     # PostgreSQL 16 schema (complete)
+│   ├── 00_extensions.sql         # uuid-ossp, pgcrypto, btree_gist, pg_trgm
+│   ├── 01_enums.sql              # ~90 custom enum types
+│   ├── 02_tenants_and_auth.sql   # 7 tables (tenants, users, roles, sessions)
+│   ├── 03_crm.sql                # 6 tables (customers, leads, follow-ups)
+│   ├── 04_sales.sql              # 5 tables (quotations, invoices, payments)
+│   ├── 05_inventory.sql          # 8 tables (items, warehouses, stock)
+│   ├── 06_purchase.sql           # 11 tables (vendors, POs, GRN, returns)
+│   ├── 07_accounts.sql           # 14 tables (COA, journals, AR/AP, VAT)
+│   ├── 08_hr.sql                 # 14 tables (employees, payroll, leaves)
+│   ├── 09_jobs.sql               # 8 tables (jobs, technicians, reports)
+│   ├── 10_dispatcher.sql         # 2 tables (locations, assignment logs)
+│   ├── 11_settings.sql           # 7 tables + sequence_counters
+│   ├── 12_rls_policies.sql       # RLS on ~65 tables
+│   ├── 13_indexes.sql            # 235 indexes
+│   ├── 14_triggers.sql           # 22 triggers
+│   ├── 15_seed.sql               # Permissions, tenant, admin, COA, leave types
+│   ├── DATABASE_SPECIFICATION.md # Complete database specification
+│   ├── db_knowledge.md           # Node.js + Prisma integration guide
+│   ├── LOCAL_SETUP.md            # Docker / native PostgreSQL setup
+│   └── README.md                 # Database setup guide
+├── LICENSE                       # Apache License 2.0
+└── README.md                     # This file
 ```
 
 ---
@@ -40,15 +81,19 @@ optifyserve-frontend-backend/
 | Layer | Technology | Status |
 |-------|-----------|--------|
 | **Frontend** | React 19 + TypeScript 5.9 + Vite 7 | Complete |
-| **UI Components** | shadcn/ui + Tailwind CSS 3.4 | Complete |
-| **i18n** | react-i18next (English + Arabic with RTL) | Complete |
-| **State** | Redux Toolkit + Saga (theme only) + React Context (auth) | Complete |
-| **Forms** | React Hook Form + Zod | Complete |
-| **Charts** | Recharts | Complete |
-| **Tables** | TanStack React Table | Complete |
-| **Database** | PostgreSQL 16 (schema designed) | Complete |
+| **UI Components** | shadcn/ui + Radix UI + Tailwind CSS 3.4 | Complete |
+| **i18n** | react-i18next (English + Arabic with automatic RTL) | Complete |
+| **State** | Redux Toolkit + Saga (theme) + React Context (auth, currency) | Complete |
+| **Forms** | React Hook Form + Zod validation | Complete |
+| **Charts** | Recharts with ResponsiveContainer | Complete |
+| **Tables** | TanStack React Table v8 | Complete |
+| **Routing** | React Router DOM v7 (lazy-loaded pages) | Complete |
+| **Toasts** | Sonner | Complete |
+| **Database** | PostgreSQL 16 (schema designed, 16 SQL files) | Complete |
 | **Backend** | Node.js + Express.js + Prisma ORM | Planned |
-| **Auth** | JWT (access + refresh tokens) | Planned |
+| **Auth (Backend)** | JWT (access + refresh tokens) | Planned |
+| **Queue** | BullMQ + Redis | Planned |
+| **Real-time** | Socket.io | Planned |
 
 ---
 
@@ -56,20 +101,20 @@ optifyserve-frontend-backend/
 
 | # | Module | Route | Pages | Description |
 |---|--------|-------|-------|-------------|
-| 1 | Auth | `/login` | 2 | Split-screen login, forgot password |
-| 2 | Dashboard | `/dashboard` | 1 | KPIs, charts, urgent jobs, activity feed |
-| 3 | CRM | `/crm/*` | 2 | Customers, leads pipeline, follow-ups |
-| 4 | Sales | `/sales/*` | 2 | Quotations, invoices, VAT calculation |
-| 5 | Inventory | `/inventory/*` | 5 | Items, warehouses, stock levels, movements |
-| 6 | Purchase | `/purchase/*` | 5 | Vendors, POs, GRN, returns, payments |
-| 7 | Accounts | `/accounts/*` | 9 | COA, journal, AR/AP, expenses, VAT, bank reconciliation |
-| 8 | HR | `/hr/*` | 10 | Employees, attendance, leaves, payroll, EOSB |
-| 9 | Jobs | `/jobs/*` | 5 | Job management, technicians, scheduling |
-| 10 | Dispatcher | `/dispatcher` | 1 | Map view, job assignment, technician tracking |
-| 11 | User Management | `/users/*` | 2 | User accounts, roles & permissions |
-| 12 | Platform Admin | `/admin/*` | 3 | Tenant management, subscriptions, analytics |
-| 13 | Audit | `/audit` | 1 | Audit log viewer with filters |
-| 14 | Settings | `/settings/*` | 1 | Company profile, theme, notifications, security |
+| 1 | **Auth** | `/login`, `/signup` | 3 | Split-screen login, multi-step signup with plan selection + 15-day trial, forgot password |
+| 2 | **Dashboard** | `/dashboard` | 1 | KPIs, revenue charts, urgent jobs, recent activities |
+| 3 | **CRM** | `/crm/*` | 2 | Customers, leads pipeline (5 stages), follow-ups |
+| 4 | **Sales** | `/sales/*` | 2 | Quotations, invoices, VAT calculation |
+| 5 | **Inventory** | `/inventory/*` | 5 | Items, warehouses, stock levels, movements, reports |
+| 6 | **Purchase** | `/purchase/*` | 5 | Vendors, POs, GRN, returns, payments |
+| 7 | **Accounts** | `/accounts/*` | 9 | Financial dashboard, COA, journal entries, AR/AP, expenses, VAT, bank reconciliation, reports |
+| 8 | **HR** | `/hr/*` | 10 | Employees, departments, attendance, leaves, payroll, EOSB, documents, performance, reports, portal |
+| 9 | **Jobs** | `/jobs/*` | 5 | Job cards, technicians, scheduling, service reports, analytics |
+| 10 | **Dispatcher** | `/dispatcher` | 1 | Map view, job assignment, technician tracking |
+| 11 | **User Management** | `/users/*` | 2 | User accounts, roles & permissions (52 granular permissions) |
+| 12 | **Platform Admin** | `/admin/*` | 3 | Tenant management, subscription plans, platform analytics |
+| 13 | **Audit** | `/audit` | 1 | Audit log viewer with filters |
+| 14 | **Settings** | `/settings/*` | 1 | Company profile, theme customizer, notifications, security |
 
 ---
 
@@ -81,9 +126,21 @@ optifyserve-frontend-backend/
 cd frontend
 npm install
 npm run dev
+# Opens at http://localhost:5173
 ```
 
-Open `http://localhost:5173` — click **Sign In** to enter (no credentials required in template mode).
+- **Login**: Click **Sign In** to enter instantly (no credentials needed in template mode)
+- **Signup**: Visit `/signup` for the multi-step registration flow with plan selection and 15-day free trial
+- **Dev bypass**: Set `AUTO_LOGIN = true` in `src/contexts/auth-context.tsx` to skip login entirely
+- **Language**: Toggle EN/AR with the globe icon in the top nav (Arabic enables full RTL layout)
+
+```bash
+# Production build
+npm run build
+
+# Preview production build
+npm run preview
+```
 
 ### Database
 
@@ -104,19 +161,48 @@ psql -U postgres -d optifyserve -f 01_enums.sql
 
 ### Backend (Planned)
 
-A Node.js + Express.js + Prisma ORM Web API will be added in the `backend/` directory. The frontend is pre-designed with API endpoint contracts documented in [`frontend/PROJECT_SPEC.md`](frontend/PROJECT_SPEC.md#10-api-endpoints-backend-reference).
+A Node.js + Express.js + Prisma ORM API will be built in the `backend/` directory. The implementation follows a 12-phase plan documented in [`backend/PLAN.md`](backend/PLAN.md). API endpoint contracts are defined in [`frontend/PROJECT_SPEC.md`](frontend/PROJECT_SPEC.md).
 
 ---
 
 ## Frontend Architecture
 
-- **Pure UI Template** — all pages use static sample data from `src/data/` (18 files), no API calls
-- **Auth**: React Context (`src/contexts/auth-context.tsx`) — zero-friction login for template mode
-- **Theme**: 4 presets (Corporate Navy, Modern Teal, UAE Premium, OptifyServe) + full color customizer
-- **i18n**: 3,501 keys per language across 18 namespaces with automatic RTL layout mirroring
-- **Animations**: Page transitions, staggered card entrances, button micro-interactions
+### Current State: Complete UI Template
 
-For full technical details, see [`frontend/PROJECT_SPEC.md`](frontend/PROJECT_SPEC.md).
+- **Pure UI template** — all 50 pages use static sample data from `src/data/` (18 files), no API calls
+- **Auth**: React Context (`src/contexts/auth-context.tsx`) — login, register, logout with localStorage persistence
+- **Theme**: 4 presets (UAE Premium, Corporate Navy, Modern Teal, OptifyServe) + full color customizer with 8 color pickers
+- **i18n**: 3,580 keys per language across 18 namespaces with automatic RTL layout mirroring
+- **Routing**: All 50 pages lazy-loaded with `React.lazy()` for code splitting
+- **Responsive**: Mobile-first (375px+), tested at 7 breakpoints, WCAG 2.2 Level AA compliant
+- **RTL**: Full Arabic support using Tailwind logical properties (`ms-*`, `me-*`, `start-*`, `end-*`)
+
+### Key Patterns
+
+```typescript
+// Auth — React Context (not Redux)
+const { user, isAuthenticated, login, register, logout } = useAuth()
+
+// i18n — always use t() for UI strings
+const { t } = useTranslation()
+t('crm.customerName')
+
+// Data — static sample files (no API calls)
+import { sampleCustomers } from '@/data/customers.data'
+
+// Theme — CSS variables (never hardcoded colors)
+<div className="bg-primary text-primary-foreground" />  // correct
+<div className="bg-indigo-600" />                        // wrong
+```
+
+### Future: Backend Integration
+
+When the Node.js/Express backend is ready:
+1. Install HTTP client (`axios`)
+2. Create API service files per feature module
+3. Add Redux slices + sagas for async data
+4. Replace static data imports with API calls
+5. Add loading/error states
 
 ---
 
@@ -135,9 +221,26 @@ For full technical details, see [`frontend/PROJECT_SPEC.md`](frontend/PROJECT_SP
 | Dispatcher | 2 | technician_locations, job_assignment_logs |
 | Settings | 8 | company_profiles, audit_logs, sequence_counters |
 
-**Key patterns**: UUID primary keys, `NUMERIC(15,2)` for money, `TIMESTAMPTZ` for dates, `tenant_id` on every business table, RLS policies on ~65 tables, 235 indexes, 22 triggers.
+**Key patterns**: UUID primary keys, `NUMERIC(15,2)` for money, `TIMESTAMPTZ` for dates, `tenant_id` on every business table, RLS policies on ~65 tables, 235 indexes, 22 triggers, all enums in kebab-case.
 
 For setup guide and Node.js integration, see [`database/db_knowledge.md`](database/db_knowledge.md).
+
+---
+
+## Backend Specification
+
+The backend architecture is fully specified and ready for implementation:
+
+- **Architecture**: RESTful API, modular monolith (feature-based folders)
+- **Stack**: Node.js + TypeScript (strict) + Express.js + Prisma ORM
+- **Auth**: JWT access tokens (15min) + refresh tokens (7d) + RBAC (52 permissions)
+- **Queue**: BullMQ + Redis for async jobs (email, PDF generation, reports)
+- **Real-time**: Socket.io for dispatcher and notifications
+- **Financial**: `decimal.js` for all money operations (never floating point)
+- **Multi-tenancy**: `tenantId` enforced at every layer from day one
+- **Implementation**: 12-phase plan (~12 weeks) documented in [`backend/PLAN.md`](backend/PLAN.md)
+
+Full specification: [`backend/BACKEND_SPECIFICATION.md`](backend/BACKEND_SPECIFICATION.md)
 
 ---
 
@@ -146,237 +249,90 @@ For setup guide and Node.js integration, see [`database/db_knowledge.md`](databa
 | Area | Details |
 |------|---------|
 | **VAT** | 5% standard rate, zero-rated, exempt (FTA format) |
-| **TRN** | 15-digit Tax Registration Number |
-| **Currency** | AED (UAE Dirham) — `AED 1,234.56` |
-| **Labor Law** | 30d annual leave, 90d sick leave, EOSB gratuity |
+| **TRN** | 15-digit Tax Registration Number validation (XXX-XXXXXX-XXXXX) |
+| **Currency** | AED (UAE Dirham) — formatted as `AED 1,234.56` |
+| **Labor Law** | 30d annual leave, 90d sick leave, EOSB gratuity calculation |
 | **WPS** | Wage Protection System payroll compliance |
 | **Emirates** | Dubai, Abu Dhabi, Sharjah, Ajman, RAK, UAQ, Fujairah |
-| **Work Week** | Sun–Thu, Ramadan reduced hours support |
+| **Work Week** | Sun-Thu, Ramadan reduced hours support |
+| **Phone** | +971 XX XXX XXXX format with validation |
+| **Bilingual** | English + Arabic with automatic RTL layout mirroring |
 
 ---
 
 ## System Architecture
 
 ```
-┌─────────────┐       HTTPS       ┌──────────────────────────┐
-│ Web Browser │ ◄───────────────► │ React Frontend (Vite)    │
-│             │                   │ 49 pages, shadcn/ui      │
-└─────────────┘                   │ i18n (EN/AR), RTL        │
-                                  └────────────┬─────────────┘
-                                               │ REST API (JSON)
-                                               ▼
-                                  ┌──────────────────────────┐
-                                  │ Node.js + Express.js     │
-                                  │ JWT Auth, RBAC           │
-                                  │ Business Logic           │
-                                  └────────────┬─────────────┘
-                                               │ Prisma ORM
-                                               ▼
-                                  ┌──────────────────────────┐
-                                  │ PostgreSQL 16            │
-                                  │ ~84 tables, RLS          │
-                                  │ Multi-tenant isolation   │
-                                  └──────────────────────────┘
+┌─────────────┐       HTTPS       ┌──────────────────────────────┐
+│ Web Browser │ ◄───────────────► │ React Frontend (Vite 7)      │
+│ Mobile/Tab  │                   │ 50 pages, shadcn/ui          │
+│ Desktop     │                   │ i18n (EN/AR), RTL            │
+└─────────────┘                   │ Lazy-loaded, responsive      │
+                                  └─────────────┬────────────────┘
+                                                │ REST API (JSON)
+                                                ▼
+                                  ┌──────────────────────────────┐
+                                  │ Node.js + Express.js         │
+                                  │ JWT Auth, RBAC (52 perms)    │
+                                  │ BullMQ + Redis (queues)      │
+                                  │ Socket.io (real-time)        │
+                                  └─────────────┬────────────────┘
+                                                │ Prisma ORM
+                                                ▼
+                                  ┌──────────────────────────────┐
+                                  │ PostgreSQL 16                │
+                                  │ ~84 tables, ~90 enums        │
+                                  │ RLS multi-tenant isolation   │
+                                  │ 235 indexes, 22 triggers     │
+                                  └──────────────────────────────┘
 ```
 
 ---
 
 ## Security
 
-- **Multi-tenancy**: Row-Level Security (RLS) on ~65 business tables
-- **Authentication**: JWT access tokens (15min) + refresh tokens (7d)
-- **Authorization**: Role-Based Access Control — 52 granular permissions
-- **Data**: `tenant_id` isolation, soft deletes, full audit logging
+| Layer | Mechanism |
+|-------|-----------|
+| **Multi-tenancy** | Row-Level Security (RLS) on ~65 business tables |
+| **Authentication** | JWT access tokens (15min) + refresh tokens (7d) |
+| **Authorization** | Role-Based Access Control — 52 granular permissions |
+| **Data Isolation** | `tenant_id` on every business table |
+| **Passwords** | bcrypt hashing |
+| **Audit** | Full audit logging with user, action, timestamp, IP |
+| **Frontend** | WCAG 2.2 Level AA, no XSS vectors, CSP-ready |
 
 ---
 
-## Software Requirements Specification (SRS)
+## Verified & Tested
 
-**ISO/IEC/IEEE 29148:2018 Compliant**
+The frontend has been comprehensively tested (129 tests, all passing) covering:
 
-### 1. Introduction
-
-#### 1.1 Purpose
-
-This document provides a detailed Software Requirements Specification for a SaaS-based ERP system designed for service-based and maintenance companies operating in the UAE. It defines functional and non-functional requirements for developers, testers, project managers, and stakeholders.
-
-#### 1.2 Document Conventions
-
-- **shall** — mandatory requirement
-- **should** — recommended feature
-- **may** — optional feature
-
-#### 1.3 Intended Audience
-
-- Internal Development Team
-- QA and Testing Team
-- Project Managers
-- Stakeholders and Product Owners
-
-#### 1.4 Product Scope
-
-The ERP system provides modules for CRM, Sales, Inventory, Purchase, Accounts, HR, Job/Service Management, Dispatcher, User Management, Platform Administration, Audit, and Settings with multi-company and multi-branch support.
-
-#### 1.5 Definitions, Acronyms, Abbreviations
-
-| Term | Definition |
-|------|------------|
-| ERP | Enterprise Resource Planning |
-| CRM | Customer Relationship Management |
-| VAT | Value Added Tax (5% in UAE) |
-| TRN | Tax Registration Number |
-| WPS | Wage Protection System |
-| EOSB | End of Service Benefits |
-| RLS | Row-Level Security |
-| GRN | Goods Received Note |
-| API | Application Programming Interface |
+- **Utility functions** — currency formatting, phone/TRN validation, initials, truncation
+- **Constants** — all 7 UAE emirates, emirate codes, customer types
+- **Zod schemas** — email, phone, TRN, password, login, signup, subscription plans
+- **i18n parity** — EN/AR key count match, all 18 namespaces present, no empty values
+- **Sample data** — all 18 data files load with required fields
+- **Module exports** — all 14 feature modules export correctly
+- **Redux store** — theme slice, colors, customization state
+- **Shared components** — all 15 shared components export correctly
+- **Custom hooks** — all 6 hooks export correctly
+- **Theme system** — presets, default colors, slice actions
+- **Production build** — 0 TypeScript errors, successful Vite build
 
 ---
 
-### 2. Overall Description
+## Brand
 
-#### 2.1 Product Perspective
-
-Web-based SaaS ERP application: React frontend, Node.js + Express.js backend with Prisma ORM, PostgreSQL database. Multi-tenant architecture with row-level security.
-
-#### 2.2 Product Functions
-
-- User and role management with granular permissions
-- Customer and lead management (CRM)
-- Quotation, invoicing, and payment tracking
-- Inventory and multi-warehouse stock management
-- Purchase orders, GRN, and vendor management
-- Double-entry accounting, AR/AP, expenses, VAT returns
-- HR: employees, attendance, leave, payroll, EOSB
-- Job scheduling, technician dispatch, service reports
-- Platform administration and audit logging
-- Configurable settings with theme customization
-
-#### 2.3 User Classes
-
-| User Class | Description |
-|------------|-------------|
-| Super Admin | Platform-level access: tenants, subscriptions, analytics |
-| Admin | Full tenant system access and configuration |
-| Manager | Operational control, approvals, and reporting |
-| Staff | Module-based limited access for daily operations |
-| Technician | Job and service-related access (mobile-ready) |
-
-#### 2.4 Operating Environment
-
-- Web browsers: Chrome, Edge, Firefox, Safari
-- Responsive: desktop (1920px), tablet (768px), mobile (375px)
-- Cloud-hosted (Azure / AWS / Vercel)
-
----
-
-### 3. System Features
-
-#### 3.1 Core System
-- Consolidated dashboard with KPIs, charts, urgent jobs, and activity feed
-- Role-based access control with 52 granular permissions
-- Secure JWT authentication with refresh tokens
-
-#### 3.2 CRM Module
-- Customer profiles with service history and contact management
-- Lead pipeline with 5 stages (New, Follow-up, Qualified, Won, Lost)
-- Follow-up tracking (call, email, meeting)
-
-#### 3.3 Sales Module
-- Quotation creation with multi-line items, discounts, VAT
-- Quotation-to-invoice conversion
-- Invoice payment recording with partial payment support
-- PDF-style preview with company branding
-
-#### 3.4 Inventory Management
-- Item master with SKU, barcode, serial number tracking
-- Multi-warehouse stock levels
-- Stock in/out/transfer/adjustment movements
-- Low stock alerts with reorder recommendations
-
-#### 3.5 Purchase Module
-- Vendor directory with ratings and payment terms
-- Purchase orders with multi-level approval workflow
-- Goods receipt with quality inspection
-- Purchase returns and vendor payment recording
-
-#### 3.6 Accounts & Finance
-- Hierarchical chart of accounts (tree view)
-- Double-entry journal entries with auto-balance validation
-- AR/AP aging analysis (6 buckets)
-- Expense claims with approval workflow
-- Bank reconciliation with statement matching
-- VAT return preparation (UAE FTA format)
-- Financial reports: trial balance, P&L, balance sheet, cash flow
-
-#### 3.7 HR Management
-- Employee lifecycle management
-- Attendance with GPS check-in/check-out, Ramadan shift support
-- Leave management (9 types per UAE labor law)
-- Payroll processing (WPS-ready)
-- Performance reviews with goals and ratings
-- EOSB gratuity calculation per UAE labor law
-- Document management with expiry alerts
-- Employee self-service portal
-
-#### 3.8 Job & Service Management
-- Job creation with customer, service type, priority, scheduling
-- Technician skills and availability management
-- Calendar and map views for scheduling
-- Service reports with checklist, parts, photos, signatures
-- Customer feedback with 5-star ratings
-
-#### 3.9 Dispatcher
-- Map view with technician and job markers
-- Smart job assignment with scoring (distance, skills, availability)
-- Technician utilization dashboard
-
----
-
-### 4. External Interface Requirements
-
-#### 4.1 User Interfaces
-- Web-based responsive SPA (React)
-- Bilingual: English + Arabic with automatic RTL layout
-
-#### 4.2 Software Interfaces
-- WhatsApp Business API (planned)
-- Google Maps API (planned)
-- Email/SMS Gateway (planned)
-
----
-
-### 5. Non-Functional Requirements
-
-#### 5.1 Performance
-- Response time under 2 seconds for standard operations (100 concurrent users)
-- Up to 500 concurrent users with response times under 5 seconds
-- Database queries within 1 second for standard operations
-
-#### 5.2 Security
-- JWT authentication with role-based authorization
-- Row-Level Security for tenant isolation
-- Encrypted sensitive data (bcrypt for passwords)
-- Full audit logging
-
-#### 5.3 Availability
-- High availability with automated backup and recovery
-- Zero-downtime deployments
-
----
-
-### 6. Architecture
-
-See [System Architecture](#system-architecture) section above.
-
----
-
-### 7. Database Schema
-
-See [Database Schema](#database-schema) section above. Full schema files in [`frontend/database/`](frontend/database/).
+| | |
+|---|---|
+| **Product** | OptifyServe ERP |
+| **Legal Entity** | OptifyServe Technical Services LLC |
+| **Domain** | [optifyserve.com](https://optifyserve.com) |
+| **App** | [app.optifyserve.com](https://app.optifyserve.com) |
+| **Arabic** | أوبتيفاي سيرف |
 
 ---
 
 ## License
 
-See the [LICENSE](LICENSE) file for details.
+Apache License 2.0 — see [LICENSE](LICENSE) for details.
