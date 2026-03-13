@@ -7,10 +7,21 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react'
 import type { User } from '@/features/auth/types/auth.types'
 
+interface RegisterData {
+  companyName: string
+  fullName: string
+  email: string
+  phone: string
+  password: string
+  emirate: string
+  selectedPlan: 'starter' | 'standard' | 'premium'
+}
+
 interface AuthContextValue {
   user: User | null
   isAuthenticated: boolean
   login: (email: string, password: string) => Promise<void>
+  register: (data: RegisterData) => Promise<void>
   logout: () => void
 }
 
@@ -68,6 +79,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(loggedInUser))
   }, [])
 
+  const register = useCallback(async (data: RegisterData) => {
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    const newUser: User = {
+      id: 'usr_new_001',
+      email: data.email,
+      name: data.fullName,
+      role: 'admin',
+      permissions: [
+        'manage_users', 'manage_settings', 'manage_roles',
+        'view_dashboard', 'manage_crm', 'manage_sales',
+        'manage_inventory', 'manage_purchase', 'manage_accounts',
+        'manage_hr', 'manage_jobs', 'manage_dispatch',
+      ],
+      companyId: 'comp_new_001',
+      companyName: data.companyName,
+      tenantId: 'tenant_new_001',
+      phone: data.phone,
+      trialEndsAt: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString(),
+      selectedPlan: data.selectedPlan,
+    }
+    setUser(newUser)
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newUser))
+  }, [])
+
   const logout = useCallback(() => {
     setUser(null)
     localStorage.removeItem(STORAGE_KEY)
@@ -85,7 +121,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   )

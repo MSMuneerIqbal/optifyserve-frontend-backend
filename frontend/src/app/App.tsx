@@ -24,7 +24,7 @@ import { useThemeApplicator } from '@/features/settings/theme/useThemeApplicator
 import { LoadingSpinner } from '@/components/shared/loading-spinner'
 
 // Auth (eagerly loaded — needed immediately)
-import { LoginPage, ForgotPasswordPage } from '@/features/auth'
+import { LoginPage, ForgotPasswordPage, SignupPage } from '@/features/auth'
 
 // Dashboard
 const DashboardPage = lazy(() => import('@/features/dashboard/pages/dashboard-page').then(m => ({ default: m.DashboardPage })))
@@ -153,6 +153,7 @@ function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
           {/* Protected Routes - Wrapped in AppLayout with ProtectedRoute */}

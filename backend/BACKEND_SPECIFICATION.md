@@ -545,6 +545,42 @@ router.get('/customers',
 - Permission check bypassed for super_admin
 - Super admin endpoints under `/api/v1/admin/*`
 
+### Registration Endpoint (Updated: Signup & Trial system added)
+
+```
+POST /api/v1/auth/register
+Body: {
+  companyName: string,
+  fullName: string,
+  email: string,
+  phone: string,
+  password: string,
+  emirate: string,
+  selectedPlan: 'starter' | 'standard' | 'premium'
+}
+Response: {
+  user: User,
+  tokens: { accessToken: string, refreshToken: string },
+  tenant: { id: string, name: string, plan: string, trialEndsAt: string }
+}
+```
+
+Notes:
+- Creates a new tenant record
+- Creates the first user as role: 'admin'
+- Sets trialEndsAt = now + 15 days
+- Sends welcome email via Nodemailer (queue via BullMQ)
+- Returns JWT access token (15min) + refresh token (7d)
+
+### Subscription Plans (Updated: Signup & Trial system added)
+
+Plans:
+- **starter**: CRM + Sales + Dashboard, up to 5 users
+- **standard**: starter + Inventory + Purchase + Accounts, up to 20 users
+- **premium**: all modules, unlimited users
+
+All plans: 15-day free trial on registration
+
 ---
 
 ## 13. Tenant Strategy in Application Layer
@@ -585,6 +621,14 @@ const prismaWithTenant = (tenantId: string) => {
   })
 }
 ```
+
+### Trial Tenant Strategy (Updated: Signup & Trial system added)
+
+- Trial tenants are created via /register endpoint
+- Trial period: 15 days from registration
+- trialEndsAt stored on tenant record
+- After trial expires: read-only mode (block write operations via middleware)
+- Plan upgrade clears trialEndsAt and sets active subscription
 
 ---
 
@@ -711,6 +755,15 @@ emailQueue.process('send-invoice', async (job) => {
   await emailService.send(recipientEmail, 'Invoice', pdf)
 })
 ```
+
+### Queue Job: send-welcome-email (Updated: Signup & Trial system added)
+
+- **Triggered by**: successful registration via POST /api/v1/auth/register
+- **Payload**: `{ email, fullName, companyName, trialEndsAt, selectedPlan }`
+- **Handler**: Nodemailer welcome email with trial details
+- **Queue**: `email`
+- **Priority**: High
+- **Retries**: 3 with exponential backoff
 
 ---
 

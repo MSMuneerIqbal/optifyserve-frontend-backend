@@ -1,6 +1,6 @@
 # PROJECT SPECIFICATION — OptifyServe ERP SaaS Platform
 
-> **Version**: 2.3 | **Last Updated**: 2026-03-11
+> **Version**: 2.4 | **Last Updated**: 2026-03-13
 > **Purpose**: Complete technical specification for rebuilding context across sessions. Read this file first when making any future changes.
 
 ---
@@ -36,7 +36,7 @@
 
 | # | Module | Description | Pages |
 |---|--------|-------------|-------|
-| 1 | **Auth** | Login (split-screen), forgot password | 2 |
+| 1 | **Auth** | Login (split-screen), signup (multi-step with trial), forgot password | 3 |
 | 2 | **Dashboard** | KPIs, charts, urgent jobs, activity feed | 1 |
 | 3 | **CRM** | Customers, leads pipeline, follow-ups | 2 |
 | 4 | **Sales** | Quotations, invoices, payments | 2 |
@@ -51,7 +51,7 @@
 | 13 | **Audit** | Audit log viewer with filters | 1 |
 | 14 | **Settings** | Company profile, notifications, integrations, security, theme | 1 |
 
-**Total**: 49 pages, 149 feature components, 27 shadcn/ui components, 14 shared components, 6 layout components
+**Total**: 50 pages, 153 feature components, 27 shadcn/ui components, 15 shared components, 6 layout components
 **i18n**: 3,501 translation keys per language (English + Arabic), 18 namespaces, full RTL support
 
 ---
@@ -129,7 +129,7 @@ optifyserve-frontend/
 │   │   └── protected-route.tsx        # Auth guard (uses useAuth context)
 │   ├── components/
 │   │   ├── layout/                    # AppLayout, Sidebar, TopNav, Breadcrumb, PageHeader, MobileSidebar
-│   │   ├── shared/                    # LoadingSpinner, ErrorMessage, StatusBadge, CurrencyDisplay, etc.
+│   │   ├── shared/                    # LoadingSpinner, ErrorMessage, StatusBadge, CurrencyDisplay, TrialBanner, etc.
 │   │   └── ui/                        # 27 shadcn/ui components
 │   ├── contexts/
 │   │   └── auth-context.tsx           # AuthProvider, useAuth() hook
@@ -222,9 +222,10 @@ optifyserve-frontend/
 - `TopNav` has breadcrumbs, global search, notifications bell, language switcher (EN/AR), user dropdown
 - `PageHeader` provides title + description + action buttons slot
 
-### Routing (49 protected routes + 2 public)
+### Routing (49 protected routes + 3 public)
 ```
 /login                          → LoginPage (split-screen with branding)
+/signup                         → SignupPage (multi-step registration with plan selection)
 /forgot-password                → ForgotPasswordPage
 /dashboard                      → DashboardPage
 /crm/customers                  → CustomersPage
@@ -305,7 +306,18 @@ interface AuthContextValue {
   user: User | null
   isAuthenticated: boolean
   login: (email: string, password: string) => Promise<void>
+  register: (data: RegisterData) => Promise<void>
   logout: () => void
+}
+
+interface RegisterData {
+  companyName: string
+  fullName: string
+  email: string
+  phone: string
+  password: string
+  emirate: string
+  selectedPlan: 'starter' | 'standard' | 'premium'
 }
 ```
 
@@ -316,6 +328,14 @@ interface AuthContextValue {
 4. User stored in localStorage for persistence across tabs/refreshes
 5. `ProtectedRoute` checks `isAuthenticated` via `useAuth()` context hook
 6. Logout clears localStorage and redirects to `/login`
+
+### Signup Flow (Template Mode)
+1. User visits `/signup` — split-screen page with branding + trial benefits
+2. **Step 1**: Company Info — company name, full name, email, phone, password (with strength indicator), emirate
+3. **Step 2**: Plan Selection — 3 plans (Starter/Standard/Premium), terms checkbox
+4. `register()` simulates 1500ms delay, creates admin user with `trialEndsAt` (15 days)
+5. Shows success toast, redirects to `/dashboard`
+6. Trial banner appears below TopNav on all authenticated pages (dismissible, persists in localStorage)
 
 ### AUTO_LOGIN Flag
 Set `const AUTO_LOGIN = true` in `src/contexts/auth-context.tsx` to bypass the login page entirely. When enabled, the app loads directly to the dashboard with the mock user pre-authenticated. Default: `false`.
@@ -357,11 +377,11 @@ src/components/shared/language-switcher.tsx  # Globe icon dropdown (EN/AR) in To
 ### Translation Namespaces (18)
 | Namespace | Keys | Covers |
 |-----------|------|--------|
-| `common` | 309 | Save, Cancel, Delete, Add, Edit, Search, Filter, Export, placeholders, etc. |
+| `common` | 312 | Save, Cancel, Delete, Add, Edit, Search, Filter, Export, trial banner, placeholders, etc. |
 | `nav` | 54 | Sidebar navigation labels |
 | `topNav` | 16 | TopNav search, notifications, user menu |
 | `breadcrumb` | 61 | Breadcrumb segment labels |
-| `auth` | 46 | Login page, forgot password |
+| `auth` | 116 | Login, signup (multi-step), forgot password, plans, trial |
 | `dashboard` | 27 | KPI labels, chart titles |
 | `crm` | 204 | Customer/lead forms, table headers |
 | `sales` | 226 | Quotation/invoice labels, VAT |
@@ -471,10 +491,12 @@ Only these files use `useAppSelector(s => s.theme)`:
 ## 8. Feature Modules — Detailed
 
 ### 8.1 Auth Module
-**Pages**: LoginPage (split-screen), ForgotPasswordPage
-**Components**: LoginForm
+**Pages**: LoginPage (split-screen), SignupPage (multi-step registration), ForgotPasswordPage
+**Components**: LoginForm, SignupForm, PlanSelector, PasswordStrength
 **Auth**: React Context (`useAuth()`) — not Redux
 **Login**: Zero-friction — click Sign In to enter (no validation in template mode)
+**Signup**: 2-step form (Company Info → Plan Selection) with 3 subscription plans (Starter/Standard/Premium), 15-day free trial, password strength indicator. Creates new tenant + admin user in template mode
+**Trial Banner**: Amber banner below TopNav on all authenticated pages showing trial days remaining, dismissible (persists in localStorage)
 **Branding**: OptifyServe with feature cards, stats bar, trust badges
 
 ### 8.2 Dashboard Module
@@ -620,7 +642,7 @@ interface Address { street: string; city: string; emirate: string; country: stri
 ### Auth Types
 ```typescript
 type UserRole = 'super-admin' | 'admin' | 'manager' | 'staff' | 'technician'
-interface User { id: string; email: string; name: string; role: UserRole; permissions: string[]; companyId: string; companyName: string; tenantId: string; avatar?: string; phone?: string; department?: string; }
+interface User { id: string; email: string; name: string; role: UserRole; permissions: string[]; companyId: string; companyName: string; tenantId: string; avatar?: string; phone?: string; department?: string; trialEndsAt?: string; selectedPlan?: 'starter' | 'standard' | 'premium'; }
 ```
 
 *(Full type definitions for all modules remain in their respective `types/` directories — CRM, Sales, Inventory, Purchase, Accounts, HR, Jobs, Dispatcher, Settings)*
@@ -634,6 +656,7 @@ interface User { id: string; email: string; name: string; role: UserRole; permis
 ### Auth
 ```
 POST   /api/auth/login              { email, password } → { user, tokens }
+POST   /api/auth/register           { companyName, fullName, email, phone, password, emirate, selectedPlan } → { user, tokens, tenant }
 POST   /api/auth/logout             → void
 POST   /api/auth/refresh            { refreshToken } → { tokens }
 GET    /api/auth/me                 → User
@@ -856,6 +879,37 @@ CREATE POLICY tenant_isolation_select ON <table>
 
 ## 15. Changelog
 
+### v2.4 — 2026-03-13 (Signup & Trial System)
+
+**Major**: Added multi-step signup page with subscription plan selection, 15-day free trial flow, and trial countdown banner across all authenticated pages.
+
+#### New Features
+- **Signup page** (`/signup`): Split-screen layout matching login page. 2-step form — Step 1: Company Info (name, full name, email, phone, password with strength indicator, emirate). Step 2: Plan selection (Starter/Standard/Premium) with terms checkbox
+- **Subscription plans**: 3 tiers — Starter (free trial, 5 users, CRM + Sales), Standard (AED 299/mo, 20 users, + Inventory/Purchase/Accounts), Premium (AED 599/mo, unlimited users, all modules)
+- **Trial banner**: Amber dismissible banner below TopNav on all authenticated pages showing days remaining. Dismiss state persists in localStorage
+- **Password strength indicator**: Real-time 4-level bar (Weak/Fair/Strong/Very Strong) with color coding
+- **Auth context register()**: Template mode simulates 1.5s signup, creates admin user with `trialEndsAt` (15 days), redirects to dashboard with success toast
+
+#### Files Created (5)
+- `src/features/auth/components/password-strength.tsx` — Password strength indicator bar
+- `src/features/auth/components/plan-selector.tsx` — 3-plan card selector
+- `src/features/auth/components/signup-form.tsx` — Multi-step signup form
+- `src/features/auth/pages/signup-page.tsx` — Split-screen signup page
+- `src/components/shared/trial-banner.tsx` — Trial countdown banner
+
+#### Files Modified (9)
+- `src/lib/validations.ts` — Added `signupStep1Schema`, `signupStep2Schema`, `signupSchema` + types
+- `src/features/auth/types/auth.types.ts` — Added `trialEndsAt`, `selectedPlan` to User
+- `src/contexts/auth-context.tsx` — Added `register()` function
+- `src/app/App.tsx` — Added `/signup` public route
+- `src/components/layout/app-layout.tsx` — Added `<TrialBanner />` below TopNav
+- `src/features/auth/index.ts` — Added barrel exports for new components/pages
+- `src/components/shared/index.ts` — Added TrialBanner export
+- `src/i18n/locales/en.json` — +70 translation keys (auth + common)
+- `src/i18n/locales/ar.json` — +70 translation keys (auth + common)
+
+---
+
 ### v2.3 — 2026-03-11 (UX Polish + Comprehensive i18n Audit)
 
 **Major**: Added page/button animations, fixed expense view action, fixed Settings drawer positioning, and resolved 1,193 missing translation keys across all modules.
@@ -1032,4 +1086,4 @@ All `src/data/*.data.ts` files updated to use new enum values
 
 ---
 
-*End of PROJECT_SPEC.md — Last generated 2026-03-11*
+*End of PROJECT_SPEC.md — Last generated 2026-03-13*

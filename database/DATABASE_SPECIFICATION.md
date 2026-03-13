@@ -217,6 +217,14 @@ model Tenant {
   @@map("tenants")
 }
 
+// Updated: Signup & Trial system added
+// Additional tenant fields for trial management:
+//   selected_plan:       ENUM ('starter', 'standard', 'premium') NOT NULL DEFAULT 'starter'
+//   trial_ends_at:       TIMESTAMPTZ — set to NOW() + INTERVAL '15 days' on insert
+//   trial_started_at:    TIMESTAMPTZ — set to NOW() on insert
+//   is_trial_active:     BOOLEAN — computed or updated by trigger
+//   subscription_status: ENUM ('trial', 'active', 'expired', 'cancelled') DEFAULT 'trial'
+
 model User {
   id            String    @id @default(uuid()) @db.Uuid
   tenantId      String    @db.Uuid
@@ -582,6 +590,11 @@ The existing SQL file defines 93 enum types. All values use kebab-case:
 
 Backend Zod schemas must match these exact values.
 
+### New Enums for Trial System (Updated: Signup & Trial system added)
+
+- **subscription_plan**: `'starter'`, `'standard'`, `'premium'`
+- **subscription_status**: `'trial'`, `'active'`, `'expired'`, `'cancelled'`
+
 ---
 
 ## 14. Prisma Schema Strategy
@@ -736,6 +749,15 @@ CREATE INDEX idx_employees_salary ON employees USING gin(salary);
 5. **P2**: Trigram search on name fields
 6. **P3**: JSONB and partial indexes
 
+### Trial System Indexes (Updated: Signup & Trial system added)
+
+```sql
+-- For scheduled job that expires trials
+CREATE INDEX idx_tenants_trial_ends_at ON tenants(trial_ends_at);
+-- For filtering active vs expired tenants
+CREATE INDEX idx_tenants_subscription_status ON tenants(subscription_status);
+```
+
 ---
 
 ## 17. Unique Constraint Strategy
@@ -855,6 +877,37 @@ When a new tenant is created via Platform Admin, automatically seed:
 - 1 theme settings (defaults)
 - 1 default branch
 - 1 default warehouse
+
+### Trial Tenant Seed (Updated: Signup & Trial system added)
+
+Default seed now includes one trial tenant matching the template mode mock user:
+- **plan**: `'starter'`
+- **trial_ends_at**: `NOW() + INTERVAL '15 days'`
+- **subscription_status**: `'trial'`
+
+### Trial Expiry Strategy (Updated: Signup & Trial system added)
+
+- A BullMQ scheduled job runs daily
+- Finds all tenants where `trial_ends_at < NOW()` AND `subscription_status = 'trial'`
+- Updates `subscription_status = 'expired'`
+- Sends expiry notification email via Nodemailer
+
+### Trial Triggers (Updated: Signup & Trial system added)
+
+```sql
+-- On tenants INSERT, auto-set trial_ends_at
+CREATE OR REPLACE FUNCTION set_trial_ends_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.trial_ends_at := NOW() + INTERVAL '15 days';
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_tenants_set_trial
+  BEFORE INSERT ON tenants
+  FOR EACH ROW EXECUTE FUNCTION set_trial_ends_at();
+```
 
 ---
 

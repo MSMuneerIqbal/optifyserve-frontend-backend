@@ -25,6 +25,8 @@ export interface User {
   department?: string
   createdAt?: string
   lastLoginAt?: string
+  trialEndsAt?: string
+  selectedPlan?: 'starter' | 'standard' | 'premium'
 }
 
 /**

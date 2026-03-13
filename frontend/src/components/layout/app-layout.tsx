@@ -13,6 +13,7 @@ import { useAuth } from '@/contexts/auth-context'
 import { Sidebar } from './sidebar'
 import { MobileSidebar } from './mobile-sidebar'
 import { TopNav } from './top-nav'
+import { TrialBanner } from '@/components/shared/trial-banner'
 
 interface AppLayoutProps {
   children?: React.ReactNode
@@ -82,6 +83,9 @@ export function AppLayout({ children }: AppLayoutProps) {
           user={topNavUser}
           onLogout={handleLogout}
         />
+
+        {/* Trial Banner */}
+        <TrialBanner />
 
         {/* Page Content */}
         <main key={location.pathname} className="animate-page-enter flex-1 p-4 md:p-6 lg:p-8">

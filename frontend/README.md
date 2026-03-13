@@ -10,7 +10,7 @@ A production-ready **React + TypeScript** UI template for a multi-tenant ERP sys
 
 | Module | Pages | Description |
 |--------|-------|-------------|
-| **Auth** | Login, Forgot Password | Split-screen login with branding panel |
+| **Auth** | Login, Signup, Forgot Password | Split-screen login + multi-step signup with trial |
 | **Dashboard** | Overview | KPI cards, revenue charts, recent activities |
 | **CRM** | Customers, Leads | Customer management, lead pipeline (5 stages) |
 | **Sales** | Quotations, Invoices | Quote-to-invoice flow, VAT calculations |
@@ -25,7 +25,7 @@ A production-ready **React + TypeScript** UI template for a multi-tenant ERP sys
 | **Audit** | Audit Logs | Activity logging & compliance |
 | **Settings** | Company, Notifications, Theme | Tenant-level configuration |
 
-**49 pages** | **148 feature components** | **27 shadcn/ui components** | **14 shared components** | **2,299 translation keys** | **EN + AR (RTL)**
+**50 pages** | **153 feature components** | **27 shadcn/ui components** | **15 shared components** | **3,501+ translation keys** | **EN + AR (RTL)**
 
 ---
 
@@ -40,7 +40,7 @@ A production-ready **React + TypeScript** UI template for a multi-tenant ERP sys
 | **Icons** | Lucide React |
 | **i18n** | react-i18next (English + Arabic RTL) |
 | **State (Theme)** | Redux Toolkit + Redux Saga |
-| **Auth** | React Context (template mode — click Sign In to enter) |
+| **Auth** | React Context (template mode — click Sign In or Sign Up to enter) |
 | **Forms** | React Hook Form + Zod validation |
 | **Tables** | TanStack React Table v8 |
 | **Charts** | Recharts |
@@ -71,7 +71,7 @@ npm run preview
 
 ### Login
 
-**Template mode**: Click **Sign In** to enter the app instantly — no email or password required. The login page is shown for UI display purposes only.
+**Template mode**: Click **Sign In** to enter the app instantly — no email or password required. Or visit `/signup` to test the multi-step registration flow with plan selection and 15-day free trial.
 
 > **Tip for developers**: Set `AUTO_LOGIN = true` in `src/contexts/auth-context.tsx` to bypass the login page entirely during development.
 
@@ -84,13 +84,13 @@ src/
 ├── app/                    # App.tsx (router), protected-route.tsx
 ├── components/
 │   ├── layout/             # AppLayout, Sidebar, Header, Footer (6 files)
-│   ├── shared/             # PageHeader, DataTable, StatusBadge, LanguageSwitcher, etc. (12 files)
+│   ├── shared/             # PageHeader, DataTable, StatusBadge, LanguageSwitcher, TrialBanner, etc. (13 files)
 │   └── ui/                 # shadcn/ui primitives (27 components)
 ├── contexts/
 │   └── auth-context.tsx    # Authentication via React Context
 ├── data/                   # Static sample data (18 files, UAE-specific)
 ├── features/               # 14 feature modules
-│   ├── auth/               # Login, forgot password
+│   ├── auth/               # Login, signup (multi-step + trial), forgot password
 │   ├── dashboard/          # KPI overview
 │   ├── crm/                # Customers, leads
 │   ├── sales/              # Quotations, invoices
@@ -108,8 +108,8 @@ src/
 ├── i18n/                   # Internationalization
 │   ├── index.ts            # i18next config (EN default, AR, browser detection)
 │   └── locales/
-│       ├── en.json         # English translations (2,299 keys, 18 namespaces)
-│       └── ar.json         # Arabic translations (2,299 keys, 18 namespaces)
+│       ├── en.json         # English translations (3,501+ keys, 18 namespaces)
+│       └── ar.json         # Arabic translations (3,501+ keys, 18 namespaces)
 ├── lib/                    # utils.ts, constants.ts, validations.ts
 ├── store/                  # Redux store (theme-only)
 ├── styles/                 # globals.css (CSS variables)
@@ -135,7 +135,7 @@ Each module under `src/features/<module>/` follows this pattern:
 
 - **No API calls** — all data is static samples from `src/data/`
 - **No backend dependencies** — zero axios, no HTTP client installed
-- **Auth via React Context** — click Sign In to enter (no validation in template mode)
+- **Auth via React Context** — click Sign In to enter, or use `/signup` for multi-step registration with 15-day trial
 - **Full i18n** — English + Arabic with automatic RTL layout switching
 - **Redux for theme only** — 1 slice (`themeSlice`) + 1 saga (`themeSaga`) for color management
 - **All pages render immediately** — no loading states, no async fetching
@@ -191,7 +191,7 @@ Full bilingual support with automatic RTL layout mirroring.
 | Feature | Details |
 |---------|---------|
 | **Languages** | English (default) + Arabic |
-| **Translation Keys** | 2,299 per language across 18 namespaces |
+| **Translation Keys** | 3,501+ per language across 18 namespaces |
 | **RTL Support** | Automatic layout mirroring via Tailwind logical properties |
 | **Language Switcher** | Globe icon in TopNav + Settings page |
 | **Persistence** | Language preference saved in localStorage |

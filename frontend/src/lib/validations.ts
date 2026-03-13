@@ -176,7 +176,79 @@ export const paymentFormSchema = z.object({
   notes: z.string().optional(),
 })
 
+// Subscription plans
+export const SUBSCRIPTION_PLANS = ['starter', 'standard', 'premium'] as const
+export type SubscriptionPlan = (typeof SUBSCRIPTION_PLANS)[number]
+
+// Signup Step 1 schema — Company Information
+export const signupStep1Schema = z
+  .object({
+    companyName: z
+      .string()
+      .min(2, 'Company name must be at least 2 characters')
+      .max(100, 'Company name must not exceed 100 characters'),
+    fullName: z
+      .string()
+      .min(2, 'Name must be at least 2 characters')
+      .max(100, 'Name must not exceed 100 characters'),
+    email: z.string().email('Please enter a valid email address'),
+    phone: z.string().min(7, 'Phone number must be at least 7 characters'),
+    password: z
+      .string()
+      .min(8, 'Password must be at least 8 characters')
+      .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+      .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+      .regex(/[0-9]/, 'Password must contain at least one number'),
+    confirmPassword: z.string(),
+    emirate: z.string().min(1, 'Please select an emirate'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  })
+
+// Signup Step 2 schema — Plan Selection
+export const signupStep2Schema = z.object({
+  selectedPlan: z.enum(SUBSCRIPTION_PLANS, {
+    message: 'Please select a plan',
+  }),
+  agreeToTerms: z
+    .boolean()
+    .refine((val) => val === true, 'You must agree to the terms and conditions'),
+})
+
+// Combined signup schema (no refine — use for useForm resolver)
+export const signupSchema = z.object({
+  companyName: z
+    .string()
+    .min(2, 'Company name must be at least 2 characters')
+    .max(100, 'Company name must not exceed 100 characters'),
+  fullName: z
+    .string()
+    .min(2, 'Name must be at least 2 characters')
+    .max(100, 'Name must not exceed 100 characters'),
+  email: z.string().email('Please enter a valid email address'),
+  phone: z.string().min(7, 'Phone number must be at least 7 characters'),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+    .regex(/[0-9]/, 'Password must contain at least one number'),
+  confirmPassword: z.string(),
+  emirate: z.string().min(1, 'Please select an emirate'),
+  selectedPlan: z.enum(SUBSCRIPTION_PLANS, {
+    message: 'Please select a plan',
+  }),
+  agreeToTerms: z
+    .boolean()
+    .refine((val) => val === true, 'You must agree to the terms and conditions'),
+})
+
 // Export types inferred from schemas
+export type SignupStep1Data = z.infer<typeof signupStep1Schema>
+export type SignupStep2Data = z.infer<typeof signupStep2Schema>
+export type SignupFormData = z.infer<typeof signupSchema>
 export type LoginFormData = z.infer<typeof loginFormSchema>
 export type CustomerFormData = z.infer<typeof customerFormSchema>
 export type LeadFormData = z.infer<typeof leadFormSchema>

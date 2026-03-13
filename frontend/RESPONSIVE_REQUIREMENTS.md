@@ -1,19 +1,26 @@
-# 📱 RESPONSIVE DESIGN REQUIREMENTS - ADDENDUM
+# Responsive Design Requirements
 
-## 🚨 CRITICAL REQUIREMENT: FULLY RESPONSIVE
+## Critical Requirement: Fully Responsive
 
 **EVERY component, EVERY page, EVERY module MUST be fully responsive.**
 
 This is **NOT optional**. This is an **enterprise SaaS application** that users will access from:
 
-- 📱 Mobile phones (iPhone, Android)
-- 📱 Tablets (iPad, Android tablets)
-- 💻 Laptops (13", 15", 17")
-- 🖥️ Desktop monitors (24", 27", 32"+)
+- Mobile phones (iPhone, Android)
+- Tablets (iPad, Android tablets)
+- Laptops (13", 15", 17")
+- Desktop monitors (24", 27", 32"+)
+
+### Accessibility Compliance
+
+Responsive design must also meet **WCAG 2.2 Level AA** requirements:
+- **SC 2.5.8 Target Size (Minimum)**: Interactive elements must be at least 24x24 CSS pixels, with 44x44px recommended
+- **SC 1.4.4 Resize Text**: Content must be readable at 200% zoom without loss of functionality
+- **SC 1.4.10 Reflow**: Content must reflow at 320px width (400% zoom) without horizontal scrolling
 
 ---
 
-## 📏 MANDATORY RESPONSIVE BREAKPOINTS
+## Mandatory Responsive Breakpoints
 
 Use Tailwind CSS responsive prefixes:
 
@@ -29,17 +36,17 @@ Use Tailwind CSS responsive prefixes:
 
 ### Test At These EXACT Sizes:
 
-✅ **Mobile (Portrait):** 375px × 667px (iPhone SE)  
-✅ **Mobile (Large):** 414px × 896px (iPhone 11 Pro Max)  
-✅ **Tablet (Portrait):** 768px × 1024px (iPad)  
-✅ **Tablet (Landscape):** 1024px × 768px (iPad Landscape)  
-✅ **Laptop:** 1366px × 768px (Common laptop)  
-✅ **Desktop:** 1920px × 1080px (Full HD)  
-✅ **Large Desktop:** 2560px × 1440px (2K)
+- **Mobile (Portrait):** 375px x 667px (iPhone SE)
+- **Mobile (Large):** 430px x 932px (iPhone 15/16 Pro Max)
+- **Tablet (Portrait):** 768px x 1024px (iPad)
+- **Tablet (Landscape):** 1024px x 768px (iPad Landscape)
+- **Laptop:** 1366px x 768px (Common laptop)
+- **Desktop:** 1920px x 1080px (Full HD)
+- **Large Desktop:** 2560px x 1440px (2K)
 
 ---
 
-## 🎯 RESPONSIVE DESIGN RULES
+## Responsive Design Rules
 
 ### Rule 1: Mobile-First Approach
 
@@ -111,7 +118,9 @@ Use Tailwind CSS responsive prefixes:
 
 ### Rule 6: Touch Targets (Mobile)
 
-**Minimum touch target: 44×44px (Apple HIG) or 48×48px (Material Design)**
+**Minimum touch target: 44x44px (Apple HIG / WCAG 2.2 recommended) or 48x48dp (Material Design 3)**
+
+WCAG 2.2 SC 2.5.8 Level AA requires minimum 24x24px, but 44x44px is strongly recommended for enterprise apps.
 
 ```tsx
 // Buttons
@@ -214,7 +223,7 @@ Use Tailwind CSS responsive prefixes:
 
 ---
 
-## 🧪 TESTING CHECKLIST (Every Component)
+## Testing Checklist (Every Component)
 
 Before marking a component as "done", test at ALL these sizes:
 
@@ -247,7 +256,7 @@ Before marking a component as "done", test at ALL these sizes:
 
 ---
 
-## 📱 SPECIFIC COMPONENT RESPONSIVE REQUIREMENTS
+## Specific Component Responsive Requirements
 
 ### Sidebar
 
@@ -264,7 +273,7 @@ Before marking a component as "done", test at ALL these sizes:
   -translate-x-full            // Mobile: Hidden
   lg:translate-x-0             // Desktop: Visible
   transition-transform
-  bg-slate-900
+  bg-sidebar                   // Use CSS variable (not bg-slate-900)
   z-50
 ">
 ```
@@ -387,7 +396,7 @@ Before marking a component as "done", test at ALL these sizes:
 
 ---
 
-## 🎯 MOBILE-SPECIFIC CONSIDERATIONS
+## Mobile-Specific Considerations
 
 ### 1. Hamburger Menu Implementation
 
@@ -412,8 +421,8 @@ const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     />
 
     {/* Menu content */}
-    <nav className="fixed left-0 top-0 bottom-0 w-64 bg-white">
-      {/* Navigation items */}
+    <nav className="fixed inset-y-0 start-0 w-64 bg-background">
+      {/* Navigation items — uses logical start for RTL support */}
     </nav>
   </div>
 )}
@@ -425,10 +434,10 @@ const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 // Alternative mobile navigation pattern
 <nav
   className="
-  fixed bottom-0 left-0 right-0
+  fixed bottom-0 inset-x-0
   lg:hidden                      // Only on mobile
   h-16
-  bg-white border-t
+  bg-background border-t         // Use CSS variable (not bg-white)
   flex items-center justify-around
 "
 >
@@ -468,9 +477,9 @@ const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
 ---
 
-## 🚨 COMMON RESPONSIVE MISTAKES TO AVOID
+## Common Responsive Mistakes to Avoid
 
-### ❌ DON'T DO THIS:
+### Don't Do This:
 
 ```tsx
 // Fixed widths
@@ -489,7 +498,7 @@ const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 <div className="flex">  // ❌ Might need to stack on mobile
 ```
 
-### ✅ DO THIS INSTEAD:
+### Do This Instead:
 
 ```tsx
 // Responsive widths
@@ -512,7 +521,7 @@ const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
 ---
 
-## ✅ UPDATED DEFINITION OF DONE
+## Definition of Done
 
 Before marking ANY component as complete, verify:
 
@@ -532,17 +541,17 @@ Before marking ANY component as complete, verify:
 
 ---
 
-## 🛠️ DEBUGGING RESPONSIVE ISSUES
+## Debugging Responsive Issues
 
 ### In Chrome DevTools:
 
 1. Open DevTools (F12)
 2. Click "Toggle Device Toolbar" (Ctrl+Shift+M)
 3. Test these presets:
-   - iPhone SE (375×667)
-   - iPhone 12 Pro (390×844)
-   - iPad (768×1024)
-   - iPad Pro (1024×1366)
+   - iPhone SE (375x667)
+   - iPhone 15 Pro Max (430x932)
+   - iPad (768x1024)
+   - iPad Pro (1024x1366)
    - Responsive (custom)
 4. Toggle between Portrait/Landscape
 5. Check "Show media queries" to see breakpoints
@@ -583,16 +592,20 @@ Before marking ANY component as complete, verify:
 
 ---
 
-## 📱 UAE-SPECIFIC MOBILE CONSIDERATIONS
+## UAE-Specific Mobile Considerations
 
-### 1. Arabic (RTL) Future Support
+### 1. Arabic (RTL) — Already Implemented
 
-Even though you're building LTR now, structure code for easy RTL conversion:
+This project has **full Arabic RTL support** (EN + AR with automatic layout mirroring). All code MUST use Tailwind logical properties:
 
 ```tsx
-// Use logical properties
-<div className="ms-4">  // margin-start (not margin-left)
-<div className="pe-6">  // padding-end (not padding-right)
+// CORRECT — logical properties (RTL-safe)
+<div className="ms-4">   // margin-inline-start (not margin-left)
+<div className="pe-6">   // padding-inline-end (not padding-right)
+<div className="start-0"> // inset-inline-start (not left-0)
+
+// WRONG — physical properties (breaks RTL)
+<div className="ml-4">   // Never use ml-*, mr-*, pl-*, pr-*, left-*, right-*
 ```
 
 ### 2. WhatsApp Integration (Mobile-Friendly)
@@ -611,61 +624,25 @@ Even though you're building LTR now, structure code for easy RTL conversion:
 ### 3. Click-to-Call
 
 ```tsx
-<a href={`tel:+971${phoneNumber}`} className="text-blue-600 hover:underline">
+<a href={`tel:+971${phoneNumber}`} className="text-primary hover:underline">
   {formatPhoneNumber(phoneNumber)}
 </a>
 ```
 
 ---
 
-## 🎯 SUMMARY: RESPONSIVE IS MANDATORY
+## Summary
 
 **Every single component you build MUST be responsive.**
 
-- ✅ Test at 375px, 768px, 1024px, 1920px
-- ✅ Mobile-first approach
-- ✅ Touch-friendly (44×44px minimum)
-- ✅ Proper overflow handling
-- ✅ Scaled typography
-- ✅ Adaptive layouts
-- ✅ No horizontal scroll (unless tables)
-- ✅ Working navigation on all devices
+- Test at 375px, 768px, 1024px, 1920px
+- Mobile-first approach
+- Touch-friendly (44x44px minimum)
+- Proper overflow handling
+- Scaled typography
+- Adaptive layouts
+- No horizontal scroll (unless tables)
+- Working navigation on all devices
+- RTL layout tested (EN + AR)
 
-**If it's not responsive, it's not done. Period.**
-
----
-
-## 📋 ADD THIS TO CLAUDE.MD INSTRUCTIONS
-
-Insert this in the "CRITICAL REMINDERS" section:
-
-```markdown
-### ⚠️ RESPONSIVE DESIGN - NON-NEGOTIABLE
-
-EVERY component MUST be fully responsive:
-
-- Test at: 375px, 768px, 1024px, 1920px
-- Mobile-first approach (default classes for mobile, md:/lg: for larger)
-- Touch targets minimum 44×44px
-- No horizontal overflow (except intentional table scroll)
-- Hamburger menu on mobile
-- Grid columns: 1 mobile, 2 tablet, 4 desktop (typical)
-- Forms stack vertically on mobile
-- Modals full-screen or 95% width on mobile
-
-If a component is not responsive, it's NOT complete.
-```
-
----
-
-**Copy this entire file and add it to your project as: `RESPONSIVE_REQUIREMENTS.md`**
-
-Then update your initial prompt to Claude Code to mention it:
-
-```
-Read CLAUDE.md, FRONTEND_PROJECT_SPEC.md, and RESPONSIVE_REQUIREMENTS.md.
-
-All components MUST be fully responsive as specified in RESPONSIVE_REQUIREMENTS.md.
-
-Start with Phase 1.
-```
+**If it's not responsive, it's not done.**

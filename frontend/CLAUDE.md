@@ -7,7 +7,7 @@
 This is a **pure UI template** for a multi-tenant SaaS ERP targeting UAE service & maintenance companies. Think of it like a ThemeForest template — all pages are built with static sample data, ready for a backend developer to integrate real APIs.
 
 - **Frontend**: React 19 + TypeScript 5.9 + Vite 7
-- **i18n**: react-i18next (English + Arabic) with RTL support — 3,501 translation keys
+- **i18n**: react-i18next (English + Arabic) with RTL support — 3,501+ translation keys
 - **Auth**: React Context (`src/contexts/auth-context.tsx`) — not Redux
 - **Data**: Static sample data in `src/data/` (18 files) — no API calls
 - **Theme**: Redux Toolkit + Redux Saga (theme system only)
@@ -20,13 +20,15 @@ This is a **pure UI template** for a multi-tenant SaaS ERP targeting UAE service
 
 All 14 frontend modules are **COMPLETE** with static sample data:
 - Auth, Dashboard, CRM, Sales, Inventory, Purchase, Accounts, HR, Jobs, Dispatcher, User Management, Platform Admin, Audit, Settings
-- 49 pages, 149 feature components
-- **Full i18n**: English + Arabic with RTL support (3,501 translation keys, 18 namespaces)
+- 50 pages, 153 feature components
+- **Full i18n**: English + Arabic with RTL support (3,501+ translation keys, 18 namespaces)
 - **No Redux in components** — only the theme system uses Redux (1 slice, 1 saga)
 - **No API calls** — all data comes from `src/data/` files
 - **No axios** — package fully removed
 - **No services directory** — deleted
 - Login page: modern split-screen design, zero-friction click-to-enter (no validation required)
+- Signup page: 2-step registration (Company Info → Plan Selection) with 15-day free trial, 3 plans (Starter/Standard/Premium)
+- Trial banner: dismissible amber banner in app layout showing remaining trial days
 - `AUTO_LOGIN` flag in auth-context.tsx — set `true` to bypass login entirely during development
 - Branding: **OptifyServe**
 - Database schema designed and verified (16 SQL files)
@@ -50,10 +52,13 @@ Auth is handled by `src/contexts/auth-context.tsx`, NOT Redux.
 
 ```typescript
 // Reading auth state
-const { user, isAuthenticated, login, logout } = useAuth()
+const { user, isAuthenticated, login, logout, register } = useAuth()
 
 // Login — template mode: click Sign In to enter (no validation)
 await login(email, password)
+
+// Register — template mode: simulates 1500ms delay, creates trial user
+await register({ companyName, fullName, email, phone, password, emirate, selectedPlan })
 
 // Logout
 logout()
@@ -102,6 +107,15 @@ Redux Toolkit + Redux Saga are installed but **only used by the theme system**.
 ### Forms — React Hook Form + Zod
 All forms use React Hook Form with Zod validation schemas in `src/lib/validations.ts`.
 
+### Toast Notifications — Sonner
+Use `toast` from `sonner` for success/error feedback. Toaster is configured in `App.tsx` (top-right, 4s duration).
+
+```typescript
+import { toast } from 'sonner'
+toast.success(t('auth.registrationSuccess'))
+toast.error(t('common.errorOccurred'))
+```
+
 ### UI — shadcn/ui + Tailwind CSS
 Use shadcn/ui components (in `src/components/ui/`). Shared components in `src/components/shared/`.
 
@@ -123,18 +137,18 @@ Button variants: `default`, `destructive`, `outline`, `secondary`, `ghost`, `lin
 
 ```
 src/
-├── app/           # App.tsx (router + providers), protected-route.tsx
-├── components/    # layout/ (6), shared/ (14 incl. language-switcher), ui/ (27 shadcn)
-├── contexts/      # auth-context.tsx (login/logout/user), currency-context.tsx
+├── app/           # App.tsx (router + providers + lazy loading), protected-route.tsx
+├── components/    # layout/ (6), shared/ (15 incl. language-switcher, trial-banner), ui/ (27 shadcn)
+├── contexts/      # auth-context.tsx (login/register/logout/user), currency-context.tsx
 ├── data/          # 18 static sample data files (one per module)
 ├── features/      # 14 modules, each with: components/ types/ pages/ [utils/]
 ├── hooks/         # useLocalStorage, useDebounce, usePagination, useModal, useMediaQuery, useDirection
 ├── i18n/          # i18next config + translation files
 │   ├── index.ts   # i18next initialization
-│   └── locales/   # en.json (2,299 keys), ar.json (2,299 keys)
+│   └── locales/   # en.json (3,501+ keys), ar.json (3,501+ keys)
 ├── lib/           # utils.ts, constants.ts, validations.ts
 ├── store/         # index.ts, rootReducer.ts (theme only), rootSaga.ts (theme only), hooks.ts
-├── types/         # common.types.ts, api.types.ts
+├── types/         # common.types.ts, api.types.ts, index.ts
 └── styles/        # globals.css (CSS variables for theme)
 ```
 
@@ -161,7 +175,8 @@ theme/
     ├── theme-preset-selector.tsx  # 4 clickable preset cards
     ├── color-customizer.tsx       # Drawer with all 8 color pickers
     ├── color-picker-field.tsx     # Single color picker input
-    └── theme-preview.tsx          # Live component preview
+    ├── theme-preview.tsx          # Live component preview
+    └── floating-theme-button.tsx  # Floating palette button (bottom-right)
 ```
 
 ### Sample Data Files (`src/data/`)
@@ -202,6 +217,8 @@ audit.data.ts           — audit log entries
 | Colors | CSS variables + Tailwind | Theme-aware, no hardcoded colors |
 | Theme default | UAE Premium (#1D4ED8) | Professional blue for UAE business |
 | DB | PostgreSQL + RLS | Multi-tenant isolation at DB level |
+| Toasts | Sonner | Clean, accessible, RTL-friendly |
+| Lazy loading | React.lazy + Suspense | Code splitting per page (auth pages eager) |
 | Backend | Node.js + Express.js + Prisma | Flexible, TypeScript across full stack |
 
 ---

@@ -662,11 +662,11 @@ User Action → Redux dispatch → Saga → API call → Success/Failure → Sli
 
 ## 17. Risks, Ambiguities & Mismatches
 
-### RISK 1: PROJECT_SPEC.md References ASP.NET — Stack Changed to Node.js
-**Source**: `PROJECT_SPEC.md` Section 2 says "Backend (Planned): ASP.NET Core + Dapper/EF Core"
-**Issue**: Backend master instruction specifies Node.js + Express + Prisma. The `database/db_knowledge.md` file is an ASP.NET integration guide.
-**Impact**: Database design patterns (RLS via `SET app.current_tenant`, raw SQL triggers) were designed for ASP.NET + Dapper direct SQL. Must be adapted for Prisma ORM which has limitations with RLS session variables and raw triggers.
-**Mitigation**: Evaluate RLS against Prisma capabilities. May need hybrid approach (Prisma for CRUD + raw SQL migrations for RLS/triggers).
+### RISK 1: Database Patterns Require Prisma Adaptation
+**Source**: Database SQL files (`database/*.sql`)
+**Issue**: Database design patterns (RLS via `SET app.current_tenant`, raw SQL triggers) were originally designed for direct SQL access. These must be adapted for the chosen backend stack: **Node.js + Express.js + Prisma ORM + PostgreSQL 16**.
+**Impact**: Prisma ORM has limitations with RLS session variables and raw triggers compared to direct SQL access.
+**Mitigation**: Use hybrid approach — Prisma for CRUD operations + raw SQL migrations for RLS policies and triggers. Prisma `$extends` for tenant scoping at the application layer.
 
 ### RISK 2: Frontend Constants vs Database Enums Partial Mismatch
 **Source**: `src/lib/constants.ts` vs `database/01_enums.sql`
@@ -730,8 +730,26 @@ User Action → Redux dispatch → Saga → API call → Success/Failure → Sli
 **File**: FRONTEND_ANALYSIS.md
 **Discovered**: The frontend defines 55+ entity types across 14 modules with comprehensive UAE business logic (VAT, EOSB, WPS, labor law) — all statically typed and ready for backend API contracts.
 **Decided**: The 71-permission set from the database is the canonical source for RBAC; the frontend's 32-permission grouping is a UI convenience layer that maps onto the finer DB permissions.
-**Next phase depends on**: Backend specification must translate these 55+ entities and 200+ implied API endpoints into a Node.js/Express/Prisma architecture, resolving the ASP.NET→Node migration of database patterns (especially RLS and triggers).
+**Next phase depends on**: Backend specification must translate these 55+ entities and 200+ implied API endpoints into the Node.js + Express.js + Prisma + PostgreSQL 16 architecture, adapting database patterns (especially RLS and triggers) for Prisma ORM.
 
 ---
 
-*End of FRONTEND_ANALYSIS.md*
+*End of original FRONTEND_ANALYSIS.md*
+
+---
+
+## Signup & Trial System (Added Post-Analysis)
+
+**Updated: Signup & Trial system added**
+
+- **Route**: `/signup` (public, no auth required)
+- **Creates**: new tenant + first admin user
+- **Form**: 2-step (Company Info → Plan Selection)
+- **Plans**: starter, standard, premium (all 15-day trial)
+- **Trial banner**: shown on all authenticated pages, dismissible
+- **New frontend files**: `signup-page.tsx`, `signup-form.tsx`, `plan-selector.tsx`, `password-strength.tsx`, `trial-banner.tsx`
+- **New User fields**: `trialEndsAt`, `selectedPlan`
+- **New Zod schemas**: `signupStep1Schema`, `signupStep2Schema`, `signupSchema`
+- **New translation keys**: 70+ keys added to `auth` and `common` namespaces
+- **Backend implication**: `POST /api/v1/auth/register` creates tenant + admin user + starts trial
+- **Database implication**: tenants table needs trial fields (`trial_ends_at`, `subscription_status`, `selected_plan`)
