@@ -79,25 +79,21 @@ const prisma = new PrismaClient()
 async function setTenantContext(tenantId: string, userId: string) {
   await prisma.$executeRawUnsafe(`SET app.current_tenant = '${tenantId}'`)
   await prisma.$executeRawUnsafe(`SET app.current_user = '${userId}'`)
-
-    public async Task InvokeAsync(HttpContext context, NpgsqlConnection db)
-    {
-        var tenantId = context.User.FindFirst("tenant_id")?.Value;
-        var userId = context.User.FindFirst("sub")?.Value;
-
-        if (!string.IsNullOrEmpty(tenantId))
-        {
-            await using var cmd = db.CreateCommand();
-            cmd.CommandText = $"SET app.current_tenant = '{tenantId}'; SET app.current_user = '{userId}';";
-            await cmd.ExecuteNonQueryAsync();
-        }
-
-        await _next(context);
-    }
 }
 
-// In Program.cs
-app.UseMiddleware<TenantContextMiddleware>();
+// Express middleware
+import express from 'express'
+
+const app = express()
+
+app.use(async (req, res, next) => {
+  const tenantId = req.user?.tenantId
+  const userId = req.user?.id
+  if (tenantId) {
+    await setTenantContext(tenantId, userId)
+  }
+  next()
+})
 ```
 
 ### Bypassing RLS (Admin/Migration Use Only)

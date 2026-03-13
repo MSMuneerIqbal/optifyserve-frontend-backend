@@ -1,18 +1,18 @@
 # Database Knowledge Base — UAE ERP
 
 Complete reference for understanding, maintaining, and evolving the PostgreSQL database schema.
-**Backend: ASP.NET Core** | **ORM: Dapper or EF Core** | **Database: PostgreSQL 13+**
+**Backend: Node.js + Express.js** | **ORM: Prisma** | **Database: PostgreSQL 16**
 
 ---
 
 ## Table of Contents
 
-1. [ASP.NET Core Compatibility](#1-aspnet-core-compatibility)
+1. [Node.js + Prisma Compatibility](#1-nodejs--prisma-compatibility)
 2. [Adding New Modules](#2-adding-new-modules)
 3. [Modifying Existing Schema](#3-modifying-existing-schema)
 4. [Migration Strategy](#4-migration-strategy)
 5. [Enum Handling](#5-enum-handling)
-6. [RLS with ASP.NET Core](#6-rls-with-aspnet-core)
+6. [RLS with Node.js](#6-rls-with-nodejs)
 7. [Connection & Pooling](#7-connection--pooling)
 8. [Backup & Restore](#8-backup--restore)
 9. [Cross-Tenant Queries](#9-cross-tenant-queries)
@@ -26,156 +26,169 @@ Complete reference for understanding, maintaining, and evolving the PostgreSQL d
 
 ---
 
-## 1. ASP.NET Core Compatibility
+## 1. Node.js + Prisma Compatibility
 
-### Is this schema compatible with ASP.NET Core?
+### Is this schema compatible with Node.js + Prisma?
 
-**Yes, 100%.** The schema is pure PostgreSQL SQL — it works with any backend language. PostgreSQL is the database; ASP.NET Core is the application framework. They communicate via the Npgsql driver.
+**Yes, 100%.** The schema is pure PostgreSQL SQL -- it works with any backend language. PostgreSQL is the database; Node.js + Express is the application framework. They communicate via Prisma (which uses the `pg` driver under the hood).
 
-### Recommended .NET Packages
+### Project Setup
 
-```xml
-<!-- In your .csproj -->
-<PackageReference Include="Npgsql" Version="8.*" />
-<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.*" />
-<PackageReference Include="Dapper" Version="2.*" />
+```bash
+# Initialize a new Node.js + TypeScript project
+mkdir backend && cd backend
+npm init -y
+npm install express @prisma/client jsonwebtoken bcryptjs zod bullmq dotenv socket.io
+npm install -D prisma typescript @types/express @types/jsonwebtoken @types/bcryptjs ts-node nodemon
+
+# Initialize Prisma
+npx prisma init --datasource-provider postgresql
 ```
+
+This creates:
+- `prisma/schema.prisma` -- your schema definition file
+- `.env` -- with a placeholder `DATABASE_URL`
+
+### Key Packages
 
 | Package | Purpose | When to Use |
 |---------|---------|-------------|
-| **Npgsql** | PostgreSQL ADO.NET driver | Always required — the core driver |
-| **Npgsql.EntityFrameworkCore.PostgreSQL** | EF Core provider for PostgreSQL | If using Entity Framework Core |
-| **Dapper** | Micro-ORM for raw SQL | If you prefer raw SQL with mapping |
+| **prisma** | CLI for migrations, schema management, client generation | Dev dependency -- schema changes, code generation |
+| **@prisma/client** | Auto-generated type-safe database client | Every database query in your app |
+| **express** | HTTP framework | API routes and middleware |
+| **jsonwebtoken** | JWT creation and verification | Authentication |
+| **bcryptjs** | Password hashing | User registration and login |
+| **zod** | Runtime schema validation | Request body validation, type guards |
+| **bullmq** | Background job queue (Redis-backed) | Emails, PDF generation, scheduled tasks |
+| **dotenv** | Environment variable loading | Configuration management |
+| **socket.io** | WebSocket realtime communication | Live updates, notifications |
 
-### ORM Choice: EF Core vs Dapper
+### Prisma Schema Configuration
 
-| Factor | EF Core | Dapper |
-|--------|---------|--------|
-| Learning curve | Higher | Lower |
-| Generated SQL control | Less control | Full control |
-| Enum mapping | Built-in with Npgsql plugin | Manual mapping |
-| JSONB support | Via `.HasColumnType("jsonb")` | Via `JsonConvert` |
-| RLS (SET commands) | Via interceptors | Via raw SQL before queries |
-| Performance | Slower (abstraction overhead) | Faster (near raw SQL) |
-| Migrations | Built-in `dotnet ef` | Need separate tool (DbUp/FluentMigrator) |
-| **Recommendation** | Good for CRUD-heavy modules | Good for complex queries/reports |
-
-**You can use both together.** EF Core for simple CRUD, Dapper for complex reports and queries.
-
-### Mapping PostgreSQL Enums in ASP.NET Core
-
-**With EF Core + Npgsql:**
-```csharp
-// 1. Define C# enum matching PostgreSQL enum
-public enum CustomerType
-{
-    Individual,
-    Corporate,
-    Government
+```prisma
+// prisma/schema.prisma
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
-// 2. Register in DbContext
-protected override void OnModelCreating(ModelBuilder modelBuilder)
-{
-    modelBuilder.HasPostgresEnum<CustomerType>("customer_type");
-
-    modelBuilder.Entity<Customer>(entity =>
-    {
-        entity.ToTable("customers");
-        entity.Property(e => e.CustomerType)
-              .HasColumnName("customer_type")
-              .HasColumnType("customer_type");
-    });
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgcrypto, pg_trgm, btree_gist]
 }
-
-// 3. Register in NpgsqlDataSource (Program.cs)
-var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
-dataSourceBuilder.MapEnum<CustomerType>("customer_type");
-// ... map all enums
-var dataSource = dataSourceBuilder.Build();
 ```
 
-**With Dapper:**
-```csharp
-// Register custom type handler
-public class PostgresEnumHandler<T> : SqlMapper.TypeHandler<T> where T : struct, Enum
-{
-    public override T Parse(object value) => Enum.Parse<T>(value.ToString()!, true);
-    public override void SetValue(IDbDataParameter parameter, T value)
-    {
-        parameter.Value = value.ToString().ToLower();
-        parameter.DbType = DbType.String;
-    }
-}
+### Environment Configuration
 
-// Register once at startup
-SqlMapper.AddTypeHandler(new PostgresEnumHandler<CustomerType>());
-SqlMapper.AddTypeHandler(new PostgresEnumHandler<JobStatus>());
-// ... register all enums
+```bash
+# .env
+DATABASE_URL="postgresql://erp_app:YourPassword@localhost:5432/erp_db?schema=public"
+JWT_SECRET="your-jwt-secret-here"
+REDIS_URL="redis://localhost:6379"
+PORT=3000
 ```
 
-### Mapping JSONB Columns in ASP.NET Core
+### Prisma Client Singleton Pattern
 
-```csharp
-// C# model
-public class Customer
-{
-    public Guid Id { get; set; }
-    public string Name { get; set; }
-    public Address Address { get; set; }  // Maps to JSONB column
+```typescript
+// src/lib/prisma.ts
+import { PrismaClient } from '@prisma/client';
+
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
+
+export const prisma =
+  globalForPrisma.prisma ??
+  new PrismaClient({
+    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+  });
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = prisma;
 }
 
-public class Address
-{
-    public string Street { get; set; }
-    public string City { get; set; }
-    public string Emirate { get; set; }
-    public string Country { get; set; }
+export default prisma;
+```
+
+### Introspecting the Existing Schema
+
+Since the database schema already exists as raw SQL files (00-15), use introspection to generate the Prisma schema from the existing database:
+
+```bash
+# Pull existing schema into prisma/schema.prisma
+npx prisma db pull
+
+# Generate the Prisma Client based on the schema
+npx prisma generate
+```
+
+This reverse-engineers your existing PostgreSQL tables, enums, indexes, and relations into `schema.prisma`. After introspection, you can use Prisma Migrate going forward.
+
+### UUID Primary Keys with Prisma
+
+```prisma
+// In schema.prisma
+model Customer {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId  String   @map("tenant_id") @db.Uuid
+  name      String   @db.VarChar(200)
+  email     String?  @db.VarChar(200)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, email])
+  @@index([tenantId])
+  @@map("customers")
+}
+```
+
+### JSONB Columns with Prisma
+
+```prisma
+// In schema.prisma -- JSONB maps to Prisma's Json type
+model Customer {
+  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  address Json?  @db.JsonB  // Stores { street, city, emirate, country }
+  // ...
+}
+```
+
+```typescript
+// In TypeScript -- define an interface for type safety
+interface Address {
+  street: string;
+  city: string;
+  emirate: string;
+  country: string;
 }
 
-// EF Core configuration
-modelBuilder.Entity<Customer>(entity =>
-{
-    entity.Property(e => e.Address)
-          .HasColumnType("jsonb")
-          .HasConversion(
-              v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
-              v => JsonSerializer.Deserialize<Address>(v, (JsonSerializerOptions)null));
+// Create with typed JSONB
+const customer = await prisma.customer.create({
+  data: {
+    tenantId: tenantId,
+    name: 'Acme LLC',
+    address: {
+      street: 'Sheikh Zayed Road',
+      city: 'Dubai',
+      emirate: 'Dubai',
+      country: 'UAE',
+    } satisfies Address,
+  },
 });
 
-// Dapper — use a custom handler
-public class JsonTypeHandler<T> : SqlMapper.TypeHandler<T>
-{
-    public override T Parse(object value) =>
-        JsonSerializer.Deserialize<T>(value.ToString()!);
-    public override void SetValue(IDbDataParameter parameter, T value)
-    {
-        parameter.Value = JsonSerializer.Serialize(value);
-        ((NpgsqlParameter)parameter).NpgsqlDbType = NpgsqlTypes.NpgsqlDbType.Jsonb;
-    }
-}
-```
-
-### UUID Primary Keys in ASP.NET Core
-
-```csharp
-// PostgreSQL gen_random_uuid() generates the ID — let the DB handle it
-public class Customer
-{
-    public Guid Id { get; set; }  // Maps to UUID
-}
-
-// EF Core — tell it the DB generates the value
-modelBuilder.Entity<Customer>(entity =>
-{
-    entity.Property(e => e.Id)
-          .HasDefaultValueSql("gen_random_uuid()");
+// Query JSONB field
+const dubaiCustomers = await prisma.customer.findMany({
+  where: {
+    address: {
+      path: ['emirate'],
+      equals: 'Dubai',
+    },
+  },
 });
-
-// Dapper — omit Id in INSERT, let DB generate
-await connection.ExecuteAsync(
-    "INSERT INTO customers (tenant_id, name, email) VALUES (@TenantId, @Name, @Email) RETURNING id",
-    new { TenantId = tenantId, Name = "Test", Email = "test@test.com" });
 ```
 
 ---
@@ -186,7 +199,7 @@ await connection.ExecuteAsync(
 
 **Step 1: Create enums (if needed)**
 ```sql
--- database/migrations/005_fleet_enums.sql
+-- prisma/migrations/<timestamp>_add_fleet_module/migration.sql
 CREATE TYPE vehicle_status AS ENUM ('active', 'maintenance', 'retired', 'sold');
 CREATE TYPE vehicle_type AS ENUM ('van', 'pickup', 'truck', 'motorcycle', 'sedan');
 CREATE TYPE fuel_type AS ENUM ('petrol', 'diesel', 'electric', 'hybrid');
@@ -194,7 +207,6 @@ CREATE TYPE fuel_type AS ENUM ('petrol', 'diesel', 'electric', 'hybrid');
 
 **Step 2: Create tables**
 ```sql
--- database/migrations/006_fleet_tables.sql
 CREATE TABLE fleet_vehicles (
     id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tenant_id       UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
@@ -260,6 +272,84 @@ ALTER TABLE jobs ADD COLUMN vehicle_id UUID REFERENCES fleet_vehicles(id) ON DEL
 CREATE INDEX idx_jobs_vehicle ON jobs (tenant_id, vehicle_id) WHERE vehicle_id IS NOT NULL;
 ```
 
+**Step 7: Introspect and generate Prisma Client**
+```bash
+# After applying the raw SQL migration, pull the changes into schema.prisma
+npx prisma db pull
+
+# Regenerate the client
+npx prisma generate
+```
+
+**Step 8: Create the TypeScript service**
+```typescript
+// src/features/fleet/fleet.service.ts
+import prisma from '../../lib/prisma';
+import { z } from 'zod';
+
+export const CreateVehicleSchema = z.object({
+  plateNumber: z.string().min(1).max(20),
+  type: z.enum(['van', 'pickup', 'truck', 'motorcycle', 'sedan']),
+  make: z.string().max(100).optional(),
+  model: z.string().max(100).optional(),
+  year: z.number().int().min(1990).max(2030).optional(),
+  fuelType: z.enum(['petrol', 'diesel', 'electric', 'hybrid']).default('petrol'),
+  assignedDriverId: z.string().uuid().optional(),
+});
+
+type CreateVehicleInput = z.infer<typeof CreateVehicleSchema>;
+
+export async function createVehicle(tenantId: string, input: CreateVehicleInput, userId: string) {
+  return prisma.fleetVehicle.create({
+    data: {
+      tenantId,
+      plateNumber: input.plateNumber,
+      type: input.type,
+      make: input.make,
+      model: input.model,
+      year: input.year,
+      fuelType: input.fuelType,
+      assignedDriverId: input.assignedDriverId,
+      createdBy: userId,
+    },
+  });
+}
+
+export async function getVehicles(tenantId: string) {
+  return prisma.fleetVehicle.findMany({
+    where: { tenantId, deletedAt: null },
+    include: { assignedDriver: true },
+    orderBy: { createdAt: 'desc' },
+  });
+}
+```
+
+**Step 9: Create the Express router**
+```typescript
+// src/features/fleet/fleet.router.ts
+import { Router } from 'express';
+import { authenticate } from '../../middleware/auth';
+import { CreateVehicleSchema, createVehicle, getVehicles } from './fleet.service';
+
+const router = Router();
+
+router.get('/', authenticate, async (req, res) => {
+  const vehicles = await getVehicles(req.user.tenantId);
+  res.json({ data: vehicles });
+});
+
+router.post('/', authenticate, async (req, res) => {
+  const parsed = CreateVehicleSchema.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ errors: parsed.error.flatten() });
+  }
+  const vehicle = await createVehicle(req.user.tenantId, parsed.data, req.user.id);
+  res.status(201).json({ data: vehicle });
+});
+
+export default router;
+```
+
 ---
 
 ## 3. Modifying Existing Schema
@@ -276,7 +366,7 @@ ALTER TABLE invoices ADD COLUMN currency VARCHAR(3) NOT NULL DEFAULT 'AED';
 -- Rename a column
 ALTER TABLE employees RENAME COLUMN phone TO mobile;
 
--- Change column type (careful — may need data migration)
+-- Change column type (careful -- may need data migration)
 ALTER TABLE items ALTER COLUMN barcode TYPE VARCHAR(200);
 
 -- Make a column nullable
@@ -299,111 +389,130 @@ ALTER TABLE jobs ADD COLUMN vehicle_id UUID REFERENCES fleet_vehicles(id) ON DEL
 CREATE INDEX idx_customers_whatsapp ON customers (tenant_id, whatsapp) WHERE whatsapp IS NOT NULL;
 ```
 
+### Applying Changes with Prisma Migrate
+
+```bash
+# After writing your SQL or editing schema.prisma, create a migration:
+npx prisma migrate dev --name add_whatsapp_to_customers
+
+# For production deployment:
+npx prisma migrate deploy
+
+# After any migration, regenerate the client:
+npx prisma generate
+```
+
+If the change is a pure SQL operation (ALTER TABLE, new trigger, etc.), place it directly in the migration SQL file that Prisma creates inside `prisma/migrations/<timestamp>_<name>/migration.sql`.
+
 ### NEVER Do These on Production Without Backup
 
 ```sql
--- DROP TABLE, DROP COLUMN, DROP TYPE — always back up first
--- ALTER TYPE ... RENAME VALUE — not supported, requires workaround
--- TRUNCATE — deletes all data instantly
--- DROP INDEX CONCURRENTLY — can cause downtime on large tables
+-- DROP TABLE, DROP COLUMN, DROP TYPE -- always back up first
+-- ALTER TYPE ... RENAME VALUE -- not supported, requires workaround
+-- TRUNCATE -- deletes all data instantly
+-- DROP INDEX CONCURRENTLY -- can cause downtime on large tables
 ```
 
 ---
 
 ## 4. Migration Strategy
 
-### Recommended for ASP.NET Core: DbUp
+### Recommended: Prisma Migrate with Raw SQL
 
-DbUp is the best fit because it runs raw SQL files — exactly what this schema uses.
-
-```bash
-dotnet add package DbUp-PostgreSQL
-```
-
-```csharp
-// Program.cs or a dedicated migration runner
-using DbUp;
-
-var connectionString = "Host=localhost;Database=erp_db;Username=erp_app;Password=xxx";
-
-var upgrader = DeployChanges.To
-    .PostgresqlDatabase(connectionString)
-    .WithScriptsFromFileSystem("database/")  // Runs 00-15 in order
-    .LogToConsole()
-    .Build();
-
-var result = upgrader.PerformUpgrade();
-
-if (!result.Successful)
-{
-    Console.ForegroundColor = ConsoleColor.Red;
-    Console.WriteLine(result.Error);
-    return -1;
-}
-
-Console.ForegroundColor = ConsoleColor.Green;
-Console.WriteLine("Database migration successful!");
-```
-
-DbUp automatically tracks which scripts have been run in a `schemaversions` table.
-
-### Alternative: EF Core Migrations
-
-If you prefer code-first with EF Core:
-```bash
-dotnet ef migrations add InitialCreate
-dotnet ef database update
-```
-
-But since the schema already exists as raw SQL, **DbUp is simpler** — it runs the SQL files directly without needing to reverse-engineer C# models.
-
-### Alternative: FluentMigrator
+Prisma Migrate is ideal because it supports both Prisma schema-level changes and raw SQL for PostgreSQL-specific features (triggers, RLS, extensions, custom functions).
 
 ```bash
-dotnet add package FluentMigrator
-dotnet add package FluentMigrator.Runner
-dotnet add package FluentMigrator.Runner.Postgres
+# Create a new migration (development)
+npx prisma migrate dev --name add_fleet_module
+
+# Apply migrations in production
+npx prisma migrate deploy
+
+# Check migration status
+npx prisma migrate status
+
+# Reset database (development only -- destroys all data)
+npx prisma migrate reset
 ```
 
-```csharp
-[Migration(20260301)]
-public class AddWhatsappToCustomers : Migration
-{
-    public override void Up()
-    {
-        Alter.Table("customers").AddColumn("whatsapp").AsString(20).Nullable();
-    }
+### Using Raw SQL in Prisma Migrations
 
-    public override void Down()
-    {
-        Delete.Column("whatsapp").FromTable("customers");
-    }
-}
+After running `npx prisma migrate dev --create-only`, Prisma creates a `migration.sql` file. You can edit this file to add raw SQL that Prisma cannot express natively:
+
+```sql
+-- prisma/migrations/20260301120000_add_fleet_module/migration.sql
+
+-- Prisma-generated schema changes go here...
+
+-- Then add raw SQL for things Prisma does not support:
+
+-- Custom enum
+CREATE TYPE vehicle_status AS ENUM ('active', 'maintenance', 'retired', 'sold');
+
+-- RLS policies
+ALTER TABLE fleet_vehicles ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation_select ON fleet_vehicles
+    FOR SELECT USING (tenant_id = current_tenant_id());
+
+-- Triggers
+CREATE OR REPLACE FUNCTION trg_vehicle_number()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.vehicle_number IS NULL OR NEW.vehicle_number = '' THEN
+        NEW.vehicle_number := generate_sequence_number(NEW.tenant_id, 'VEH');
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_fleet_vehicles_auto_number
+    BEFORE INSERT ON fleet_vehicles
+    FOR EACH ROW EXECUTE FUNCTION trg_vehicle_number();
+
+-- Extensions
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
 ```
 
-### Migration Folder Structure (Production)
+### Baseline an Existing Database
+
+Since the schema already exists as raw SQL files (00-15), baseline Prisma to track future changes:
+
+```bash
+# 1. Run the existing SQL files against your database (if not done already)
+# 2. Pull the schema into Prisma
+npx prisma db pull
+
+# 3. Create an initial migration without applying it (since the DB already matches)
+npx prisma migrate dev --name initial_baseline --create-only
+
+# 4. Mark it as already applied
+npx prisma migrate resolve --applied 20260301000000_initial_baseline
+```
+
+### Migration Folder Structure
 
 ```
-database/
-├── schema/              ← Original 00-15.sql (run once on fresh DB)
-│   ├── 00_extensions.sql
-│   ├── 01_enums.sql
-│   └── ...
-└── migrations/          ← Incremental changes (run in order)
-    ├── 001_20260301_add_whatsapp_to_customers.sql
-    ├── 002_20260305_add_fleet_module.sql
-    ├── 003_20260310_fix_invoice_enum.sql
-    └── 004_20260315_add_customer_search_vector.sql
+prisma/
+├── schema.prisma              <- Prisma schema definition
+└── migrations/
+    ├── 20260301000000_initial_baseline/
+    │   └── migration.sql      <- Baseline (existing schema)
+    ├── 20260305120000_add_whatsapp_to_customers/
+    │   └── migration.sql
+    ├── 20260310120000_add_fleet_module/
+    │   └── migration.sql
+    └── migration_lock.toml    <- Prisma migration lock
 ```
 
 ### Golden Rules for Migrations
 
-1. **Never edit a migration that has been run in production** — create a new one
-2. **Always write a rollback** — so you can undo mistakes
-3. **Test on staging first** — never run untested migrations on production
-4. **Back up before migrating** — `pg_dump erp_db > backup.sql`
-5. **One concern per migration** — don't mix unrelated changes
-6. **Name files descriptively** — `003_add_fleet_module.sql` not `003_update.sql`
+1. **Never edit a migration that has been run in production** -- create a new one
+2. **Always write reversible changes** -- so you can undo mistakes manually
+3. **Test on staging first** -- never run untested migrations on production
+4. **Back up before migrating** -- `pg_dump erp_db > backup.sql`
+5. **One concern per migration** -- do not mix unrelated changes
+6. **Name migrations descriptively** -- `add_fleet_module` not `update`
+7. **Use `--create-only` for complex changes** -- edit the SQL before applying
 
 ---
 
@@ -437,6 +546,80 @@ ALTER TABLE job_status_history ALTER COLUMN status TYPE job_status USING status:
 DROP TYPE job_status_old;
 ```
 
+### Prisma Enum Support
+
+Prisma maps PostgreSQL enums to TypeScript enums automatically:
+
+```prisma
+// schema.prisma -- generated by `npx prisma db pull`
+enum job_status {
+  new
+  scheduled
+  in_progress  @map("in-progress")
+  on_hold      @map("on-hold")
+  completed
+  cancelled
+  invoiced
+}
+
+model Job {
+  id     String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  status job_status @default(new)
+  // ...
+  @@map("jobs")
+}
+```
+
+```typescript
+// Usage in TypeScript -- fully typed
+import { job_status } from '@prisma/client';
+
+const activeJobs = await prisma.job.findMany({
+  where: {
+    status: { in: [job_status.new, job_status.scheduled, job_status.in_progress] },
+  },
+});
+```
+
+### Zod Schemas for Enum Validation
+
+```typescript
+// src/features/jobs/job.schema.ts
+import { z } from 'zod';
+
+export const JobStatusEnum = z.enum([
+  'new',
+  'scheduled',
+  'in-progress',
+  'on-hold',
+  'completed',
+  'cancelled',
+  'invoiced',
+]);
+
+export type JobStatus = z.infer<typeof JobStatusEnum>;
+
+export const UpdateJobStatusSchema = z.object({
+  status: JobStatusEnum,
+  notes: z.string().max(500).optional(),
+});
+
+// Usage in route handler
+router.patch('/:id/status', authenticate, async (req, res) => {
+  const parsed = UpdateJobStatusSchema.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ errors: parsed.error.flatten() });
+  }
+
+  const job = await prisma.job.update({
+    where: { id: req.params.id },
+    data: { status: parsed.data.status as job_status },
+  });
+
+  res.json({ data: job });
+});
+```
+
 ### Alternative: Use VARCHAR Instead of ENUM
 
 Some teams prefer `VARCHAR(50)` with `CHECK` constraints instead of enums because they are easier to modify:
@@ -456,110 +639,156 @@ ALTER TABLE jobs ADD CONSTRAINT chk_job_status
 
 ---
 
-## 6. RLS with ASP.NET Core
+## 6. RLS with Node.js
 
-### Middleware Approach (Recommended)
+### Express Middleware Approach (Recommended)
 
-```csharp
-// TenantContextMiddleware.cs
-public class TenantContextMiddleware
-{
-    private readonly RequestDelegate _next;
+Row-Level Security in PostgreSQL relies on session variables (`app.current_tenant`, `app.current_user`). With Prisma, you set these via `$executeRawUnsafe` before each request.
 
-    public TenantContextMiddleware(RequestDelegate next) => _next = next;
+```typescript
+// src/middleware/tenant-context.ts
+import { Request, Response, NextFunction } from 'express';
+import prisma from '../lib/prisma';
 
-    public async Task InvokeAsync(HttpContext context)
-    {
-        // Extract tenant and user from JWT claims
-        var tenantId = context.User.FindFirst("tenant_id")?.Value;
-        var userId = context.User.FindFirst("sub")?.Value;
+/**
+ * Middleware that sets PostgreSQL session variables for RLS.
+ * Must run AFTER the auth middleware (which populates req.user).
+ */
+export async function tenantContext(req: Request, res: Response, next: NextFunction) {
+  try {
+    const tenantId = req.user?.tenantId;
+    const userId = req.user?.id;
 
-        if (!string.IsNullOrEmpty(tenantId))
-        {
-            // Store in HttpContext for later use
-            context.Items["TenantId"] = tenantId;
-            context.Items["UserId"] = userId;
-        }
-
-        await _next(context);
+    if (tenantId) {
+      // Set PostgreSQL session variables for RLS policies
+      await prisma.$executeRawUnsafe(
+        `SELECT set_config('app.current_tenant', '${tenantId}', false)`
+      );
+      await prisma.$executeRawUnsafe(
+        `SELECT set_config('app.current_user', '${userId}', false)`
+      );
     }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
 }
-
-// DbConnectionFactory.cs — creates connection with tenant context
-public class DbConnectionFactory : IDbConnectionFactory
-{
-    private readonly string _connectionString;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public DbConnectionFactory(string connectionString, IHttpContextAccessor httpContextAccessor)
-    {
-        _connectionString = connectionString;
-        _httpContextAccessor = httpContextAccessor;
-    }
-
-    public async Task<NpgsqlConnection> CreateConnectionAsync()
-    {
-        var connection = new NpgsqlConnection(_connectionString);
-        await connection.OpenAsync();
-
-        var tenantId = _httpContextAccessor.HttpContext?.Items["TenantId"]?.ToString();
-        var userId = _httpContextAccessor.HttpContext?.Items["UserId"]?.ToString();
-
-        if (!string.IsNullOrEmpty(tenantId))
-        {
-            await using var cmd = connection.CreateCommand();
-            cmd.CommandText = "SELECT set_config('app.current_tenant', @tenantId, false), " +
-                              "set_config('app.current_user', @userId, false)";
-            cmd.Parameters.AddWithValue("tenantId", tenantId);
-            cmd.Parameters.AddWithValue("userId", userId ?? "");
-            await cmd.ExecuteNonQueryAsync();
-        }
-
-        return connection;
-    }
-}
-
-// Program.cs registration
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IDbConnectionFactory>(sp =>
-    new DbConnectionFactory(
-        builder.Configuration.GetConnectionString("DefaultConnection")!,
-        sp.GetRequiredService<IHttpContextAccessor>()));
 ```
 
-### EF Core Interceptor Approach
+### Auth Middleware (JWT Verification)
 
-```csharp
-// TenantInterceptor.cs
-public class TenantInterceptor : DbConnectionInterceptor
-{
-    private readonly IHttpContextAccessor _httpContextAccessor;
+```typescript
+// src/middleware/auth.ts
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 
-    public TenantInterceptor(IHttpContextAccessor httpContextAccessor)
-    {
-        _httpContextAccessor = httpContextAccessor;
-    }
-
-    public override async Task ConnectionOpenedAsync(
-        DbConnection connection, ConnectionEndEventData eventData, CancellationToken ct)
-    {
-        var tenantId = _httpContextAccessor.HttpContext?.Items["TenantId"]?.ToString();
-        var userId = _httpContextAccessor.HttpContext?.Items["UserId"]?.ToString();
-
-        if (!string.IsNullOrEmpty(tenantId))
-        {
-            await using var cmd = connection.CreateCommand();
-            cmd.CommandText = $"SET app.current_tenant = '{tenantId}'; SET app.current_user = '{userId}';";
-            await cmd.ExecuteNonQueryAsync(ct);
-        }
-    }
+interface JwtPayload {
+  sub: string;        // user ID
+  tenantId: string;
+  email: string;
+  role: string;
 }
 
-// In Program.cs
-builder.Services.AddDbContext<ErpDbContext>((sp, options) =>
-{
-    options.UseNpgsql(connectionString)
-           .AddInterceptors(sp.GetRequiredService<TenantInterceptor>());
+// Extend Express Request type
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        id: string;
+        tenantId: string;
+        email: string;
+        role: string;
+      };
+    }
+  }
+}
+
+export function authenticate(req: Request, res: Response, next: NextFunction) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader?.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Missing or invalid authorization header' });
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    req.user = {
+      id: decoded.sub,
+      tenantId: decoded.tenantId,
+      email: decoded.email,
+      role: decoded.role,
+    };
+    next();
+  } catch {
+    return res.status(401).json({ error: 'Invalid or expired token' });
+  }
+}
+```
+
+### Combining Auth + Tenant Context in Express App
+
+```typescript
+// src/app.ts
+import express from 'express';
+import { authenticate } from './middleware/auth';
+import { tenantContext } from './middleware/tenant-context';
+import fleetRouter from './features/fleet/fleet.router';
+import jobsRouter from './features/jobs/jobs.router';
+
+const app = express();
+
+app.use(express.json());
+
+// Public routes (no auth needed)
+app.use('/api/auth', authRouter);
+
+// Protected routes -- auth + tenant context
+app.use('/api/fleet', authenticate, tenantContext, fleetRouter);
+app.use('/api/jobs', authenticate, tenantContext, jobsRouter);
+
+export default app;
+```
+
+### Transaction-Scoped Tenant Context
+
+For operations that need RLS within a Prisma transaction:
+
+```typescript
+// src/lib/with-tenant.ts
+import { PrismaClient, Prisma } from '@prisma/client';
+import prisma from './prisma';
+
+/**
+ * Executes a callback within a transaction that has tenant context set.
+ * This ensures RLS is enforced for all queries within the transaction.
+ */
+export async function withTenantContext<T>(
+  tenantId: string,
+  userId: string,
+  callback: (tx: Prisma.TransactionClient) => Promise<T>
+): Promise<T> {
+  return prisma.$transaction(async (tx) => {
+    await tx.$executeRawUnsafe(
+      `SELECT set_config('app.current_tenant', '${tenantId}', true)`
+    );
+    await tx.$executeRawUnsafe(
+      `SELECT set_config('app.current_user', '${userId}', true)`
+    );
+    return callback(tx);
+  });
+}
+
+// Usage
+const invoice = await withTenantContext(tenantId, userId, async (tx) => {
+  const inv = await tx.invoice.create({
+    data: { tenantId, customerId, total: 1500 },
+  });
+  await tx.invoiceItem.createMany({
+    data: items.map((item) => ({ invoiceId: inv.id, ...item })),
+  });
+  return inv;
 });
 ```
 
@@ -567,46 +796,89 @@ builder.Services.AddDbContext<ErpDbContext>((sp, options) =>
 
 ## 7. Connection & Pooling
 
-### ASP.NET Core Connection String
+### Prisma Connection URL
 
-```json
-// appsettings.json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Port=5432;Database=erp_db;Username=erp_app;Password=YourPassword;Pooling=true;MinPoolSize=5;MaxPoolSize=100;ConnectionIdleLifetime=300;ConnectionPruningInterval=10"
-  }
-}
+```bash
+# .env
+DATABASE_URL="postgresql://erp_app:YourPassword@localhost:5432/erp_db?schema=public&connection_limit=20&pool_timeout=10"
 ```
 
 ### Connection Pool Settings
 
-| Setting | Development | Production | Description |
-|---------|------------|------------|-------------|
-| `MinPoolSize` | 2 | 10 | Minimum open connections |
-| `MaxPoolSize` | 20 | 100 | Maximum open connections |
-| `ConnectionIdleLifetime` | 300 | 300 | Seconds before idle connection is closed |
-| `Timeout` | 30 | 15 | Connection timeout in seconds |
-| `CommandTimeout` | 30 | 30 | Query timeout in seconds |
+Prisma manages its own connection pool. Configure via the `DATABASE_URL` query parameters:
+
+| Parameter | Development | Production | Description |
+|-----------|------------|------------|-------------|
+| `connection_limit` | 5 | 20 | Maximum connections in the pool |
+| `pool_timeout` | 10 | 10 | Seconds to wait for a connection from the pool |
+| `connect_timeout` | 10 | 5 | Seconds to wait for a new connection to the database |
+| `statement_cache_size` | 100 | 500 | Number of prepared statements to cache |
+
+```bash
+# Production DATABASE_URL with pool settings
+DATABASE_URL="postgresql://erp_app:xxx@db.example.com:5432/erp_db?schema=public&connection_limit=20&pool_timeout=10&connect_timeout=5&sslmode=require"
+```
 
 ### For High Load (100+ concurrent users)
 
 Use **PgBouncer** as a connection pooler between your app and PostgreSQL:
 
 ```
-ASP.NET Core App → PgBouncer (port 6432) → PostgreSQL (port 5432)
+Node.js App (Prisma) -> PgBouncer (port 6432) -> PostgreSQL (port 5432)
+```
+
+When using PgBouncer with Prisma, add the `pgbouncer=true` flag:
+
+```bash
+# .env with PgBouncer
+DATABASE_URL="postgresql://erp_app:xxx@localhost:6432/erp_db?schema=public&pgbouncer=true&connection_limit=20"
+
+# Direct URL (for migrations -- bypass PgBouncer)
+DIRECT_URL="postgresql://erp_app:xxx@localhost:5432/erp_db?schema=public"
+```
+
+```prisma
+// schema.prisma -- configure both URLs
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")       // PgBouncer for queries
+  directUrl = env("DIRECT_URL")         // Direct for migrations
+}
 ```
 
 PgBouncer reuses connections efficiently, reducing PostgreSQL overhead from thousands of app connections down to ~50 actual DB connections.
+
+### Graceful Shutdown
+
+```typescript
+// src/server.ts
+import app from './app';
+import prisma from './lib/prisma';
+
+const server = app.listen(process.env.PORT || 3000, () => {
+  console.log(`Server running on port ${process.env.PORT || 3000}`);
+});
+
+async function gracefulShutdown() {
+  console.log('Shutting down gracefully...');
+  server.close();
+  await prisma.$disconnect();
+  process.exit(0);
+}
+
+process.on('SIGTERM', gracefulShutdown);
+process.on('SIGINT', gracefulShutdown);
+```
 
 ---
 
 ## 8. Backup & Restore
 
 ```bash
-# Full backup (custom format — best for restore flexibility)
+# Full backup (custom format -- best for restore flexibility)
 pg_dump -Fc -h localhost -U erp_app erp_db > erp_backup_$(date +%Y%m%d).dump
 
-# Schema only (no data) — useful for documentation
+# Schema only (no data) -- useful for documentation
 pg_dump --schema-only -h localhost -U erp_app erp_db > schema_only.sql
 
 # Data only (no schema)
@@ -635,6 +907,37 @@ pg_dump -Fc -h localhost -U erp_app erp_db > "$BACKUP_DIR/erp_$TIMESTAMP.dump"
 find "$BACKUP_DIR" -name "*.dump" -mtime +30 -delete
 ```
 
+### Backup via BullMQ Background Job
+
+```typescript
+// src/jobs/backup.job.ts
+import { Queue, Worker } from 'bullmq';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
+
+const backupQueue = new Queue('database-backup', {
+  connection: { url: process.env.REDIS_URL },
+});
+
+// Schedule daily backup at 2 AM
+await backupQueue.add('daily-backup', {}, {
+  repeat: { pattern: '0 2 * * *' },
+});
+
+// Worker
+const worker = new Worker('database-backup', async (job) => {
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const filename = `/backups/erp_${timestamp}.dump`;
+
+  await execAsync(`pg_dump -Fc -h localhost -U erp_app erp_db > ${filename}`);
+  console.log(`Backup created: ${filename}`);
+}, {
+  connection: { url: process.env.REDIS_URL },
+});
+```
+
 ### Cloud Provider Backups
 
 Most cloud providers (Supabase, Neon, AWS RDS) have automated daily backups. You just configure retention period.
@@ -650,17 +953,56 @@ Most cloud providers (Supabase, Neon, AWS RDS) have automated daily backups. You
 - System health monitoring
 - Analytics aggregation
 
-### How to Bypass RLS
+### How to Bypass RLS with Prisma
 
-```csharp
-// Option 1: Use a superuser connection (bypasses RLS automatically)
-var superConnection = new NpgsqlConnection(superuserConnectionString);
-var totalUsers = await superConnection.QueryAsync<int>("SELECT count(*) FROM users");
+```typescript
+// Option 1: Use a separate superuser Prisma client (bypasses RLS automatically)
+// src/lib/prisma-admin.ts
+import { PrismaClient } from '@prisma/client';
 
-// Option 2: Set an empty tenant (returns nothing — safe)
-// Then run query without RLS via superuser role
+// This client uses a superuser connection that bypasses RLS
+const prismaAdmin = new PrismaClient({
+  datasources: {
+    db: { url: process.env.DATABASE_ADMIN_URL },
+  },
+});
 
-// Option 3: Create a dedicated "platform admin" role
+export default prismaAdmin;
+```
+
+```typescript
+// Option 2: Use raw SQL with a BYPASSRLS role
+// src/features/admin/admin.service.ts
+import prismaAdmin from '../../lib/prisma-admin';
+
+export async function getDashboardStats() {
+  const [tenantCount, userCount, activeJobs] = await Promise.all([
+    prismaAdmin.tenant.count(),
+    prismaAdmin.user.count({ where: { status: 'active' } }),
+    prismaAdmin.job.count({ where: { status: { in: ['scheduled', 'in_progress'] } } }),
+  ]);
+
+  return { tenantCount, userCount, activeJobs };
+}
+
+// Cross-tenant analytics
+export async function getRevenueByTenant() {
+  const results = await prismaAdmin.$queryRaw<
+    { tenant_id: string; tenant_name: string; total_revenue: number }[]
+  >`
+    SELECT t.id AS tenant_id, t.name AS tenant_name,
+           COALESCE(SUM(i.total), 0) AS total_revenue
+    FROM tenants t
+    LEFT JOIN invoices i ON i.tenant_id = t.id AND i.status = 'paid'
+    GROUP BY t.id, t.name
+    ORDER BY total_revenue DESC
+  `;
+  return results;
+}
+```
+
+```typescript
+// Option 3: Create a dedicated platform admin role in PostgreSQL
 // CREATE ROLE platform_admin BYPASSRLS LOGIN PASSWORD '...';
 ```
 
@@ -701,6 +1043,43 @@ EXPLAIN ANALYZE SELECT * FROM invoices WHERE tenant_id = '...' AND status = 'ove
 ANALYZE invoices;
 ```
 
+### Optimizing Prisma Queries
+
+```typescript
+// BAD -- N+1 problem: fetches jobs, then fetches customer for each job
+const jobs = await prisma.job.findMany({ where: { tenantId } });
+for (const job of jobs) {
+  const customer = await prisma.customer.findUnique({ where: { id: job.customerId } });
+}
+
+// GOOD -- single query with include (JOIN)
+const jobs = await prisma.job.findMany({
+  where: { tenantId },
+  include: { customer: true, assignedTechnician: true },
+});
+
+// GOOD -- select only needed fields to reduce payload
+const jobs = await prisma.job.findMany({
+  where: { tenantId },
+  select: {
+    id: true,
+    jobNumber: true,
+    status: true,
+    scheduledDate: true,
+    customer: { select: { name: true, phone: true } },
+  },
+});
+
+// Use cursor-based pagination for large datasets
+const jobs = await prisma.job.findMany({
+  where: { tenantId },
+  take: 20,
+  skip: 1,
+  cursor: { id: lastJobId },
+  orderBy: { createdAt: 'desc' },
+});
+```
+
 ### VACUUM & Maintenance
 
 ```sql
@@ -709,7 +1088,7 @@ ANALYZE invoices;
 VACUUM ANALYZE customers;
 VACUUM ANALYZE invoices;
 
--- Full vacuum (reclaims disk space, requires exclusive lock — run off-hours)
+-- Full vacuum (reclaims disk space, requires exclusive lock -- run off-hours)
 VACUUM FULL audit_logs;
 ```
 
@@ -717,8 +1096,8 @@ VACUUM FULL audit_logs;
 
 For heavy reporting workloads, use a read replica:
 ```
-Write queries → Primary DB
-Read queries (reports, dashboards) → Read Replica
+Write queries  -> Primary DB
+Read queries (reports, dashboards) -> Read Replica
 ```
 
 Most cloud providers support this with a toggle.
@@ -735,6 +1114,44 @@ The schema already has `pg_trgm` extension and a trigram index on `customers.nam
 SELECT * FROM customers
 WHERE name % 'Ahmed'  -- Trigram similarity
 ORDER BY similarity(name, 'Ahmed') DESC;
+```
+
+### Querying Full-Text Search with Prisma
+
+```typescript
+// src/features/crm/customer.service.ts
+import prisma from '../../lib/prisma';
+
+export async function searchCustomers(tenantId: string, query: string) {
+  // Trigram similarity search via raw SQL
+  const customers = await prisma.$queryRaw<
+    { id: string; name: string; email: string; similarity: number }[]
+  >`
+    SELECT id, name, email, similarity(name, ${query}) AS similarity
+    FROM customers
+    WHERE tenant_id = ${tenantId}::uuid
+      AND name % ${query}
+    ORDER BY similarity DESC
+    LIMIT 20
+  `;
+  return customers;
+}
+
+// Full-text search (if tsvector column exists)
+export async function fullTextSearch(tenantId: string, query: string) {
+  const customers = await prisma.$queryRaw<
+    { id: string; name: string; email: string; rank: number }[]
+  >`
+    SELECT id, name, email,
+           ts_rank(search_vector, to_tsquery('english', ${query})) AS rank
+    FROM customers
+    WHERE tenant_id = ${tenantId}::uuid
+      AND search_vector @@ to_tsquery('english', ${query})
+    ORDER BY rank DESC
+    LIMIT 20
+  `;
+  return customers;
+}
 ```
 
 ### Advanced Full-Text Search (add if needed)
@@ -792,27 +1209,105 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE O
 
 ### SSL Connections (required for cloud)
 
-```json
-// appsettings.json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Host=db.example.com;Database=erp_db;Username=erp_app;Password=xxx;SslMode=Require;TrustServerCertificate=false"
-  }
-}
+```bash
+# .env -- SSL is enforced via the sslmode parameter
+DATABASE_URL="postgresql://erp_app:xxx@db.example.com:5432/erp_db?schema=public&sslmode=require"
 ```
 
 ### Prevent SQL Injection
 
-```csharp
-// ALWAYS use parameterized queries
-// GOOD
-await connection.QueryAsync<Customer>(
-    "SELECT * FROM customers WHERE tenant_id = @TenantId AND email = @Email",
-    new { TenantId = tenantId, Email = email });
+Prisma uses parameterized queries by default. This is the primary defense against SQL injection:
 
-// BAD — never do this
-await connection.QueryAsync<Customer>(
-    $"SELECT * FROM customers WHERE email = '{email}'");  // SQL INJECTION!
+```typescript
+// SAFE -- Prisma parameterizes automatically
+const customer = await prisma.customer.findFirst({
+  where: { tenantId, email: userInput },
+});
+
+// SAFE -- tagged template literal is parameterized
+const results = await prisma.$queryRaw`
+  SELECT * FROM customers WHERE tenant_id = ${tenantId} AND email = ${email}
+`;
+
+// DANGEROUS -- $queryRawUnsafe with string interpolation
+// NEVER do this with user input:
+const results = await prisma.$queryRawUnsafe(
+  `SELECT * FROM customers WHERE email = '${email}'`  // SQL INJECTION!
+);
+
+// SAFE -- if you must use $queryRawUnsafe, use Prisma.sql for parameterization
+import { Prisma } from '@prisma/client';
+const results = await prisma.$queryRawUnsafe(
+  'SELECT * FROM customers WHERE tenant_id = $1 AND email = $2',
+  tenantId,
+  email
+);
+```
+
+### Important: RLS Tenant Context and Injection
+
+The tenant context middleware uses `$executeRawUnsafe` with the tenant ID from a verified JWT. Since the JWT is signed and verified server-side, the tenant ID is trusted. Never set tenant context from unverified user input:
+
+```typescript
+// SAFE -- tenantId comes from verified JWT
+await prisma.$executeRawUnsafe(
+  `SELECT set_config('app.current_tenant', '${req.user.tenantId}', false)`
+);
+
+// DANGEROUS -- tenantId from query parameter (could be tampered)
+await prisma.$executeRawUnsafe(
+  `SELECT set_config('app.current_tenant', '${req.query.tenantId}', false)` // NEVER!
+);
+```
+
+### Password Hashing
+
+```typescript
+// src/features/auth/auth.service.ts
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+
+const SALT_ROUNDS = 12;
+
+export async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, SALT_ROUNDS);
+}
+
+export async function verifyPassword(password: string, hash: string): Promise<boolean> {
+  return bcrypt.compare(password, hash);
+}
+
+export function generateToken(user: { id: string; tenantId: string; email: string; role: string }): string {
+  return jwt.sign(
+    { sub: user.id, tenantId: user.tenantId, email: user.email, role: user.role },
+    process.env.JWT_SECRET!,
+    { expiresIn: '8h' }
+  );
+}
+```
+
+### Input Validation with Zod
+
+```typescript
+// src/features/auth/auth.schema.ts
+import { z } from 'zod';
+
+export const LoginSchema = z.object({
+  email: z.string().email().max(200),
+  password: z.string().min(8).max(100),
+});
+
+export const RegisterSchema = z.object({
+  name: z.string().min(2).max(200),
+  email: z.string().email().max(200),
+  password: z.string()
+    .min(8, 'Password must be at least 8 characters')
+    .max(100)
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .regex(/[0-9]/, 'Password must contain at least one number'),
+  tenantName: z.string().min(2).max(200),
+  trn: z.string().regex(/^\d{15}$/, 'TRN must be exactly 15 digits').optional(),
+});
 ```
 
 ---
@@ -897,26 +1392,125 @@ END;
 $$ LANGUAGE plpgsql;
 ```
 
-### Call from ASP.NET Core
+### Call from TypeScript / Express
 
-```csharp
-var result = await connection.QuerySingleAsync<(Guid TenantId, Guid AdminUserId)>(
-    "SELECT * FROM provision_tenant(@Name, @Email, @PasswordHash, @Trn, @Plan::subscription_plan)",
-    new { Name = "Acme LLC", Email = "admin@acme.ae", PasswordHash = hashedPassword, Trn = "100123456789003", Plan = "starter" });
+```typescript
+// src/features/auth/auth.service.ts
+import prisma from '../../lib/prisma';
+import bcrypt from 'bcryptjs';
+
+interface ProvisionResult {
+  tenant_id: string;
+  admin_user_id: string;
+}
+
+export async function provisionTenant(
+  name: string,
+  adminEmail: string,
+  adminPassword: string,
+  trn?: string,
+  plan: string = 'starter'
+): Promise<ProvisionResult> {
+  const passwordHash = await bcrypt.hash(adminPassword, 12);
+
+  const result = await prisma.$queryRaw<ProvisionResult[]>`
+    SELECT * FROM provision_tenant(
+      ${name},
+      ${adminEmail},
+      ${passwordHash},
+      ${trn ?? null},
+      ${plan}::subscription_plan
+    )
+  `;
+
+  return result[0];
+}
+```
+
+```typescript
+// src/features/auth/auth.router.ts
+import { Router } from 'express';
+import { RegisterSchema } from './auth.schema';
+import { provisionTenant } from './auth.service';
+import { generateToken } from './auth.service';
+
+const router = Router();
+
+router.post('/register', async (req, res) => {
+  const parsed = RegisterSchema.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ errors: parsed.error.flatten() });
+  }
+
+  const { name, email, password, tenantName, trn } = parsed.data;
+
+  try {
+    const result = await provisionTenant(tenantName, email, password, trn);
+
+    const token = generateToken({
+      id: result.admin_user_id,
+      tenantId: result.tenant_id,
+      email,
+      role: 'admin',
+    });
+
+    res.status(201).json({
+      data: {
+        tenantId: result.tenant_id,
+        userId: result.admin_user_id,
+        token,
+      },
+    });
+  } catch (error: any) {
+    if (error.code === '23505') {
+      return res.status(409).json({ error: 'Email or tenant already exists' });
+    }
+    throw error;
+  }
+});
+
+export default router;
+```
+
+### Background Job for Post-Provisioning Tasks
+
+```typescript
+// src/jobs/tenant-provisioning.job.ts
+import { Queue, Worker } from 'bullmq';
+
+const provisioningQueue = new Queue('tenant-provisioning', {
+  connection: { url: process.env.REDIS_URL },
+});
+
+// Add to queue after tenant creation
+export async function schedulePostProvisioningTasks(tenantId: string, adminEmail: string) {
+  await provisioningQueue.add('post-provision', { tenantId, adminEmail });
+}
+
+// Worker handles async tasks
+const worker = new Worker('tenant-provisioning', async (job) => {
+  const { tenantId, adminEmail } = job.data;
+
+  // Send welcome email
+  // Generate sample data
+  // Set up default notification preferences
+  console.log(`Post-provisioning tasks completed for tenant ${tenantId}`);
+}, {
+  connection: { url: process.env.REDIS_URL },
+});
 ```
 
 ---
 
 ## 14. Cloud Database Providers
 
-### Comparison for ASP.NET Core Backend
+### Comparison for Node.js Backend
 
 | Provider | Free Tier | Pricing (Prod) | Extensions | RLS | Backups | Best For |
 |----------|-----------|----------------|------------|-----|---------|----------|
 | **Neon** | 512 MB, 0.5 GB compute | $19/mo (Scale) | All supported | Yes | Auto PITR | Serverless, auto-scaling, dev branching |
 | **Supabase** | 500 MB | $25/mo (Pro) | All supported | Yes (native) | Daily | Full platform (auth, storage, realtime) |
 | **AWS RDS** | 12 months free (t3.micro) | $15-50/mo | All supported | Yes | Auto daily | Enterprise, full AWS ecosystem |
-| **Azure Database for PostgreSQL** | $200 credit | $25-60/mo | All supported | Yes | Auto daily | .NET ecosystem, Azure DevOps |
 | **Railway** | 1 GB trial | $5-20/mo | All supported | Yes | Manual | Simple deploy, fast setup |
 | **DigitalOcean Managed DB** | None | $15/mo (1GB) | All supported | Yes | Auto daily | Simple, predictable pricing |
 | **Render** | 256 MB (90 days) | $7/mo (Starter) | Most supported | Yes | Daily | Simple, good free tier |
@@ -927,23 +1521,32 @@ var result = await connection.QuerySingleAsync<(Guid TenantId, Guid AdminUserId)
 |-------|----------|-----|
 | **Learning/Development** | **Neon Free** | 512 MB free forever, instant setup, database branching |
 | **MVP/Beta** | **Neon Scale** or **Supabase Pro** | $19-25/mo, auto-scaling, managed backups |
-| **Production** | **Azure Database for PostgreSQL** or **AWS RDS** | Best for ASP.NET Core ecosystem, enterprise SLAs |
-| **If already on Azure** | **Azure Database** | Native integration with Azure App Service, DevOps |
+| **Production** | **AWS RDS** or **DigitalOcean** | Best for Node.js ecosystem, great Prisma support, enterprise SLAs |
+| **Full-stack platform** | **Supabase** | Built-in auth, storage, realtime -- but you may not need these with your own backend |
 
-### Connection String Examples
+### Connection String Examples (DATABASE_URL format)
 
-```
+```bash
 # Neon
-Host=ep-cool-name-123456.us-east-2.aws.neon.tech;Database=erp_db;Username=erp_app;Password=xxx;SslMode=Require
+DATABASE_URL="postgresql://erp_app:xxx@ep-cool-name-123456.us-east-2.aws.neon.tech/erp_db?sslmode=require"
 
-# Supabase
-Host=db.abcdefghijklmnop.supabase.co;Port=5432;Database=postgres;Username=postgres;Password=xxx;SslMode=Require
+# Supabase (direct connection)
+DATABASE_URL="postgresql://postgres:xxx@db.abcdefghijklmnop.supabase.co:5432/postgres?sslmode=require"
+
+# Supabase (connection pooler -- recommended for serverless/Prisma)
+DATABASE_URL="postgresql://postgres:xxx@pooler.abcdefghijklmnop.supabase.co:6543/postgres?pgbouncer=true&sslmode=require"
 
 # AWS RDS
-Host=erp-db.abc123def456.us-east-1.rds.amazonaws.com;Port=5432;Database=erp_db;Username=erp_app;Password=xxx;SslMode=Require
+DATABASE_URL="postgresql://erp_app:xxx@erp-db.abc123def456.us-east-1.rds.amazonaws.com:5432/erp_db?sslmode=require"
 
-# Azure
-Host=erp-server.postgres.database.azure.com;Port=5432;Database=erp_db;Username=erp_app;Password=xxx;SslMode=Require
+# Railway
+DATABASE_URL="postgresql://postgres:xxx@containers-us-west-1.railway.app:5432/railway?sslmode=require"
+
+# DigitalOcean
+DATABASE_URL="postgresql://erp_app:xxx@db-postgresql-nyc1-12345-do-user.db.ondigitalocean.com:25060/erp_db?sslmode=require"
+
+# Render
+DATABASE_URL="postgresql://erp_app:xxx@dpg-abc123.oregon-postgres.render.com/erp_db?sslmode=require"
 ```
 
 ---
@@ -955,8 +1558,8 @@ Host=erp-server.postgres.database.azure.com;Port=5432;Database=erp_db;Username=e
 A traditional PostgreSQL database runs on a **dedicated server** (physical or virtual) that is **always running**, whether anyone is querying it or not.
 
 ```
-Traditional: Server is ON 24/7 → You pay 24/7
-             Even at 3 AM when nobody is using it → Still running, still paying
+Traditional: Server is ON 24/7 -> You pay 24/7
+             Even at 3 AM when nobody is using it -> Still running, still paying
 ```
 
 Think of it like renting an office: you pay rent every month whether you're in the office or not.
@@ -966,9 +1569,9 @@ Think of it like renting an office: you pay rent every month whether you're in t
 Serverless PostgreSQL (like **Neon**) separates **storage** from **compute**:
 
 ```
-Serverless:  Someone sends a query → Compute spins up (milliseconds) → Runs query → Scales down
-             Nobody using it at 3 AM → Compute scales to ZERO → You pay $0 for compute
-             Storage still exists (your data is safe) → You only pay for storage
+Serverless:  Someone sends a query -> Compute spins up (milliseconds) -> Runs query -> Scales down
+             Nobody using it at 3 AM -> Compute scales to ZERO -> You pay $0 for compute
+             Storage still exists (your data is safe) -> You only pay for storage
 ```
 
 Think of it like a taxi: you only pay when you ride.
@@ -976,27 +1579,27 @@ Think of it like a taxi: you only pay when you ride.
 ### Visual Comparison
 
 ```
-TRADITIONAL (AWS RDS, Azure DB, DigitalOcean):
-├── 12 AM ████████████████ Running (paying)
-├──  3 AM ████████████████ Running (paying) ← Nobody using it!
-├──  6 AM ████████████████ Running (paying)
-├──  9 AM ████████████████ Running (paying) ← Users active
-├── 12 PM ████████████████ Running (paying) ← Peak usage
-├──  3 PM ████████████████ Running (paying)
-├──  6 PM ████████████████ Running (paying) ← Users leaving
-├──  9 PM ████████████████ Running (paying)
-│   Cost: ~$50/mo flat regardless of usage
+TRADITIONAL (AWS RDS, DigitalOcean):
+|-- 12 AM ################ Running (paying)
+|--  3 AM ################ Running (paying) <-- Nobody using it!
+|--  6 AM ################ Running (paying)
+|--  9 AM ################ Running (paying) <-- Users active
+|-- 12 PM ################ Running (paying) <-- Peak usage
+|--  3 PM ################ Running (paying)
+|--  6 PM ################ Running (paying) <-- Users leaving
+|--  9 PM ################ Running (paying)
+|   Cost: ~$50/mo flat regardless of usage
 
 SERVERLESS (Neon):
-├── 12 AM ░░░░░░░░░░░░░░░░ Scaled to zero ($0)
-├──  3 AM ░░░░░░░░░░░░░░░░ Scaled to zero ($0)
-├──  6 AM ░░░░░░░░░░░░░░░░ Scaled to zero ($0)
-├──  9 AM ████████░░░░░░░░ Scaled up (paying)
-├── 12 PM ████████████████ Peak (paying more)
-├──  3 PM ████████████░░░░ Medium load (paying less)
-├──  6 PM ████████░░░░░░░░ Low usage (paying less)
-├──  9 PM ░░░░░░░░░░░░░░░░ Scaled to zero ($0)
-│   Cost: ~$10-20/mo (pay only for actual usage)
+|-- 12 AM ................ Scaled to zero ($0)
+|--  3 AM ................ Scaled to zero ($0)
+|--  6 AM ................ Scaled to zero ($0)
+|--  9 AM ########........ Scaled up (paying)
+|-- 12 PM ################ Peak (paying more)
+|--  3 PM ############.... Medium load (paying less)
+|--  6 PM ########........ Low usage (paying less)
+|--  9 PM ................ Scaled to zero ($0)
+|   Cost: ~$10-20/mo (pay only for actual usage)
 ```
 
 ### Why Choose Serverless (Neon)?
@@ -1006,7 +1609,7 @@ SERVERLESS (Neon):
 | **Cost savings** | You pay only when queries are running. For a startup/MVP with variable traffic, this can save 50-80% vs a dedicated server. |
 | **Auto-scaling** | If 100 users hit your app at once, compute scales up automatically. No manual server resizing. |
 | **Scale to zero** | At night, weekends, or low-traffic periods, compute shuts down. Storage (your data) remains safe. |
-| **Database branching** | Create instant copies of your database for testing migrations — like `git branch` for your database. |
+| **Database branching** | Create instant copies of your database for testing migrations -- like `git branch` for your database. |
 | **Instant provisioning** | New database in seconds, not minutes. |
 | **No server management** | No patching, no OS updates, no disk management. |
 
@@ -1022,13 +1625,13 @@ SERVERLESS (Neon):
 
 ### The Cold Start Problem
 
-Serverless databases have a "cold start" — when the compute has scaled to zero, the first query takes slightly longer:
+Serverless databases have a "cold start" -- when the compute has scaled to zero, the first query takes slightly longer:
 
 ```
-Traditional:  Every query → ~5ms response
-Serverless:   First query after idle → ~500ms (cold start)
-              Subsequent queries → ~5ms (warm)
-              After 5 min idle → scales to zero again
+Traditional:  Every query -> ~5ms response
+Serverless:   First query after idle -> ~500ms (cold start)
+              Subsequent queries -> ~5ms (warm)
+              After 5 min idle -> scales to zero again
 ```
 
 **Mitigation:** Neon lets you configure a "suspend delay" (e.g., keep compute alive for 5 minutes after the last query). For production, set this to 10-15 minutes to avoid cold starts during business hours.
@@ -1040,21 +1643,20 @@ Serverless:   First query after idle → ~500ms (cold start)
 | Building MVP, low budget | **Serverless (Neon)** |
 | Variable traffic (busy daytime, quiet nights) | **Serverless (Neon)** |
 | Startup, few users, growing | **Serverless (Neon)** |
-| 50+ users online 24/7 | **Traditional (Azure/RDS)** |
-| Enterprise client, SLA required | **Traditional (Azure/RDS)** |
+| 50+ users online 24/7 | **Traditional (AWS RDS)** |
+| Enterprise client, SLA required | **Traditional (AWS RDS)** |
 | Need database branching for dev | **Serverless (Neon)** |
-| Already on Azure with App Service | **Azure Database for PostgreSQL** |
 
 ### For YOUR Project (UAE ERP SaaS)
 
 **Start with Neon (serverless)** because:
-- You're building an ERP for UAE service companies — most users work 8 AM to 6 PM UAE time
-- Nights and weekends will have near-zero traffic → serverless saves money
-- Multiple tenants with variable load → auto-scaling handles spikes
-- Database branching → test schema migrations safely before production
-- When you grow to 100+ concurrent users 24/7, migrate to Azure Database or RDS
+- You are building an ERP for UAE service companies -- most users work 8 AM to 6 PM UAE time
+- Nights and weekends will have near-zero traffic -- serverless saves money
+- Multiple tenants with variable load -- auto-scaling handles spikes
+- Database branching -- test schema migrations safely before production
+- When you grow to 100+ concurrent users 24/7, migrate to AWS RDS or DigitalOcean
 
-**Migration from Neon to Azure/RDS is simple** — it's all standard PostgreSQL. Just `pg_dump` and `pg_restore`.
+**Migration from Neon to a traditional provider is simple** -- it is all standard PostgreSQL. Just `pg_dump` and `pg_restore`.
 
 ---
 
@@ -1063,39 +1665,68 @@ Serverless:   First query after idle → ~500ms (cold start)
 ### Pitfall 1: Forgetting to SET tenant context
 
 ```
-Problem: Query returns empty results or affects wrong tenant's data
+Problem:  Query returns empty results or affects wrong tenant's data
 Solution: ALWAYS set app.current_tenant before any query
-Prevention: Use middleware (see Section 6) so it's automatic
+Prevention: Use tenantContext middleware (see Section 6) so it is automatic
+```
+
+```typescript
+// BAD -- forgot tenant context
+router.get('/customers', authenticate, async (req, res) => {
+  const customers = await prisma.customer.findMany(); // No tenant filter!
+  res.json(customers);
+});
+
+// GOOD -- tenant context set via middleware
+router.get('/customers', authenticate, tenantContext, async (req, res) => {
+  const customers = await prisma.customer.findMany({
+    where: { tenantId: req.user!.tenantId },
+  });
+  res.json(customers);
+});
 ```
 
 ### Pitfall 2: Adding enum values in the wrong position
 
 ```
-Problem: ALTER TYPE ... ADD VALUE cannot specify IF NOT EXISTS in transactions
+Problem:  ALTER TYPE ... ADD VALUE cannot specify IF NOT EXISTS in transactions
 Solution: Run enum additions outside transactions, or use the rename-recreate pattern
 ```
 
 ### Pitfall 3: Running migrations without backup
 
 ```
-Problem: Migration fails halfway, database in inconsistent state
+Problem:  Migration fails halfway, database in inconsistent state
 Solution: ALWAYS pg_dump before running migrations
           Use transactions: BEGIN; ... COMMIT; (or ROLLBACK; on error)
+          Prisma Migrate wraps each migration in a transaction by default
 ```
 
-### Pitfall 4: N+1 queries with RLS
+### Pitfall 4: N+1 queries with Prisma
 
 ```
-Problem: RLS subqueries (for child tables) can cause performance issues at scale
-Solution: Add tenant_id directly to child tables instead of filtering via parent
-          Our schema already does this for most tables — child tables without
-          tenant_id use parent FK subqueries only where necessary
+Problem:  Looping over results and querying for each item individually
+Solution: Use Prisma's `include` or `select` with nested relations
+```
+
+```typescript
+// BAD -- N+1: one query per job to get customer
+const jobs = await prisma.job.findMany({ where: { tenantId } });
+for (const job of jobs) {
+  job.customer = await prisma.customer.findUnique({ where: { id: job.customerId } });
+}
+
+// GOOD -- single query with JOIN
+const jobs = await prisma.job.findMany({
+  where: { tenantId },
+  include: { customer: true },
+});
 ```
 
 ### Pitfall 5: JSONB overuse
 
 ```
-Problem: Querying deep inside JSONB is slower than querying regular columns
+Problem:  Querying deep inside JSONB is slower than querying regular columns
 Solution: If you query a JSONB field frequently (e.g., address.emirate),
           consider extracting it to a dedicated column with an index
 ```
@@ -1103,7 +1734,7 @@ Solution: If you query a JSONB field frequently (e.g., address.emirate),
 ### Pitfall 6: Large text in audit_logs
 
 ```
-Problem: audit_logs grows very large because changes JSONB stores full before/after
+Problem:  audit_logs grows very large because changes JSONB stores full before/after
 Solution: Only store changed fields, not the full record
           Implement table partitioning by month/quarter
           Set up automatic archival after 2 years
@@ -1112,21 +1743,69 @@ Solution: Only store changed fields, not the full record
 ### Pitfall 7: Connection pool exhaustion
 
 ```
-Problem: "too many connections" error under load
-Solution: Use connection pooling (Npgsql built-in or PgBouncer)
-          Set MaxPoolSize appropriately (default 100 for Npgsql)
-          Ensure connections are returned to pool (use 'using' statements)
+Problem:  "too many connections" error under load
+Solution: Configure Prisma connection pool properly
+          Use PgBouncer for high-concurrency scenarios
+          Ensure prisma.$disconnect() is called on shutdown
 ```
 
-```csharp
-// GOOD — connection returned to pool when disposed
-await using var connection = await factory.CreateConnectionAsync();
-var customers = await connection.QueryAsync<Customer>("SELECT * FROM customers");
+```typescript
+// GOOD -- Prisma singleton pattern (one client, shared pool)
+import prisma from '../lib/prisma';
+const customers = await prisma.customer.findMany();
 
-// BAD — connection leak!
-var connection = await factory.CreateConnectionAsync();
-var customers = await connection.QueryAsync<Customer>("SELECT * FROM customers");
-// Forgot to dispose — connection never returned to pool
+// BAD -- creating a new PrismaClient per request (pool exhaustion!)
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient(); // This creates a NEW pool every time!
+const customers = await prisma.customer.findMany();
+// Forgot to disconnect -- connection leak!
+```
+
+### Pitfall 8: Using $queryRawUnsafe with user input
+
+```
+Problem:  SQL injection vulnerability
+Solution: Use Prisma's tagged template literal ($queryRaw) or parameterized $queryRawUnsafe
+```
+
+```typescript
+// SAFE -- tagged template (auto-parameterized)
+const results = await prisma.$queryRaw`
+  SELECT * FROM customers WHERE email = ${userEmail}
+`;
+
+// SAFE -- parameterized $queryRawUnsafe
+const results = await prisma.$queryRawUnsafe(
+  'SELECT * FROM customers WHERE email = $1',
+  userEmail
+);
+
+// DANGEROUS -- string interpolation in $queryRawUnsafe
+const results = await prisma.$queryRawUnsafe(
+  `SELECT * FROM customers WHERE email = '${userEmail}'` // SQL INJECTION!
+);
+```
+
+### Pitfall 9: Not handling Prisma errors properly
+
+```typescript
+// GOOD -- handle known Prisma errors gracefully
+import { Prisma } from '@prisma/client';
+
+try {
+  const customer = await prisma.customer.create({ data: input });
+  res.status(201).json(customer);
+} catch (error) {
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error.code === 'P2002') {
+      return res.status(409).json({ error: 'A record with that unique field already exists' });
+    }
+    if (error.code === 'P2025') {
+      return res.status(404).json({ error: 'Record not found' });
+    }
+  }
+  throw error; // Re-throw unknown errors to the global error handler
+}
 ```
 
 ---
@@ -1135,16 +1814,23 @@ var customers = await connection.QueryAsync<Customer>("SELECT * FROM customers")
 
 Before going to production:
 
-- [ ] Database created on cloud provider (Neon/Azure/Supabase)
-- [ ] All 16 SQL files executed in order (00-15)
+- [ ] Database created on cloud provider (Neon/AWS RDS/Supabase)
+- [ ] All SQL files executed in order (00-15) or Prisma migrations applied
 - [ ] Dedicated `erp_app` database role created (not superuser)
-- [ ] SSL enabled on connection string
-- [ ] ASP.NET Core middleware sets tenant context on every request
-- [ ] All C# enums mapped to PostgreSQL enums via Npgsql
-- [ ] JSONB columns mapped with proper serialization
-- [ ] Connection pooling configured (MinPoolSize, MaxPoolSize)
+- [ ] SSL enabled in DATABASE_URL (`?sslmode=require`)
+- [ ] Express middleware sets tenant context on every request via `$executeRawUnsafe`
+- [ ] Prisma schema introspected and client generated (`npx prisma generate`)
+- [ ] Zod schemas defined for all API request validation
+- [ ] JWT authentication middleware configured with `jsonwebtoken`
+- [ ] Passwords hashed with `bcryptjs` (12+ salt rounds)
+- [ ] Prisma connection pooling configured (`connection_limit` in DATABASE_URL)
+- [ ] PgBouncer configured for high-concurrency production use
 - [ ] Automated backups configured on cloud provider
-- [ ] Migration strategy set up (DbUp or FluentMigrator)
+- [ ] Prisma Migrate set up for future schema changes
 - [ ] Seed data verified (permissions, chart of accounts, leave types)
 - [ ] RLS tested (tenant A cannot see tenant B's data)
-- [ ] Parameterized queries used everywhere (no SQL injection)
+- [ ] All queries use Prisma's built-in parameterization (no raw string interpolation)
+- [ ] BullMQ workers configured for background jobs (emails, PDFs, scheduled tasks)
+- [ ] Socket.io configured for realtime notifications
+- [ ] Graceful shutdown handles `prisma.$disconnect()`
+- [ ] Error handling middleware catches Prisma-specific error codes

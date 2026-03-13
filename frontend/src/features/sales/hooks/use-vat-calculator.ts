@@ -10,9 +10,7 @@
 
 import { useMemo, useCallback } from 'react'
 import type { VatStatus, InvoiceItem, QuotationItem } from '../types'
-
-// UAE VAT Rate
-export const UAE_VAT_RATE = 0.05 // 5%
+import { UAE_VAT_RATE } from '@/lib/constants'
 
 /**
  * VAT calculation result

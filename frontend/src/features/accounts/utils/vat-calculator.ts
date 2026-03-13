@@ -9,25 +9,20 @@
  */
 
 import type { VATReturnBoxes } from '../types/vat-return.types'
-
-/**
- * UAE Standard VAT Rate
- */
-export const UAE_VAT_RATE = 5
-export const UAE_VAT_DECIMAL = 0.05
+import { UAE_VAT_RATE } from '@/lib/constants'
 
 /**
  * Calculate VAT amount from a taxable amount
  */
 export function calculateVAT(taxableAmount: number, rate: number = UAE_VAT_RATE): number {
-  return Math.round((taxableAmount * rate) / 100 * 100) / 100
+  return Math.round(taxableAmount * rate * 100) / 100
 }
 
 /**
  * Calculate amount inclusive of VAT
  */
 export function calculateAmountWithVAT(amount: number, rate: number = UAE_VAT_RATE): number {
-  return Math.round((amount * (1 + rate / 100)) * 100) / 100
+  return Math.round(amount * (1 + rate) * 100) / 100
 }
 
 /**
@@ -37,7 +32,7 @@ export function extractVATFromInclusive(inclusiveAmount: number, rate: number = 
   taxableAmount: number
   vatAmount: number
 } {
-  const taxableAmount = Math.round((inclusiveAmount / (1 + rate / 100)) * 100) / 100
+  const taxableAmount = Math.round((inclusiveAmount / (1 + rate)) * 100) / 100
   const vatAmount = Math.round((inclusiveAmount - taxableAmount) * 100) / 100
   return { taxableAmount, vatAmount }
 }
