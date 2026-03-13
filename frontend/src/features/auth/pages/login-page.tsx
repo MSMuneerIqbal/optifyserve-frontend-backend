@@ -5,7 +5,7 @@
  */
 
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   ShieldCheck,
@@ -209,6 +209,17 @@ export function LoginPage() {
                 <span className="text-xs">{t('auth.uaeHosted')}</span>
               </div>
             </div>
+
+            {/* Sign up link */}
+            <p className="mt-6 text-center text-sm text-muted-foreground">
+              {t('auth.dontHaveAccount')}{' '}
+              <Link
+                to="/signup"
+                className="font-medium text-primary hover:underline"
+              >
+                {t('auth.signUpNow')}
+              </Link>
+            </p>
           </div>
         </div>
 

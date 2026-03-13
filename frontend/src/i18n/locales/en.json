@@ -523,6 +523,8 @@
     "creatingAccount": "Creating your account...",
     "alreadyHaveAccount": "Already have an account?",
     "signInHere": "Sign in",
+    "dontHaveAccount": "Don't have an account?",
+    "signUpNow": "Start free trial",
     "trialHeadline": "Start your 15-day free trial",
     "trialSubheadline": "No credit card required. Cancel anytime.",
     "noCardRequired": "No credit card required",

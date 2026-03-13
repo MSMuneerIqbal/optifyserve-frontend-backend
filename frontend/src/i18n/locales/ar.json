@@ -523,6 +523,8 @@
     "creatingAccount": "جارٍ إنشاء حسابك...",
     "alreadyHaveAccount": "لديك حساب بالفعل؟",
     "signInHere": "تسجيل الدخول",
+    "dontHaveAccount": "ليس لديك حساب؟",
+    "signUpNow": "ابدأ التجربة المجانية",
     "trialHeadline": "ابدأ تجربتك المجانية لمدة 15 يوماً",
     "trialSubheadline": "لا حاجة لبطاقة ائتمان. يمكنك الإلغاء في أي وقت.",
     "noCardRequired": "لا حاجة لبطاقة ائتمان",
